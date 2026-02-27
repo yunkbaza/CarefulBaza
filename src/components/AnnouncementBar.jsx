@@ -1,0 +1,9 @@
+export default function AnnouncementBar() {
+  return (
+    <div className="bg-black text-baza-lavender text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-center py-2.5 px-4 z-[60] relative">
+      <span className="text-baza-lavender mr-2">✦</span> 
+      Frete Grátis para todo o Brasil em compras acima de R$ 199 
+      <span className="text-baza-lavender ml-2">✦</span>
+    </div>
+  );
+}

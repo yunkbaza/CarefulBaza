@@ -1,79 +1,166 @@
+import { useRef } from 'react';
+import { useCart } from '../context/CartContext';
+
+const products = [
+  {
+    id: 1,
+    name: 'Sérum Renovador',
+    category: 'Skincare',
+    price: 189.90,
+    image: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbce5ce?q=80&w=600&auto=format&fit=crop',
+    tag: 'Mais Vendido',
+    reviews: 128
+  },
+  {
+    id: 2,
+    name: 'Hidratante Aqua Glow',
+    category: 'Skincare',
+    price: 145.00,
+    image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=600&auto=format&fit=crop',
+    tag: 'Novidade',
+    reviews: 45
+  },
+  {
+    id: 3,
+    name: 'Óleo Corporal Botânico',
+    category: 'Banho e Corpo',
+    price: 210.00,
+    image: 'https://images.unsplash.com/photo-1615397323861-125026210f84?q=80&w=600&auto=format&fit=crop',
+    tag: null,
+    reviews: 89
+  },
+  {
+    id: 4,
+    name: 'Essência Noturna',
+    category: 'Tratamentos',
+    price: 250.00,
+    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&auto=format&fit=crop',
+    tag: 'Edição Limitada',
+    reviews: 22
+  },
+  {
+    id: 5,
+    name: 'Bruma Revitalizante',
+    category: 'Skincare',
+    price: 110.00,
+    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=600&auto=format&fit=crop',
+    tag: null,
+    reviews: 56
+  },
+  {
+    id: 6,
+    name: 'Creme para Olhos',
+    category: 'Tratamentos',
+    price: 165.00,
+    image: 'https://images.unsplash.com/photo-1571781926291-c477eb31f801?q=80&w=600&auto=format&fit=crop',
+    tag: 'Mais Vendido',
+    reviews: 210
+  }
+];
+
 export default function ProductGrid() {
-  // Lista temporária de produtos (depois isso virá do banco de dados/API)
-  const produtos = [
-    {
-      id: 1,
-      nome: "Sérum Facial Iluminador",
-      preco: "R$ 129,90",
-      imagem: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-      tag: "Mais Vendido",
-    },
-    {
-      id: 2,
-      nome: "Base Líquida Efeito Blur",
-      preco: "R$ 145,00",
-      imagem: "https://images.unsplash.com/photo-1599305090598-fe179d501227?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-      tag: "Novidade",
-    },
-    {
-      id: 3,
-      nome: "Gloss Labial Velvet",
-      preco: "R$ 79,90",
-      imagem: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-      tag: "",
-    },
-    {
-      id: 4,
-      nome: "Hidratante Nuvem Base",
-      preco: "R$ 110,00",
-      imagem: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-      tag: "Vegano",
-    },
-  ];
+  const sliderRef = useRef(null);
+  const { addToCart } = useCart();
+
+  const scroll = (direction) => {
+    if (sliderRef.current) {
+      const scrollAmount = 300;
+      sliderRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
-    <section className="px-6 py-16 md:px-16 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-black text-gray-800 mb-10 text-center">
-        Favoritos da <span className="text-baza-lavender">Estação</span>
-      </h2>
+    <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 overflow-hidden">
+      
+      <div className="flex items-end justify-between mb-10">
+        <div>
+          <h2 className="font-syne text-3xl md:text-4xl font-bold text-gray-900 mb-2">Rotina de Alta Performance</h2>
+          <p className="text-gray-500 text-xs md:text-sm uppercase font-bold tracking-widest">Selecione o seu tratamento</p>
+        </div>
+        
+        <div className="hidden md:flex items-center gap-2">
+          <button 
+            onClick={() => scroll('left')}
+            aria-label="Anterior"
+            className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-900 hover:border-baza-lavender hover:text-baza-lavender hover:bg-baza-lavender/5 transition-all duration-300"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button 
+            onClick={() => scroll('right')}
+            aria-label="Próximo"
+            className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-900 hover:border-baza-lavender hover:text-baza-lavender hover:bg-baza-lavender/5 transition-all duration-300"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
 
-      {/* Grid: 1 coluna no celular, 2 no tablet, 4 no PC */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {produtos.map((produto) => (
-          <div key={produto.id} className="group bg-white rounded-2xl p-4 shadow-sm border border-baza-lavender/10 hover:shadow-xl hover:border-baza-lavender/30 transition-all duration-300 relative flex flex-col">
+      <div 
+        ref={sliderRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth pb-8 -mx-6 px-6 md:-mx-12 md:px-12 lg:-mx-16 lg:px-16 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
+        {products.map((product) => (
+          <div key={product.id} className="group cursor-pointer flex flex-col min-w-[200px] w-[200px] md:min-w-[240px] md:w-[240px] flex-shrink-0">
             
-            {/* Imagem do Produto */}
-            <div className="aspect-square w-full rounded-xl overflow-hidden bg-baza-creme mb-4 relative">
-              <img 
-                src={produto.imagem} 
-                alt={produto.nome}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              {/* Etiqueta condicional */}
-              {produto.tag && (
-                <span className="absolute top-3 left-3 bg-baza-mint text-baza-lavender text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-sm">
-                  {produto.tag}
-                </span>
+            <div className="relative aspect-[4/5] bg-gray-50 overflow-hidden mb-5">
+              
+              {product.tag && (
+                <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest text-gray-900 shadow-sm border border-gray-100">
+                  {product.tag}
+                </div>
               )}
+              
+              <img 
+                src={product.image} 
+                alt={product.name} 
+                className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(product);
+                  }}
+                  className="w-full bg-gray-900 text-white py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors duration-300 flex items-center justify-center gap-2"
+                >
+                  Adicionar
+                </button>
+              </div>
             </div>
 
-            {/* Informações */}
-            <div className="flex flex-col flex-grow">
-              <h3 className="text-sm font-bold text-gray-800 mb-1 line-clamp-2">
-                {produto.nome}
+            <div className="flex flex-col flex-1">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold">
+                  {product.category}
+                </span>
+                <div className="flex items-center gap-1">
+                  <svg className="w-2.5 h-2.5 text-baza-lavender fill-current" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span className="text-[9px] font-mono text-gray-500">({product.reviews})</span>
+                </div>
+              </div>
+
+              <h3 className="font-syne font-bold text-gray-900 text-base mb-1 line-clamp-1 group-hover:text-baza-lavender transition-colors">
+                {product.name}
               </h3>
-              <p className="text-baza-lavender font-black text-lg mb-4 mt-auto">
-                {produto.preco}
-              </p>
               
-              {/* Botão de Compra */}
-              <button className="w-full bg-gray-50 text-gray-800 border border-gray-200 py-2.5 rounded-xl text-sm font-bold group-hover:bg-baza-lavender group-hover:text-white group-hover:border-baza-lavender transition-colors">
-                Adicionar à Sacola
-              </button>
+              <div className="mt-auto flex items-center gap-2">
+                <span className="text-sm font-mono font-bold text-gray-900">
+                  R$ {product.price.toFixed(2).replace('.', ',')}
+                </span>
+              </div>
+
             </div>
           </div>
         ))}
       </div>
-    </section>
+
+    </div>
   );
 }
