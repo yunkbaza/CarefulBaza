@@ -1,4 +1,13 @@
 import logoSvg from '../assets/LogoCarefulBazaHorizontal.svg';
+import logoPix from '../assets/LogoPix.png';
+import logoMaster from '../assets/LogoMaster.png';
+import logoVisa from '../assets/LogoVisa.png';
+import logoAmerican from '../assets/LogoAmerican.png';
+import logoElo from '../assets/LogoElo.png';
+import logoHipercard from '../assets/LogoHipercard.png';
+import logoDiners from '../assets/LogoDiners.png';
+import logoBoleto from '../assets/LogoBoleto.png';
+
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -16,6 +25,15 @@ export default function Footer() {
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               A ciência da pureza. Desenvolvemos fórmulas dermatológicas de alta performance, sem ingredientes suspeitos e com resultados comprovados.
             </p>
+            {/* Redes Sociais */}
+            <div className="flex items-center gap-4">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-baza-lavender hover:border-baza-lavender transition-all">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </a>
+              <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-baza-lavender hover:border-baza-lavender transition-all">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+              </a>
+            </div>
           </div>
 
           <div className="lg:w-1/2 w-full bg-gray-800/50 p-8 rounded-sm border border-gray-800">
@@ -27,7 +45,7 @@ export default function Footer() {
                 placeholder="Seu melhor e-mail" 
                 className="flex-1 bg-gray-900 border border-gray-700 px-4 py-3 text-sm text-white outline-none focus:border-baza-lavender transition-colors"
               />
-              <button className="bg-white text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender hover:text-white transition-colors">
+              <button type="button" className="bg-white text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender hover:text-white transition-colors">
                 Assinar
               </button>
             </form>
@@ -58,7 +76,9 @@ export default function Footer() {
             <h4 className="font-syne font-bold text-white mb-6 uppercase text-sm tracking-widest">Suporte</h4>
             <ul className="space-y-4 text-xs font-medium text-gray-400">
               <li><Link to="/rastreio" className="hover:text-baza-lavender transition-colors">Rastrear Pedido</Link></li>
-              <li><a href="#" className="hover:text-baza-lavender transition-colors">Trocas e Devoluções</a></li>
+              {/* LINKS ATUALIZADOS AQUI */}
+              <li><Link to="/info/trocas" className="hover:text-baza-lavender transition-colors">Trocas e Devoluções</Link></li>
+              <li><Link to="/info/faq" className="hover:text-baza-lavender transition-colors">Dúvidas Frequentes (FAQ)</Link></li>
               <li><a href="mailto:contato@carefulbaza.com.br" className="hover:text-baza-lavender transition-colors">contato@carefulbaza.com.br</a></li>
             </ul>
           </div>
@@ -67,27 +87,18 @@ export default function Footer() {
             <h4 className="font-syne font-bold text-white mb-6 uppercase text-sm tracking-widest">Segurança</h4>
             <div className="flex items-center gap-3 mb-6">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-baza-mint"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-              <span className="text-xs text-gray-400">Ambiente Seguro</span>
+              <span className="text-xs text-gray-400">Ambiente 100% Seguro</span>
             </div>
             
-            {/* Bandeiras de Cartão (Estética Clean) */}
-            <div className="flex flex-wrap gap-3 opacity-70">
-              {/* PIX */}
-              <div className="h-8 w-12 bg-white rounded-sm flex items-center justify-center p-1">
-                <svg viewBox="0 0 24 24" fill="#32BCAD" className="w-full h-full"><path d="M6.864 9.043l4.673-4.673a.654.654 0 0 1 .926 0l4.673 4.673a.654.654 0 0 1 0 .926l-4.673 4.673a.654.654 0 0 1-.926 0L6.864 9.969a.654.654 0 0 1 0-.926zm10.272.926l3.522-3.522a.654.654 0 0 0 0-.926L16.205 1.068a.654.654 0 0 0-.926 0l-3.522 3.522a.654.654 0 0 0 0 .926l4.453 4.453a.654.654 0 0 0 .926 0zM12.463 22.932l4.453-4.453a.654.654 0 0 0 0-.926l-3.522-3.522a.654.654 0 0 0-.926 0l-4.453 4.453a.654.654 0 0 0 0 .926l3.522 3.522a.654.654 0 0 0 .926 0zM3.342 18.479l3.522-3.522a.654.654 0 0 0 0-.926L2.41 9.578a.654.654 0 0 0-.926 0L1.068 9.994a.654.654 0 0 0 0 .926l4.453 4.453a.654.654 0 0 0 .926 0l-3.105-3.105z"/></svg>
-              </div>
-              {/* MASTERCARD */}
-              <div className="h-8 w-12 bg-white rounded-sm flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="w-8 h-8"><circle cx="9" cy="12" r="5" fill="#ea001b"/><circle cx="15" cy="12" r="5" fill="#f79e1b" fillOpacity="0.8"/></svg>
-              </div>
-              {/* VISA */}
-              <div className="h-8 w-12 bg-white rounded-sm flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="w-8 h-8"><text x="1" y="16" fontFamily="Arial" fontWeight="900" fontStyle="italic" fill="#1434CB" fontSize="11">VISA</text></svg>
-              </div>
-              {/* BOLETO (Ícone Código de Barras) */}
-              <div className="h-8 w-12 bg-white rounded-sm flex items-center justify-center">
-                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2"><path d="M3 5v14M7 5v14M11 5v14M13 5v14M17 5v14M21 5v14"/></svg>
-              </div>
+            <div className="grid grid-cols-4 gap-2.5 opacity-90 w-fit">
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoPix} alt="Pix" className="w-full h-full object-contain" /></div>
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoMaster} alt="Mastercard" className="w-full h-full object-contain" /></div>
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoVisa} alt="Visa" className="w-full h-full object-contain" /></div>
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoAmerican} alt="American Express" className="w-full h-full object-contain" /></div>
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoElo} alt="Elo" className="w-full h-full object-contain" /></div>
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoHipercard} alt="Hipercard" className="w-full h-full object-contain" /></div>
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoDiners} alt="Diners Club" className="w-full h-full object-contain" /></div>
+              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoBoleto} alt="Boleto Bancário" className="w-full h-full object-contain" /></div>
             </div>
           </div>
         </div>
@@ -95,9 +106,10 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-800 text-[10px] text-gray-500 uppercase tracking-widest font-bold">
           <p>© {new Date().getFullYear()} CAREFUL BAZA LABS. TODOS OS DIREITOS RESERVADOS.</p>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-white transition-colors">Termos de Serviço</a>
+            {/* LINKS ATUALIZADOS AQUI */}
+            <Link to="/info/termos" className="hover:text-white transition-colors">Termos de Serviço</Link>
             <span className="hidden md:inline">•</span>
-            <a href="#" className="hover:text-white transition-colors">Política de Privacidade</a>
+            <Link to="/info/privacidade" className="hover:text-white transition-colors">Política de Privacidade</Link>
           </div>
         </div>
         

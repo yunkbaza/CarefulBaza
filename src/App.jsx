@@ -14,6 +14,7 @@ import CollectionPage from './pages/CollectionPage';
 import AboutPage from './pages/AboutPage';
 import SciencePage from './pages/SciencePage';
 import TrackPage from './pages/TrackPage';
+import LegalPage from './pages/LegalPage'; // IMPORTADO AQUI
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -25,6 +26,15 @@ function MainLayout() {
   const { isCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     if (isCartOpen || isMobileMenuOpen || isQuizOpen) {
@@ -37,7 +47,7 @@ function MainLayout() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-baza-mint selection:text-gray-900 relative">
+      <div className="min-h-screen flex flex-col font-sans bg-white dark:bg-gray-900 transition-colors duration-300 selection:bg-baza-mint selection:text-gray-900 relative">
         
         <CartDrawer />
         <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
@@ -47,6 +57,8 @@ function MainLayout() {
         <Navbar 
           onOpenMenu={() => setIsMobileMenuOpen(true)} 
           onOpenQuiz={() => setIsQuizOpen(true)}
+          toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+          isDarkMode={isDarkMode}
         />
         
         <div className="flex-1">
@@ -58,6 +70,7 @@ function MainLayout() {
             <Route path="/sobre" element={<AboutPage />} />
             <Route path="/ciencia/:topicId" element={<SciencePage />} />
             <Route path="/rastreio" element={<TrackPage />} />
+            <Route path="/info/:pageId" element={<LegalPage />} /> {/* ADICIONADO AQUI */}
           </Routes>
         </div>
         
