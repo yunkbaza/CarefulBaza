@@ -1,35 +1,46 @@
 import { useCart } from '../context/CartContext';
 
 export default function CartDrawer() {
-  const { isCartOpen, setIsCartOpen, cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
+  const { isCartOpen, setIsCartOpen, cartItems, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
+
+  // Meta do Frete Grátis (Ex: R$ 250)
+  const FREE_SHIPPING_GOAL = 250;
+  const progressPercent = Math.min((cartTotal / FREE_SHIPPING_GOAL) * 100, 100);
+  const amountLeft = FREE_SHIPPING_GOAL - cartTotal;
 
   return (
     <>
-      {/* Fundo escuro */}
-      <div 
-        className={`fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-[70] transition-opacity duration-300 ${
-          isCartOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
-        onClick={() => setIsCartOpen(false)}
-      />
+      <div className={`fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-[70] transition-opacity duration-300 ${isCartOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setIsCartOpen(false)} />
 
-      {/* Gaveta */}
-      <div 
-        className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-[80] shadow-2xl flex flex-col transform transition-transform duration-500 ease-in-out ${
-          isCartOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
+      <div className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-[80] shadow-2xl flex flex-col transform transition-transform duration-500 ease-in-out ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <h2 className="font-syne text-xl font-bold text-gray-900">Sua Sacola</h2>
-          <button 
-            onClick={() => setIsCartOpen(false)}
-            className="text-gray-400 hover:text-gray-900 transition-colors"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
+          <div className="flex items-center gap-4">
+            {cartItems.length > 0 && (
+              <button onClick={clearCart} className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">Esvaziar</button>
+            )}
+            <button onClick={() => setIsCartOpen(false)} className="text-gray-400 hover:text-gray-900 transition-colors">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
         </div>
 
-        {/* Lista de Produtos */}
+        {/* Barra de Progresso do Frete Grátis */}
+        <div className="bg-baza-lavender/5 p-4 border-b border-gray-100">
+          <p className="text-[11px] font-bold text-center text-gray-900 mb-2 uppercase tracking-widest">
+            {cartTotal >= FREE_SHIPPING_GOAL 
+              ? "✨ Você ganhou Frete Grátis!" 
+              : `Faltam R$ ${amountLeft.toFixed(2).replace('.', ',')} para Frete Grátis`}
+          </p>
+          <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-baza-mint transition-all duration-700 ease-out"
+              style={{ width: `${progressPercent}%` }}
+            ></div>
+          </div>
+        </div>
+
         <div className="flex-1 overflow-y-auto p-6 bg-gray-50 flex flex-col gap-4">
           {cartItems.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center">
@@ -37,9 +48,6 @@ export default function CartDrawer() {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-gray-300" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
               </div>
               <p className="text-gray-500 text-sm font-medium">Sua sacola está vazia.</p>
-              <button onClick={() => setIsCartOpen(false)} className="mt-6 text-[10px] font-bold uppercase tracking-widest text-baza-lavender border-b border-baza-lavender pb-1">
-                Continuar Explorando
-              </button>
             </div>
           ) : (
             cartItems.map((item) => (
@@ -54,7 +62,7 @@ export default function CartDrawer() {
                       <h3 className="font-syne font-bold text-gray-900 text-sm line-clamp-1 mt-0.5">{item.name}</h3>
                     </div>
                     <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500 transition-colors">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2 2v2"></path></svg>
                     </button>
                   </div>
                   <div className="flex items-center justify-between mt-auto">
@@ -73,7 +81,6 @@ export default function CartDrawer() {
           )}
         </div>
 
-        {/* Rodapé e Checkout */}
         <div className="p-6 border-t border-gray-100 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.02)]">
           <div className="flex justify-between items-center mb-6">
             <span className="text-sm font-bold text-gray-900 uppercase tracking-widest">Subtotal</span>
@@ -81,7 +88,6 @@ export default function CartDrawer() {
               R$ {cartTotal.toFixed(2).replace('.', ',')}
             </span>
           </div>
-          <p className="text-[10px] text-gray-500 mb-6 text-center">Frete calculado no checkout.</p>
           <button 
             disabled={cartItems.length === 0}
             className={`w-full py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2

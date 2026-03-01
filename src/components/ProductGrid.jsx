@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useCart } from '../context/CartContext';
+import { Link } from 'react-router-dom';
 
 const products = [
   {
@@ -53,7 +54,7 @@ const products = [
     category: 'Tratamentos',
     price: 165.00,
     image: 'https://images.unsplash.com/photo-1571781926291-c477eb31f801?q=80&w=600&auto=format&fit=crop',
-    tag: 'Mais Vendido',
+    tag: 'Destaque',
     reviews: 210
   }
 ];
@@ -74,7 +75,6 @@ export default function ProductGrid() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 overflow-hidden">
-      
       <div className="flex items-end justify-between mb-10">
         <div>
           <h2 className="font-syne text-3xl md:text-4xl font-bold text-gray-900 mb-2">Rotina de Alta Performance</h2>
@@ -82,51 +82,40 @@ export default function ProductGrid() {
         </div>
         
         <div className="hidden md:flex items-center gap-2">
-          <button 
-            onClick={() => scroll('left')}
-            aria-label="Anterior"
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-900 hover:border-baza-lavender hover:text-baza-lavender hover:bg-baza-lavender/5 transition-all duration-300"
-          >
+          <button onClick={() => scroll('left')} aria-label="Anterior" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-900 hover:border-baza-lavender hover:text-baza-lavender hover:bg-baza-lavender/5 transition-all duration-300">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
-          <button 
-            onClick={() => scroll('right')}
-            aria-label="Próximo"
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-900 hover:border-baza-lavender hover:text-baza-lavender hover:bg-baza-lavender/5 transition-all duration-300"
-          >
+          <button onClick={() => scroll('right')} aria-label="Próximo" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-900 hover:border-baza-lavender hover:text-baza-lavender hover:bg-baza-lavender/5 transition-all duration-300">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </button>
         </div>
       </div>
 
-      <div 
-        ref={sliderRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth pb-8 -mx-6 px-6 md:-mx-12 md:px-12 lg:-mx-16 lg:px-16 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-      >
+      <div ref={sliderRef} className="flex gap-6 overflow-x-auto scroll-smooth pb-8 -mx-6 px-6 md:-mx-12 md:px-12 lg:-mx-16 lg:px-16 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {products.map((product) => (
-          <div key={product.id} className="group cursor-pointer flex flex-col min-w-[200px] w-[200px] md:min-w-[240px] md:w-[240px] flex-shrink-0">
-            
-            <div className="relative aspect-[4/5] bg-gray-50 overflow-hidden mb-5">
+          <Link 
+            to={`/produto/${product.id}`} 
+            key={product.id} 
+            className="group flex flex-col min-w-[200px] w-[200px] md:min-w-[240px] md:w-[240px] flex-shrink-0"
+          >
+            <div className="relative aspect-[4/5] bg-gray-50 overflow-hidden mb-5 rounded-sm">
               
               {product.tag && (
-                <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest text-gray-900 shadow-sm border border-gray-100">
+                <div className="absolute top-3 left-3 z-10 bg-baza-mint text-baza-lavender px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest shadow-sm rounded-sm">
                   {product.tag}
                 </div>
               )}
               
-              <img 
-                src={product.image} 
-                alt={product.name} 
-                className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
-              />
+              <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105" />
 
               <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
                 <button 
                   onClick={(e) => {
+                    e.preventDefault(); // Impede o Link de mudar a página quando você clica em "Adicionar"
                     e.stopPropagation();
                     addToCart(product);
                   }}
-                  className="w-full bg-gray-900 text-white py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors duration-300 flex items-center justify-center gap-2"
+                  className="w-full bg-gray-900 text-white py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors duration-300 flex items-center justify-center gap-2 rounded-sm"
                 >
                   Adicionar
                 </button>
@@ -139,28 +128,22 @@ export default function ProductGrid() {
                   {product.category}
                 </span>
                 <div className="flex items-center gap-1">
-                  <svg className="w-2.5 h-2.5 text-baza-lavender fill-current" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
+                  <svg className="w-2.5 h-2.5 text-baza-lavender fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                   <span className="text-[9px] font-mono text-gray-500">({product.reviews})</span>
                 </div>
               </div>
-
               <h3 className="font-syne font-bold text-gray-900 text-base mb-1 line-clamp-1 group-hover:text-baza-lavender transition-colors">
                 {product.name}
               </h3>
-              
               <div className="mt-auto flex items-center gap-2">
                 <span className="text-sm font-mono font-bold text-gray-900">
                   R$ {product.price.toFixed(2).replace('.', ',')}
                 </span>
               </div>
-
             </div>
-          </div>
+          </Link>
         ))}
       </div>
-
     </div>
   );
 }

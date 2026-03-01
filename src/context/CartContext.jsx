@@ -33,13 +33,16 @@ export function CartProvider({ children }) {
     }));
   };
 
+  // NOVA FUNÇÃO: Limpa o carrinho todo
+  const clearCart = () => setCartItems([]);
+
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const cartTotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   return (
     <CartContext.Provider value={{ 
       isCartOpen, setIsCartOpen, 
-      cartItems, addToCart, removeFromCart, updateQuantity, 
+      cartItems, addToCart, removeFromCart, updateQuantity, clearCart, 
       cartCount, cartTotal 
     }}>
       {children}

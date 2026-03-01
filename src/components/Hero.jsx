@@ -11,8 +11,12 @@ export default function Hero() {
           </span>
         </div>
         
-        <h1 className="font-syne text-5xl md:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight mb-8">
-          A pureza que a <span className="italic font-serif font-normal text-baza-lavender">sua pele</span> sente.
+        <h1 className="font-syne text-5xl md:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight mb-8 relative z-10">
+          A pureza que a <span className="italic font-serif font-normal text-baza-lavender relative inline-block whitespace-nowrap">
+            sua pele
+            {/* O detalhe de marca-texto com a cor da marca */}
+            <span className="absolute bottom-1 left-0 w-full h-3 sm:h-4 bg-baza-mint/40 -z-10 -rotate-2 transform"></span>
+          </span> sente.
         </h1>
         
         <p className="text-gray-600 text-lg mb-10 max-w-md leading-relaxed">
@@ -20,7 +24,7 @@ export default function Hero() {
         </p>
         
         <div className="flex flex-col items-start gap-4">
-          <button className="group w-fit bg-baza-lavender text-white px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-3">
+          <button className="group w-fit bg-baza-lavender text-white px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-gray-900 hover:text-baza-mint transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-3">
             <span>Descobrir Tratamentos</span>
             <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -42,7 +46,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="flex-1 relative min-h-[50vh] lg:min-h-full overflow-hidden bg-gray-50">
+      <div className="flex-1 relative min-h-[50vh] lg:min-h-full overflow-hidden bg-gray-50 border-l border-gray-100">
         <img 
           src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=1200&auto=format&fit=crop" 
           alt="Textura de Sérum Skincare" 
