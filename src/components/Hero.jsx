@@ -29,7 +29,7 @@ export default function Hero() {
           {/* AQUI ESTÁ A MÁGICA: O botão agora é um Link que leva para a página /shop */}
           <Link 
             to="/shop" 
-            className="group w-fit bg-baza-lavender dark:bg-baza-mint text-white dark:text-black px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-gray-900 dark:hover:bg-white dark:hover:text-gray-900 hover:text-baza-mint transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-3"
+            className="group w-fit bg-baza-lavender dark:bg-baza-mint text-white dark:text-baza-lavender px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-gray-900 dark:hover:bg-white dark:hover:text-gray-900 hover:text-baza-mint transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-3"
           >
             <span>Descobrir Tratamentos</span>
             <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
