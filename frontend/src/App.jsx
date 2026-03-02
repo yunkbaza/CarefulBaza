@@ -20,6 +20,7 @@ import LegalPage from './pages/LegalPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage'; 
+import CheckoutPage from './pages/CheckoutPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -32,16 +33,28 @@ function MainLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  // 1. INICIALIZAÇÃO INTELIGENTE DO TEMA: Verifica se o cliente já tinha escolhido Dark Mode antes
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('@CarefulBaza:theme');
+    return savedTheme === 'dark';
+  });
 
+  // 2. APLICAÇÃO E PERSISTÊNCIA: Atualiza a classe no HTML e salva a preferência
   useEffect(() => {
+    const htmlElement = document.documentElement;
+    htmlElement.lang = 'pt-BR'; // Otimização silenciosa para SEO do Google
+    
     if (isDarkMode) {
-      document.documentElement.classList.add('dark');
+      htmlElement.classList.add('dark');
+      localStorage.setItem('@CarefulBaza:theme', 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      htmlElement.classList.remove('dark');
+      localStorage.setItem('@CarefulBaza:theme', 'light');
     }
   }, [isDarkMode]);
 
+  // Previne rolagem do fundo quando gavetas estão abertas
   useEffect(() => {
     if (isCartOpen || isMobileMenuOpen || isQuizOpen || isSearchOpen) {
       document.body.style.overflow = 'hidden';
@@ -56,7 +69,7 @@ function MainLayout() {
       <div className="min-h-screen flex flex-col font-sans bg-white dark:bg-gray-900 transition-colors duration-300 selection:bg-baza-mint selection:text-gray-900 relative">
         
         <CartDrawer />
-        <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+        <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} onOpenQuiz={() => setIsQuizOpen(true)} />
         <Quiz isOpen={isQuizOpen} onClose={() => setIsQuizOpen(false)} />
         <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         
@@ -83,6 +96,9 @@ function MainLayout() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cadastro" element={<RegisterPage />} />
             <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
+            <Route path="/rastreio" element={<TrackPage />} />
+            <Route path="/info/:pageId" element={<LegalPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} /> {/* ROTA NOVA */}
           </Routes>
         </div>
         

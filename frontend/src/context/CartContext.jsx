@@ -1,10 +1,24 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  
+  // 1. INICIALIZAÇÃO INTELIGENTE: Puxa o carrinho salvo no navegador
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem('@CarefulBaza:cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch { // <-- O ESLint está feliz agora! Removemos a variável não utilizada.
+      return [];
+    }
+  });
+
+  // 2. PERSISTÊNCIA: Salva no localStorage em tempo real
+  useEffect(() => {
+    localStorage.setItem('@CarefulBaza:cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (product) => {
     setCartItems((prev) => {
@@ -33,7 +47,6 @@ export function CartProvider({ children }) {
     }));
   };
 
-  // NOVA FUNÇÃO: Limpa o carrinho todo
   const clearCart = () => setCartItems([]);
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);

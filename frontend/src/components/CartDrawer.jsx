@@ -1,12 +1,14 @@
 import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, cartItems, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
-
+  const navigate = useNavigate();
   // Meta do Frete Grátis (Ex: R$ 250)
   const FREE_SHIPPING_GOAL = 250;
   const progressPercent = Math.min((cartTotal / FREE_SHIPPING_GOAL) * 100, 100);
   const amountLeft = FREE_SHIPPING_GOAL - cartTotal;
+  
 
   return (
     <>
@@ -93,16 +95,20 @@ export default function CartDrawer() {
             </span>
           </div>
           <button 
-            disabled={cartItems.length === 0}
-            className={`w-full py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2
-              ${cartItems.length > 0 
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-baza-lavender dark:hover:bg-baza-mint dark:hover:text-white shadow-lg hover:shadow-xl' 
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'}
-            `}
-          >
-            Finalizar Compra
-            {cartItems.length > 0 && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>}
-          </button>
+         disabled={cartItems.length === 0}
+         onClick={() => {
+           setIsCartOpen(false);
+           navigate('/checkout');
+         }}
+         className={`w-full py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2
+           ${cartItems.length > 0 
+             ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-baza-lavender dark:hover:bg-baza-mint dark:hover:text-white shadow-lg hover:shadow-xl' 
+             : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'}
+         `}
+       >
+         Finalizar Compra
+         {cartItems.length > 0 && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>}
+       </button>
         </div>
 
       </div>

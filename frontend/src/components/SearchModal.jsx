@@ -18,14 +18,64 @@ const CATEGORIES = [
   { id: 7, name: 'Fragrâncias', slug: 'fragrancias', img: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=100' },
 ];
 
+// --- MOTOR DE BUSCA INTELIGENTE ---
+
+// 1. Remove acentos e converte para minúsculo
+const normalize = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+// 2. Calcula a "distância" entre duas palavras (quantas letras erradas existem)
+const levenshtein = (a, b) => {
+  const matrix = Array.from({ length: a.length + 1 }, () => []);
+  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return matrix[a.length][b.length];
+};
+
+// 3. A lógica que decide se o produto aparece ou não
+const smartSearch = (query, product) => {
+  const q = normalize(query);
+  const name = normalize(product.name);
+  const cat = normalize(product.category);
+
+  // Match perfeito ou parcial (ex: digitar "serum" acha "sérum" sem usar matemática pesada)
+  if (name.includes(q) || cat.includes(q)) return true;
+
+  // Busca permissiva para erros de digitação (ex: "serun" ou "hidrtante")
+  if (q.length > 3) {
+    const words = name.split(' ').concat(cat.split('-'));
+    for (const word of words) {
+      // Permite até 2 erros para palavras longas, 1 erro para curtas
+      const maxDistance = q.length > 5 ? 2 : 1;
+      
+      if (Math.abs(word.length - q.length) <= maxDistance) {
+        if (levenshtein(q, word) <= maxDistance) return true;
+      } else if (word.length > q.length) {
+        // Checa se a pessoa estava digitando certo, mas errou uma letra no meio
+        if (levenshtein(q, word.substring(0, q.length)) <= maxDistance) return true;
+      }
+    }
+  }
+  return false;
+};
+
+// --- FIM DO MOTOR DE BUSCA ---
+
 export default function SearchModal({ isOpen, onClose }) {
   const [query, setQuery] = useState('');
 
+  // Agora usamos a função `smartSearch` ao invés do includes básico
   const results = query.length > 1
-    ? SEARCH_DB.filter(product => 
-        product.name.toLowerCase().includes(query.toLowerCase()) || 
-        product.category.toLowerCase().includes(query.toLowerCase())
-      )
+    ? SEARCH_DB.filter(product => smartSearch(query, product))
     : [];
 
   const handleClose = () => {
@@ -91,7 +141,7 @@ export default function SearchModal({ isOpen, onClose }) {
                     <button 
                       key={item} 
                       onClick={() => setQuery(item)}
-                      className="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-600 hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white hover:border-baza-lavender dark:hover:border-baza-mint transition-all rounded-full"
+                      className="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white dark:hover:text-black hover:border-baza-lavender dark:hover:border-baza-mint transition-all rounded-full"
                     >
                       {item}
                     </button>
@@ -114,7 +164,7 @@ export default function SearchModal({ isOpen, onClose }) {
 
               {results.length === 0 ? (
                 <div className="text-center py-20">
-                  <p className="text-gray-400 dark:text-gray-600 mb-4 italic">Nenhum produto corresponde à sua busca.</p>
+                  <p className="text-gray-400 dark:text-gray-500 mb-4 italic">Nenhum produto corresponde à sua busca.</p>
                   <button onClick={() => setQuery('')} className="text-baza-lavender dark:text-baza-mint font-bold text-xs uppercase tracking-widest border-b border-baza-lavender dark:border-baza-mint pb-1">Ver todos os produtos</button>
                 </div>
               ) : (
