@@ -18,42 +18,42 @@ export default function MobileMenu({ isOpen, onClose, onOpenQuiz }) {
       >
         <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">Navegação</span>
-          <button onClick={onClose} className="text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-lavender transition-colors p-2 -mr-2">
+          <button onClick={onClose} className="text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-mint transition-colors p-2 -mr-2">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto py-8 px-6 flex flex-col gap-8">
-          <Link to="/colecao/mais-vendidos" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender transition-colors">
+          <Link to="/colecao/mais-vendidos" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">
             Mais Vendidos
           </Link>
           
           <div className="flex flex-col gap-5">
-            <Link to="/shop" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender transition-colors">
+            <Link to="/shop" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">
               Shop
             </Link>
             <div className="flex flex-col gap-4 pl-4 border-l-2 border-baza-mint/30 dark:border-baza-mint/20 transition-colors duration-300">
-              <Link to="/colecao/skincare" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-white uppercase tracking-widest transition-colors">Skincare</Link>
-              <Link to="/colecao/fragrancias" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-white uppercase tracking-widest transition-colors">Fragrâncias</Link>
-              <Link to="/colecao/banho-corpo" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-white uppercase tracking-widest transition-colors">Banho e Corpo</Link>
-              <Link to="/colecao/masculino" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-white uppercase tracking-widest transition-colors">Masculino</Link>
-              <Link to="/colecao/kits" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-white uppercase tracking-widest transition-colors">Kits e Presentes</Link>
+              <Link to="/colecao/skincare" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">Skincare</Link>
+              <Link to="/colecao/fragrancias" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">Fragrâncias</Link>
+              <Link to="/colecao/banho-corpo" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">Banho e Corpo</Link>
+              <Link to="/colecao/masculino" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">Masculino</Link>
+              <Link to="/colecao/kits" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">Kits e Presentes</Link>
             </div>
           </div>
 
-          <Link to="/ciencia/ativos" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender transition-colors">
+          <Link to="/ciencia/ativos" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">
             A Ciência
           </Link>
           
           {/* AQUI: O botão do Quiz agora aciona a tela inteira de perguntas e fecha o menu sozinho */}
           <button 
             onClick={() => { onOpenQuiz(); onClose(); }} 
-            className="font-syne text-3xl font-bold text-baza-lavender text-left transition-colors hover:text-gray-900 dark:hover:text-white"
+            className="font-syne text-3xl font-bold text-baza-lavender dark:text-baza-mint text-left transition-colors hover:text-gray-900 dark:hover:text-white"
           >
             Quiz de Rotina
           </button>
           
-          <Link to="/sobre" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender transition-colors">
+          <Link to="/sobre" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">
             Sobre Nós
           </Link>
         </div>

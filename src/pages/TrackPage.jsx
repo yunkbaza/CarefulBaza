@@ -17,7 +17,7 @@ export default function TrackPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-32 px-6 md:px-16 transition-colors duration-300">
       <div className="max-w-2xl mx-auto">
-        <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 hover:text-baza-lavender dark:hover:text-baza-lavender transition-colors mb-8">
+        <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 hover:text-baza-lavender dark:hover:text-baza-mint transition-colors mb-8">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Voltar para Home
         </Link>
@@ -33,9 +33,9 @@ export default function TrackPage() {
               placeholder="Ex: BR123456789" 
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
-              className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-baza-lavender dark:focus:border-baza-lavender transition-colors"
+              className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-baza-lavender dark:focus:border-baza-mint transition-colors"
             />
-            <button type="submit" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-lavender hover:text-white transition-colors shadow-md">
+            <button type="submit" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-colors shadow-md">
               Rastrear
             </button>
           </form>
@@ -43,7 +43,7 @@ export default function TrackPage() {
           {/* Animação de Carregamento */}
           {status === 'loading' && (
             <div className="flex justify-center py-8">
-              <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-700 border-t-baza-lavender dark:border-t-baza-lavender rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-2 border-gray-200 dark:border-gray-700 border-t-baza-lavender dark:border-t-baza-mint rounded-full animate-spin"></div>
             </div>
           )}
 

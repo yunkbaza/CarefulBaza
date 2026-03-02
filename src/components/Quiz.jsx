@@ -119,7 +119,7 @@ export default function Quiz({ isOpen, onClose }) {
       {/* HEADER DO QUIZ */}
       <div className="p-6 md:p-10 flex justify-between items-center bg-white dark:bg-gray-900 sticky top-0 z-10 transition-colors duration-300">
         <span className="font-syne font-bold text-xl tracking-widest uppercase text-gray-900 dark:text-white transition-colors">
-          Careful Baza <span className="text-baza-lavender italic font-serif text-lg lowercase">Labs</span>
+          Careful Baza <span className="text-baza-lavender dark:text-baza-mint italic font-serif text-lg lowercase">Labs</span>
         </span>
         <button onClick={handleClose} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
           Fechar
@@ -158,10 +158,10 @@ export default function Quiz({ isOpen, onClose }) {
                 <button
                   key={option}
                   onClick={() => handleAnswer(option)}
-                  className="w-full text-left p-6 border border-gray-200 dark:border-gray-700 hover:border-baza-lavender dark:hover:border-baza-lavender hover:bg-baza-lavender/5 dark:hover:bg-baza-lavender/10 text-gray-900 dark:text-white font-medium text-lg transition-all duration-300 group flex justify-between items-center shadow-sm hover:shadow-md"
+                  className="w-full text-left p-6 border border-gray-200 dark:border-gray-700 hover:border-baza-lavender dark:hover:border-baza-mint hover:bg-baza-lavender/5 dark:hover:bg-baza-lavender/10 text-gray-900 dark:text-white font-medium text-lg transition-all duration-300 group flex justify-between items-center shadow-sm hover:shadow-md"
                 >
                   {option}
-                  <svg className="w-5 h-5 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-baza-lavender" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  <svg className="w-5 h-5 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-baza-lavender dark:text-baza-mint" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
               ))}
             </div>
@@ -171,7 +171,7 @@ export default function Quiz({ isOpen, onClose }) {
         {/* TELA DE ANÁLISE (CARREGANDO) */}
         {isAnalyzing && (
           <div className="flex flex-col items-center justify-center text-center animate-in fade-in duration-500 h-full">
-            <div className="w-16 h-16 border-4 border-gray-100 dark:border-gray-800 border-t-baza-lavender rounded-full animate-spin mb-8 transition-colors"></div>
+            <div className="w-16 h-16 border-4 border-gray-100 dark:border-gray-800 border-t-baza-lavender dark:border-t-baza-mint rounded-full animate-spin mb-8 transition-colors"></div>
             <h2 className="font-syne text-2xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">Mapeando sua rotina...</h2>
             <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs mx-auto transition-colors">Cruzando seus objetivos com nossos ativos de alta performance para o resultado perfeito.</p>
           </div>
@@ -211,7 +211,7 @@ export default function Quiz({ isOpen, onClose }) {
                 <div className="flex flex-col gap-3">
                   <button 
                     onClick={handleAddToCart}
-                    className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-xs font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-lavender hover:text-white transition-all duration-300 shadow-xl flex items-center justify-center gap-3"
+                    className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-xs font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-all duration-300 shadow-xl flex items-center justify-center gap-3"
                   >
                     Adicionar à Sacola
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>

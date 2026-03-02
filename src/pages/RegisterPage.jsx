@@ -34,7 +34,7 @@ export default function RegisterPage() {
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 py-16 md:px-20 lg:px-32">
         <div className="w-full max-w-md mx-auto">
           
-          <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-baza-lavender transition-colors mb-12">
+          <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint transition-colors mb-12">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Voltar para Home
           </Link>
@@ -81,7 +81,7 @@ export default function RegisterPage() {
               />
             </div>
 
-            <button type="submit" className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-lavender hover:text-white transition-colors shadow-lg mt-4">
+            <button type="submit" className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-colors shadow-lg mt-4">
               Finalizar Cadastro
             </button>
           </form>
@@ -89,7 +89,7 @@ export default function RegisterPage() {
           <div className="mt-10 text-center border-t border-gray-100 dark:border-gray-800 pt-8">
             <p className="text-gray-500 dark:text-gray-400 text-sm">
               Já tem uma conta?{' '}
-              <Link to="/login" className="font-bold text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-lavender transition-colors">
+              <Link to="/login" className="font-bold text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">
                 Faça login
               </Link>
             </p>

@@ -36,7 +36,7 @@ export default function CartDrawer() {
           </p>
           <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden transition-colors duration-300">
             <div 
-              className="h-full bg-baza-mint transition-all duration-700 ease-out"
+              className="h-full bg-baza-lavender dark:bg-baza-mint transition-all duration-700 ease-out"
               style={{ width: `${progressPercent}%` }}
             ></div>
           </div>
@@ -96,7 +96,7 @@ export default function CartDrawer() {
             disabled={cartItems.length === 0}
             className={`w-full py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2
               ${cartItems.length > 0 
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-baza-lavender dark:hover:bg-baza-lavender dark:hover:text-white shadow-lg hover:shadow-xl' 
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-baza-lavender dark:hover:bg-baza-mint dark:hover:text-white shadow-lg hover:shadow-xl' 
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'}
             `}
           >

@@ -34,10 +34,10 @@ export default function ProductGrid() {
         </div>
         
         <div className="hidden md:flex items-center gap-2">
-          <button onClick={() => scroll('left')} aria-label="Anterior" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-300 hover:border-baza-lavender hover:text-baza-lavender dark:hover:text-baza-lavender dark:hover:border-baza-lavender hover:bg-baza-lavender/5 dark:hover:bg-baza-lavender/10 transition-all duration-300">
+          <button onClick={() => scroll('left')} aria-label="Anterior" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-300 hover:border-baza-lavender hover:text-baza-lavender dark:hover:text-baza-mint dark:hover:border-baza-mint hover:bg-baza-lavender/5 dark:hover:bg-baza-lavender/10 transition-all duration-300">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
-          <button onClick={() => scroll('right')} aria-label="Próximo" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-300 hover:border-baza-lavender hover:text-baza-lavender dark:hover:text-baza-lavender dark:hover:border-baza-lavender hover:bg-baza-lavender/5 dark:hover:bg-baza-lavender/10 transition-all duration-300">
+          <button onClick={() => scroll('right')} aria-label="Próximo" className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-300 hover:border-baza-lavender hover:text-baza-lavender dark:hover:text-baza-mint dark:hover:border-baza-mint hover:bg-baza-lavender/5 dark:hover:bg-baza-lavender/10 transition-all duration-300">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </button>
         </div>
@@ -67,7 +67,7 @@ export default function ProductGrid() {
                     e.stopPropagation();
                     addToCart(product);
                   }}
-                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-lavender hover:text-white transition-colors duration-300 flex items-center justify-center gap-2 rounded-sm"
+                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-colors duration-300 flex items-center justify-center gap-2 rounded-sm"
                 >
                   Adicionar
                 </button>
@@ -84,7 +84,7 @@ export default function ProductGrid() {
                   <span className="text-[9px] font-mono text-gray-500 dark:text-gray-400 transition-colors duration-300">({product.reviews})</span>
                 </div>
               </div>
-              <h3 className="font-syne font-bold text-gray-900 dark:text-white text-base mb-1 line-clamp-1 group-hover:text-baza-lavender transition-colors duration-300">
+              <h3 className="font-syne font-bold text-gray-900 dark:text-white text-base mb-1 line-clamp-1 group-hover:text-baza-lavender dark:group-hover:text-baza-mint transition-colors duration-300">
                 {product.name}
               </h3>
               <div className="mt-auto flex items-center gap-2">
