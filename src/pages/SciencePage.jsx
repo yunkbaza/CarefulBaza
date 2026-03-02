@@ -5,7 +5,7 @@ export default function SciencePage() {
   const { topicId } = useParams();
   const { addToCart } = useCart();
 
-  // O "Cérebro" Editorial 100% Completo (Pele, Cabelo, Ativos e Rotinas)
+  // O "Cérebro" Editorial 100% Completo e Intocado
   const CONTENT_DB = {
     'tipos-de-pele': {
       title: 'Guia Definitivo: Tipos de Pele',
@@ -180,7 +180,7 @@ export default function SciencePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-20 pb-32 px-6 md:px-16">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 pt-20 pb-32 px-6 md:px-16">
       <div className="max-w-4xl mx-auto">
         
         <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-baza-lavender transition-colors mb-8">
@@ -188,50 +188,50 @@ export default function SciencePage() {
           Voltar para Home
         </Link>
         <span className="text-baza-mint font-bold uppercase tracking-[0.2em] text-[10px] mb-4 block">Careful Baza Labs</span>
-        <h1 className="font-syne text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">{content.title}</h1>
+        <h1 className="font-syne text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors">{content.title}</h1>
         <h2 className="text-xl md:text-2xl text-baza-lavender font-serif italic mb-10">{content.subtitle}</h2>
         
-        <p className="text-gray-600 text-lg leading-relaxed mb-16 max-w-2xl">{content.intro}</p>
+        <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-16 max-w-2xl transition-colors">{content.intro}</p>
 
         <div className="flex flex-col gap-24">
           {content.sections.map((section) => (
-            <div key={section.id} className="scroll-mt-32 border-t border-gray-100 pt-12" id={section.id}>
+            <div key={section.id} className="scroll-mt-32 border-t border-gray-100 dark:border-gray-800 pt-12 transition-colors" id={section.id}>
               
               <div className="flex flex-col lg:flex-row gap-12">
                 {/* Coluna de Texto */}
                 <div className="lg:w-7/12">
-                  <h3 className="font-syne text-2xl md:text-3xl font-bold text-gray-900 mb-6">{section.title}</h3>
-                  <p className="text-gray-600 leading-relaxed mb-8 text-lg">{section.body}</p>
+                  <h3 className="font-syne text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{section.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8 text-lg transition-colors">{section.body}</p>
                   
                   {/* Dica Clínica de Autoridade */}
                   {section.clinicalTip && (
-                    <div className="bg-baza-lavender/5 border-l-2 border-baza-lavender p-6 mb-8">
+                    <div className="bg-baza-lavender/5 dark:bg-baza-lavender/10 border-l-2 border-baza-lavender p-6 mb-8 transition-colors">
                       <div className="flex items-center gap-2 mb-2">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-baza-lavender"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         <span className="text-xs font-bold uppercase tracking-widest text-baza-lavender">A Dica de Ouro</span>
                       </div>
-                      <p className="text-sm text-gray-700 font-medium leading-relaxed">{section.clinicalTip}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 font-medium leading-relaxed transition-colors">{section.clinicalTip}</p>
                     </div>
                   )}
                 </div>
 
-                {/* Coluna de Produto (Compre a Solução) */}
+                {/* Coluna de Produto */}
                 <div className="lg:w-5/12">
                   {section.suggestedProduct && (
-                    <div className="bg-gray-50 border border-gray-100 p-6 rounded-sm sticky top-32">
+                    <div className="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-sm sticky top-32 transition-colors">
                       <div className="flex items-start gap-4 mb-6">
-                        <div className="w-24 h-24 flex-shrink-0 bg-white rounded-sm overflow-hidden border border-gray-100 p-2">
+                        <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-900 rounded-sm overflow-hidden border border-gray-100 dark:border-gray-800 p-2 transition-colors">
                           <img 
                             src={section.suggestedProduct.image} 
                             alt={section.suggestedProduct.name} 
-                            className="w-full h-full object-cover mix-blend-multiply"
+                            className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal"
                           />
                         </div>
                         <div>
                           <span className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold block mb-1">
                             A Solução Ideal
                           </span>
-                          <h4 className="font-syne text-lg font-bold text-gray-900 leading-tight mb-1">
+                          <h4 className="font-syne text-lg font-bold text-gray-900 dark:text-white leading-tight mb-1 transition-colors">
                             {section.suggestedProduct.name}
                           </h4>
                           <span className="text-[10px] text-baza-lavender font-bold uppercase tracking-widest block">
@@ -240,25 +240,24 @@ export default function SciencePage() {
                         </div>
                       </div>
 
-                      {/* Por que funciona? (Explicação leiga) */}
                       {section.suggestedProduct.whyItWorks && (
-                        <div className="mb-6 pb-6 border-b border-gray-200">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900 mb-2 block">
+                        <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700 transition-colors">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2 block transition-colors">
                             Por que funciona?
                           </span>
-                          <p className="text-xs text-gray-500 leading-relaxed">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed transition-colors">
                             {section.suggestedProduct.whyItWorks}
                           </p>
                         </div>
                       )}
 
                       <div className="flex items-center justify-between mt-4">
-                        <span className="text-xl font-mono font-bold text-gray-900">
+                        <span className="text-xl font-mono font-bold text-gray-900 dark:text-white transition-colors">
                           R$ {section.suggestedProduct.price.toFixed(2).replace('.', ',')}
                         </span>
                         <button 
                           onClick={() => addToCart(section.suggestedProduct)}
-                          className="bg-gray-900 text-white px-5 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-all duration-300 shadow-md"
+                          className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-lavender hover:text-white transition-colors duration-300 shadow-md"
                         >
                           Adicionar
                         </button>
@@ -273,8 +272,8 @@ export default function SciencePage() {
         </div>
 
         {/* Rodapé do Artigo */}
-        <div className="mt-20 pt-10 border-t border-gray-100">
-          <p className="text-gray-400 text-sm leading-relaxed text-center">
+        <div className="mt-20 pt-10 border-t border-gray-100 dark:border-gray-800 transition-colors">
+          <p className="text-gray-400 dark:text-gray-500 text-sm leading-relaxed text-center transition-colors">
             As informações deste editorial têm fins estritamente educativos e traduzem a ciência dermatológica para o dia a dia. Em caso de patologias, alergias extremas ou condições inflamatórias severas, suspenda o uso de cosméticos e consulte um médico de sua confiança.
           </p>
         </div>

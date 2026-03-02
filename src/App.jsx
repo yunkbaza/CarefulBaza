@@ -7,14 +7,19 @@ import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import MobileMenu from './components/MobileMenu';
 import Quiz from './components/Quiz';
+import SearchModal from './components/SearchModal'; 
 
+// Importação das Páginas
 import Home from './pages/Home';
 import ProductPage from './pages/ProductPage';
 import CollectionPage from './pages/CollectionPage';
 import AboutPage from './pages/AboutPage';
 import SciencePage from './pages/SciencePage';
 import TrackPage from './pages/TrackPage';
-import LegalPage from './pages/LegalPage'; // IMPORTADO AQUI
+import LegalPage from './pages/LegalPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage'; 
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -26,6 +31,7 @@ function MainLayout() {
   const { isCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -37,12 +43,12 @@ function MainLayout() {
   }, [isDarkMode]);
 
   useEffect(() => {
-    if (isCartOpen || isMobileMenuOpen || isQuizOpen) {
+    if (isCartOpen || isMobileMenuOpen || isQuizOpen || isSearchOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [isCartOpen, isMobileMenuOpen, isQuizOpen]);
+  }, [isCartOpen, isMobileMenuOpen, isQuizOpen, isSearchOpen]);
 
   return (
     <Router>
@@ -52,11 +58,13 @@ function MainLayout() {
         <CartDrawer />
         <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
         <Quiz isOpen={isQuizOpen} onClose={() => setIsQuizOpen(false)} />
+        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         
         <AnnouncementBar />
         <Navbar 
           onOpenMenu={() => setIsMobileMenuOpen(true)} 
           onOpenQuiz={() => setIsQuizOpen(true)}
+          onOpenSearch={() => setIsSearchOpen(true)} 
           toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
           isDarkMode={isDarkMode}
         />
@@ -70,7 +78,11 @@ function MainLayout() {
             <Route path="/sobre" element={<AboutPage />} />
             <Route path="/ciencia/:topicId" element={<SciencePage />} />
             <Route path="/rastreio" element={<TrackPage />} />
-            <Route path="/info/:pageId" element={<LegalPage />} /> {/* ADICIONADO AQUI */}
+            <Route path="/info/:pageId" element={<LegalPage />} />
+            
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/cadastro" element={<RegisterPage />} />
+            <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
           </Routes>
         </div>
         

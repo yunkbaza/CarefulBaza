@@ -62,7 +62,7 @@ export default function CollectionPage() {
     : 'O catálogo completo da Careful Baza. Desenvolvido para entregar resultados reais respeitando a biologia da sua pele.';
 
   return (
-    <div className="min-h-screen bg-white pt-10 pb-24 px-6 md:px-16">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 pt-10 pb-24 px-6 md:px-16">
       
       {/* Breadcrumb Elegante */}
       <div className="max-w-7xl mx-auto mb-10">
@@ -74,28 +74,28 @@ export default function CollectionPage() {
 
       {/* Cabeçalho da Coleção */}
       <div className="max-w-7xl mx-auto mb-16 text-center">
-        <h1 className="font-syne text-4xl md:text-6xl font-bold text-gray-900 mb-4">{pageTitle}</h1>
-        <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+        <h1 className="font-syne text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">{pageTitle}</h1>
+        <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
           {pageDescription}
         </p>
       </div>
 
       {/* Barra de Ferramentas (Filtros e Contagem) */}
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 pb-6 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 pb-6 border-b border-gray-100 dark:border-gray-800">
         <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
           {processedProducts.length} Produtos Encontrados
         </span>
         
-        <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 border border-gray-100 rounded-sm">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900">Ordenar por:</span>
+        <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 px-4 py-2 border border-gray-100 dark:border-gray-700 rounded-sm">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">Ordenar por:</span>
           <select 
             value={sortOrder} 
             onChange={(e) => setSortOrder(e.target.value)}
-            className="text-xs font-medium text-gray-600 bg-transparent border-none outline-none cursor-pointer hover:text-baza-lavender transition-colors"
+            className="text-xs font-medium text-gray-600 dark:text-gray-400 bg-transparent border-none outline-none cursor-pointer hover:text-baza-lavender transition-colors"
           >
-            <option value="relevance">Mais Relevantes</option>
-            <option value="price-low">Menor Preço</option>
-            <option value="price-high">Maior Preço</option>
+            <option value="relevance" className="dark:bg-gray-900">Mais Relevantes</option>
+            <option value="price-low" className="dark:bg-gray-900">Menor Preço</option>
+            <option value="price-high" className="dark:bg-gray-900">Maior Preço</option>
           </select>
         </div>
       </div>
@@ -104,7 +104,7 @@ export default function CollectionPage() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
         {processedProducts.map((product) => (
           <Link to={`/produto/${product.id}`} key={product.id} className="group flex flex-col">
-            <div className="relative aspect-[4/5] bg-gray-50 overflow-hidden mb-5 rounded-sm">
+            <div className="relative aspect-[4/5] bg-gray-50 dark:bg-gray-800 overflow-hidden mb-5 rounded-sm">
               
               {product.tag && (
                 <div className="absolute top-3 left-3 z-10 bg-baza-mint text-baza-lavender px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest shadow-sm rounded-sm">
@@ -112,7 +112,7 @@ export default function CollectionPage() {
                 </div>
               )}
               
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105" />
+              <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal transition-transform duration-700 group-hover:scale-105" />
               
               <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
                 <button 
@@ -121,7 +121,7 @@ export default function CollectionPage() {
                     e.stopPropagation(); 
                     addToCart(product); 
                   }}
-                  className="w-full bg-gray-900 text-white py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors duration-300 rounded-sm flex items-center justify-center gap-2 shadow-xl"
+                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-lavender hover:text-white transition-colors duration-300 rounded-sm flex items-center justify-center gap-2 shadow-xl"
                 >
                   Adicionar à Sacola
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
@@ -137,8 +137,8 @@ export default function CollectionPage() {
                   <span className="text-[9px] font-mono text-gray-500">({product.reviews})</span>
                 </div>
               </div>
-              <h3 className="font-syne font-bold text-gray-900 text-base mb-2 group-hover:text-baza-lavender transition-colors">{product.name}</h3>
-              <span className="text-sm font-mono font-bold text-gray-900 mt-auto">R$ {product.price.toFixed(2).replace('.', ',')}</span>
+              <h3 className="font-syne font-bold text-gray-900 dark:text-white text-base mb-2 group-hover:text-baza-lavender transition-colors">{product.name}</h3>
+              <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300 mt-auto">R$ {product.price.toFixed(2).replace('.', ',')}</span>
             </div>
           </Link>
         ))}
@@ -147,10 +147,10 @@ export default function CollectionPage() {
       {/* Estado Vazio (Caso clique em uma categoria sem produtos) */}
       {processedProducts.length === 0 && (
         <div className="text-center py-24 flex flex-col items-center">
-          <svg className="w-16 h-16 text-gray-200 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1"><path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-          <h3 className="font-syne text-2xl font-bold text-gray-900 mb-2">Coleção Esgotada</h3>
-          <p className="text-gray-500 text-sm mb-8">Nossos especialistas estão preparando um novo lote de tratamentos para esta categoria.</p>
-          <Link to="/shop" className="bg-gray-900 text-white px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors">
+          <svg className="w-16 h-16 text-gray-200 dark:text-gray-700 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1"><path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+          <h3 className="font-syne text-2xl font-bold text-gray-900 dark:text-white mb-2">Coleção Esgotada</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Nossos especialistas estão preparando um novo lote de tratamentos para esta categoria.</p>
+          <Link to="/shop" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender hover:text-white transition-colors">
             Ver Todos os Produtos
           </Link>
         </div>
