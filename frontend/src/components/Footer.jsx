@@ -78,7 +78,7 @@ export default function Footer() {
               <li><Link to="/rastreio" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">Rastrear Pedido</Link></li>
               <li><Link to="/info/trocas" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">Trocas e Devoluções</Link></li>
               <li><Link to="/info/faq" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">Dúvidas Frequentes (FAQ)</Link></li>
-              <li><a href="mailto:contato@carefulbaza.com.br" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">contato@carefulbaza.com.br</a></li>
+              <li><a href="mailto:contato@carefulbaza.com.br" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">carefulbaza@gmail.com</a></li>
             </ul>
           </div>
 
@@ -105,9 +105,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-800 dark:border-gray-900 text-[10px] text-gray-500 uppercase tracking-widest font-bold transition-colors duration-300">
           <p>© {new Date().getFullYear()} CAREFUL BAZA LABS. TODOS OS DIREITOS RESERVADOS.</p>
           <div className="flex items-center gap-4">
-            <Link to="/info/termos" className="hover:text-white transition-colors">Termos de Serviço</Link>
+            <Link to="/info/termos" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">Termos de Serviço</Link>
             <span className="hidden md:inline">•</span>
-            <Link to="/info/privacidade" className="hover:text-white transition-colors">Política de Privacidade</Link>
+            <Link to="/info/privacidade" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">Política de Privacidade</Link>
           </div>
         </div>
         

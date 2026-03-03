@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Compatível com Prisma 7 (sem a URL aqui, pois ela fica no prisma.config.ts)
+datasource db {
+  provider = "postgresql"
+}
+
+// 1. CATEGORIAS (Ex: Skincare, Maquiagem, Cabelo)
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// 2. PRODUTOS (O coração do e-commerce)
+model Product {
+  id             String   @id @default(uuid())
+  name           String
+  description    String?  @db.Text
+  howToUse       String?
+  price          Int // Preço de venda em centavos (ex: 14990 para R$ 149,90)
+  compareAtPrice Int? // O famoso preço "De:" (ex: 29990 para mostrar "De 299 por 149") - Aumenta conversão!
+  image          String
+  gallery        String[] // Lista de links para múltiplas imagens no carrossel
+  stock          Int      @default(0)
+  isActive       Boolean  @default(true) // Fácil para pausar um produto que esgotou no fornecedor
+
+  // Motores de Dropshipping
+  supplierSku String? // Código do produto no Zendrop/AliExpress
+  supplierUrl String? // Link direto do fornecedor para a sua equipe achar rápido
+  costPrice   Int? // Custo real do produto para você calcular o seu lucro líquido depois
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 3. CLIENTES (Para você fazer remarketing e disparar e-mails depois)
+model Customer {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  name              String
+  phone             String?
+  password          String?
+  
+  isVerified        Boolean   @default(false)
+  verificationToken String?   
+  resetToken        String? 
+  
+  orders            Order[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+// 4. PEDIDOS (Onde o dinheiro entra)
+model Order {
+  id           String      @id @default(uuid())
+  totalAmount  Int
+  status       String      @default("PENDING")
+  stripeId     String?     @unique
+  trackingCode String? // Código de rastreio para enviar ao cliente
+
+  // Endereço de Entrega (Vital para a automação do envio)
+  addressLine1 String?
+  city         String?
+  state        String?
+  zipCode      String?
+  country      String? @default("BR")
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  items OrderItem[] // Lista de produtos comprados neste pedido
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 5. ITENS DO PEDIDO (Permite que 1 cliente compre 3 cosméticos diferentes na mesma compra)
+model OrderItem {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+  price    Int // O preço congelado no momento da compra (se você mudar o preço amanhã, o histórico do pedido não quebra)
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+// 6. STATUS DO PEDIDO (Esteira de produção)
+enum OrderStatus {
+  PENDING // Aguardando pagamento no Stripe
+  PAID // Cliente pagou (Sinal verde para comprar no fornecedor)
+  PROCESSING // Sua equipe ou API já comprou no Zendrop
+  SHIPPED // Fornecedor enviou (Tem código de rastreio)
+  DELIVERED // Chegou na casa do cliente
+  CANCELED // Pagamento falhou ou devolvido
+}

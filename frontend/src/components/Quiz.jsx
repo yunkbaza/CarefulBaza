@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 
 const QUESTIONS = [
@@ -29,37 +29,26 @@ const QUESTIONS = [
   }
 ];
 
-const RESULTS_DB = {
+// O NOVO CÉREBRO DO QUIZ: Ele procura o produto pelo NOME exato que está no banco de dados
+const DYNAMIC_MAPPING = {
   'Oleosa e Brilhante': {
-    id: 101,
-    name: 'Kit Controle & Poros Baza',
-    desc: 'Gel Purificante + Sérum Niacinamida + Hidratante Aqua. Controle absoluto de oleosidade e poros dilatados sem ressecar.',
-    price: 345.00,
-    image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=600&auto=format&fit=crop',
+    targetName: 'Espuma de Limpeza Purificante',
+    desc: 'Limpeza profunda que controla o brilho ao longo do dia sem causar o efeito repuxado.',
     tag: 'Rotina Matinal'
   },
   'Seca e Opaca': {
-    id: 102,
-    name: 'Kit Hidratação & Glow',
-    desc: 'Óleo de Limpeza + Essência Noturna + Creme Rico. Nutrição intensa que devolve o viço natural e a elasticidade desde o 1º uso.',
-    price: 410.00,
-    image: 'https://images.unsplash.com/photo-1615397323861-125026210f84?q=80&w=600&auto=format&fit=crop',
+    targetName: 'Hidratante Aqua Glow',
+    desc: 'Nutrição intensa que devolve o viço natural e a elasticidade desde o 1º uso.',
     tag: 'Hidratação Profunda'
   },
   'Sensível e Avermelhada': {
-    id: 103,
-    name: 'Kit Calmante Botânico',
-    desc: 'Espuma Suave + Bruma Revitalizante + Creme Calmante. Alívio imediato e proteção da barreira cutânea com ativos limpos.',
-    price: 360.00,
-    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=600&auto=format&fit=crop',
+    targetName: 'Bruma Calmante Revitalizante',
+    desc: 'Alívio imediato e proteção da barreira cutânea com ativos botânicos e limpos.',
     tag: 'Dermatológico'
   },
   'Mista': {
-    id: 104,
-    name: 'Kit Equilíbrio Essencial',
-    desc: 'Gel de Limpeza + Sérum Renovador + Hidratante Aqua Glow. O balanço perfeito: hidrata onde precisa, controla a zona T.',
-    price: 385.00,
-    image: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbce5ce?q=80&w=600&auto=format&fit=crop',
+    targetName: 'Kit Rotina Completa 5 Passos',
+    desc: 'O balanço perfeito: trata todas as áreas do seu rosto com a nossa linha completa de alta performance.',
     tag: 'Mais Recomendado'
   }
 };
@@ -69,7 +58,21 @@ export default function Quiz({ isOpen, onClose }) {
   const [answers, setAnswers] = useState({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [recommendedKit, setRecommendedKit] = useState(null);
+  
+  // Novo estado para guardar os produtos reais vindos da API
+  const [dbProducts, setDbProducts] = useState([]);
   const { addToCart } = useCart();
+
+  // Quando o quiz abre, ele vai buscar a lista de produtos reais ao Back-end
+  useEffect(() => {
+    if (isOpen) {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      fetch(`${apiUrl}/products`)
+        .then(res => res.json())
+        .then(data => setDbProducts(data))
+        .catch(err => console.error("Erro ao carregar produtos para o quiz", err));
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -82,9 +85,7 @@ export default function Quiz({ isOpen, onClose }) {
   };
 
   const handleBack = () => {
-    if (step > 0) {
-      setStep(step - 1);
-    }
+    if (step > 0) setStep(step - 1);
   };
 
   const handleAnswer = (answer) => {
@@ -97,9 +98,22 @@ export default function Quiz({ isOpen, onClose }) {
     } else {
       setIsAnalyzing(true);
       setTimeout(() => {
+        // LÓGICA DE MATCH: Encontra o produto real no banco de dados baseado na resposta
         const skinTypeAnswer = newAnswers.skinType;
-        const finalKit = RESULTS_DB[skinTypeAnswer] || RESULTS_DB['Mista'];
-        setRecommendedKit(finalKit);
+        const mapping = DYNAMIC_MAPPING[skinTypeAnswer] || DYNAMIC_MAPPING['Mista'];
+        
+        // Procura no banco o produto com o mesmo nome
+        const realProduct = dbProducts.find(p => p.name === mapping.targetName) || dbProducts[0]; 
+        
+        if (realProduct) {
+          // Junta os dados reais do banco (ID, Preço, Imagem) com os textos persuasivos do Quiz
+          setRecommendedKit({
+            ...realProduct, 
+            desc: mapping.desc,
+            tag: mapping.tag
+          });
+        }
+        
         setIsAnalyzing(false);
         setStep(step + 1);
       }, 2500);
@@ -108,7 +122,7 @@ export default function Quiz({ isOpen, onClose }) {
 
   const handleAddToCart = () => {
     if (recommendedKit) {
-      addToCart(recommendedKit);
+      addToCart(recommendedKit); // Agora ele envia o produto com o ID real para o carrinho!
       handleClose();
     }
   };
@@ -143,7 +157,7 @@ export default function Quiz({ isOpen, onClose }) {
                   Voltar
                 </button>
               ) : (
-                <div></div> // Espaçador
+                <div></div>
               )}
               <span className="text-baza-mint font-bold uppercase tracking-widest text-[10px]">
                 Passo {step + 1} de {QUESTIONS.length}
@@ -203,7 +217,14 @@ export default function Quiz({ isOpen, onClose }) {
                 <h3 className="font-syne text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">{recommendedKit.name}</h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed transition-colors">{recommendedKit.desc}</p>
                 <div className="flex items-center gap-4 mb-6">
-                  <span className="text-2xl font-mono font-bold text-gray-900 dark:text-white transition-colors">R$ {recommendedKit.price.toFixed(2).replace('.', ',')}</span>
+                  {recommendedKit.compareAtPrice && (
+                    <span className="text-sm font-mono line-through text-gray-400 dark:text-gray-500">
+                      R$ {recommendedKit.compareAtPrice.toFixed(2).replace('.', ',')}
+                    </span>
+                  )}
+                  <span className="text-2xl font-mono font-bold text-gray-900 dark:text-white transition-colors">
+                    R$ {recommendedKit.price.toFixed(2).replace('.', ',')}
+                  </span>
                   <span className="text-xs text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 px-2 py-1 border border-gray-200 dark:border-gray-700 transition-colors">Frete Grátis Integrado</span>
                 </div>
                 
