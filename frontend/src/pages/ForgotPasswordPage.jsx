@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const { t } = useTranslation();
 
   const handleForgot = async (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ export default function ForgotPasswordPage() {
       setMessage({ type: 'success', text: data.message });
       setEmail('');
     } catch (err) {
-      setMessage({ type: 'error', text: err.message || 'Erro ao solicitar a recuperação.' });
+      setMessage({ type: 'error', text: err.message || t('auth.error_recovery') });
     } finally {
       setLoading(false);
     }
@@ -37,12 +39,12 @@ export default function ForgotPasswordPage() {
         
         <Link to="/login" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-baza-lavender transition-colors mb-8">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Voltar para o Login
+          {t('auth.back_login')}
         </Link>
 
-        <h2 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-2">Recuperar Senha</h2>
+        <h2 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-2">{t('auth.forgot_title')}</h2>
         <p className="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed">
-          Insira o e-mail associado à sua conta. Se ele existir no nosso sistema, enviar-lhe-emos um link para criar uma nova senha.
+          {t('auth.forgot_desc')}
         </p>
 
         {message.text && (
@@ -53,18 +55,18 @@ export default function ForgotPasswordPage() {
 
         <form onSubmit={handleForgot} className="space-y-6">
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">Seu E-mail</label>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">{t('auth.forgot_label')}</label>
             <input 
               type="email" 
               required 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
-              className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-4 py-4 text-gray-900 dark:text-white outline-none focus:border-baza-lavender" 
-              placeholder="seu@email.com" 
+              className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-4 py-4 text-gray-900 dark:text-white outline-none focus:border-baza-lavender transition-colors" 
+              placeholder="you@email.com" 
             />
           </div>
-          <button type="submit" disabled={loading} className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors disabled:opacity-50">
-            {loading ? 'A Enviar...' : 'Enviar Link de Recuperação'}
+          <button type="submit" disabled={loading} className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint transition-all shadow-md disabled:opacity-50">
+            {loading ? t('auth.sending') : t('auth.forgot_btn')}
           </button>
         </form>
       </div>

@@ -1,22 +1,22 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next'; // Importar tradutor
 
 export default function CollectionPage() {
   const { categoryId } = useParams(); 
   const { addToCart } = useCart();
+  const { t } = useTranslation(); // Inicializar tradutor
   const [sortOrder, setSortOrder] = useState('relevance');
   
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Busca os produtos REAIS do Banco de Dados
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
     fetch(`${apiUrl}/products`)
       .then(res => res.json())
       .then(data => {
-        // Adicionamos um número de reviews falso apenas para manter o design bonito
         const dataWithReviews = data.map(p => ({
           ...p,
           reviews: Math.floor(Math.random() * 200) + 15
@@ -30,18 +30,14 @@ export default function CollectionPage() {
       });
   }, []);
 
-  // O Motor de Lógica Dinâmico
   const processedProducts = useMemo(() => {
     let filtered = [...products];
-
-    // Filtra pela categoria exata vinda da URL
     if (categoryId && categoryId !== 'mais-vendidos') {
       filtered = filtered.filter(p => p.category?.name.toLowerCase().replace(/ /g, '-') === categoryId.toLowerCase());
     } else if (categoryId === 'mais-vendidos') {
       filtered = filtered.filter(p => p.reviews > 100);
     }
 
-    // Ordenação
     if (sortOrder === 'price-low') {
       filtered.sort((a, b) => a.price - b.price);
     } else if (sortOrder === 'price-high') {
@@ -49,25 +45,14 @@ export default function CollectionPage() {
     } else {
       filtered.sort((a, b) => b.reviews - a.reviews);
     }
-
     return filtered;
   }, [products, categoryId, sortOrder]);
 
-  // Títulos dinâmicos
-  const titles = {
-    'skincare': 'Skincare de Alta Performance',
-    'fragrancias': 'Fragrâncias Exclusivas',
-    'banho-e-corpo': 'Banho e Corpo',
-    'masculino': 'Cuidados Masculinos',
-    'kits': 'Kits e Presentes',
-    'mais-vendidos': 'Os Mais Amados pelos Clientes',
-  };
-  
-  // AQUI FOI ALTERADO PARA "Todos os Produtos" CONFORME PEDIU
-  const pageTitle = categoryId ? titles[categoryId] || categoryId.replace('-', ' ') : 'Todos os Produtos';
+  // Título e Descrição Dinâmicos puxando do dicionário
+  const pageTitle = categoryId ? t(`shop.titles.${categoryId}`, categoryId.replace('-', ' ')) : t('shop.titles.all');
   const pageDescription = categoryId && categoryId !== 'mais-vendidos' 
-    ? `Descubra nossa seleção exclusiva. Fórmulas limpas e de eficácia comprovada para a sua rotina.`
-    : 'O catálogo completo da Careful Baza. Desenvolvido para entregar resultados reais respeitando a biologia do seu corpo.';
+    ? t('shop.descriptions.category')
+    : t('shop.descriptions.all');
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 pt-10 pb-24 px-6 md:px-16">
@@ -75,7 +60,7 @@ export default function CollectionPage() {
       <div className="max-w-7xl mx-auto mb-10">
         <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Página Inicial
+          {t('shop.breadcrumb')}
         </Link>
       </div>
 
@@ -88,19 +73,19 @@ export default function CollectionPage() {
 
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 pb-6 border-b border-gray-100 dark:border-gray-800">
         <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-          {processedProducts.length} Produtos Encontrados
+          {t('shop.found', { count: processedProducts.length })}
         </span>
         
         <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 px-4 py-2 border border-gray-100 dark:border-gray-700 rounded-sm">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">Ordenar por:</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">{t('shop.sort_by')}</span>
           <select 
             value={sortOrder} 
             onChange={(e) => setSortOrder(e.target.value)}
             className="text-xs font-medium text-gray-600 dark:text-gray-400 bg-transparent border-none outline-none cursor-pointer hover:text-baza-lavender dark:hover:text-baza-mint transition-colors"
           >
-            <option value="relevance" className="dark:bg-gray-900">Mais Relevantes</option>
-            <option value="price-low" className="dark:bg-gray-900">Menor Preço</option>
-            <option value="price-high" className="dark:bg-gray-900">Maior Preço</option>
+            <option value="relevance" className="dark:bg-gray-900">{t('shop.relevance')}</option>
+            <option value="price-low" className="dark:bg-gray-900">{t('shop.price_low')}</option>
+            <option value="price-high" className="dark:bg-gray-900">{t('shop.price_high')}</option>
           </select>
         </div>
       </div>
@@ -117,7 +102,7 @@ export default function CollectionPage() {
                 
                 {product.compareAtPrice && (
                   <div className="absolute top-3 left-3 z-10 bg-baza-mint text-baza-lavender px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest shadow-sm rounded-sm">
-                    PROMO
+                    {t('shop.promo')}
                   </div>
                 )}
                 
@@ -128,7 +113,7 @@ export default function CollectionPage() {
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); addToCart(product); }}
                     className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-colors duration-300 rounded-sm flex items-center justify-center gap-2 shadow-xl"
                   >
-                    Adicionar à Sacola
+                    {t('shop.add_btn')}
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                   </button>
                 </div>
@@ -146,9 +131,9 @@ export default function CollectionPage() {
                 
                 <div className="mt-auto flex items-center gap-2">
                   {product.compareAtPrice && (
-                    <span className="text-sm font-mono line-through text-gray-400">R$ {product.compareAtPrice.toFixed(2).replace('.', ',')}</span>
+                    <span className="text-sm font-mono line-through text-gray-400">${product.compareAtPrice.toFixed(2)}</span>
                   )}
-                  <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">R$ {product.price.toFixed(2).replace('.', ',')}</span>
+                  <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">${product.price.toFixed(2)}</span>
                 </div>
               </div>
             </Link>
@@ -159,10 +144,10 @@ export default function CollectionPage() {
       {!loading && processedProducts.length === 0 && (
         <div className="text-center py-24 flex flex-col items-center">
           <svg className="w-16 h-16 text-gray-200 dark:text-gray-700 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1"><path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-          <h3 className="font-syne text-2xl font-bold text-gray-900 dark:text-white mb-2">Coleção Esgotada</h3>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Nossos especialistas estão preparando um novo lote de produtos para esta categoria.</p>
+          <h3 className="font-syne text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('shop.empty_title')}</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">{t('shop.empty_desc')}</p>
           <Link to="/shop" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors">
-            Ver Todos os Produtos
+            {t('shop.view_all')}
           </Link>
         </div>
       )}

@@ -305,7 +305,7 @@ export default function CheckoutPage() {
                 form="checkout-form"
                 className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-5 text-xs font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-all duration-300 shadow-xl flex items-center justify-center gap-3"
               >
-                Ir para Pagamento (Stripe)
+                Ir para Pagamento
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </button>
 
