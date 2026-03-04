@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const Stripe = require('stripe');
+const Stripe = require('stripe'); // Voltamos para a Stripe (Global)
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken'); 
 const crypto = require('crypto'); 
@@ -12,6 +12,8 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const { Pool } = require('pg');
 
 const app = express();
+
+// Inicializamos a Stripe com a chave do .env
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -23,7 +25,6 @@ app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
 
-// Transportador Oficial da Careful Baza
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -33,11 +34,11 @@ const transporter = nodemailer.createTransport({
 });
 
 // ==========================================
-// TEMPLATES DE E-MAIL DE ALTO PADRÃO
+// TEMPLATES DE E-MAIL (AGORA EM INGLÊS DE LUXO)
 // ==========================================
 const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f5; color: #111111;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f5; padding: 40px 20px;">
     <tr><td align="center">
@@ -54,12 +55,12 @@ const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
                     ${buttonText}
                   </a>
             </td></tr></table>
-            <p style="margin: 40px 0 0 0; font-size: 12px; color: #a1a1aa; line-height: 1.5;">Ou cole este link no seu navegador:<br><a href="${buttonLink}" style="color: #09090b; word-break: break-all;">${buttonLink}</a></p>
+            <p style="margin: 40px 0 0 0; font-size: 12px; color: #a1a1aa; line-height: 1.5;">Or paste this link into your browser:<br><a href="${buttonLink}" style="color: #09090b; word-break: break-all;">${buttonLink}</a></p>
         </td></tr>
         <tr><td align="center" style="padding: 30px 40px; background-color: #fafafa; border-top: 1px solid #e4e4e7;">
             <p style="margin: 0; font-size: 11px; color: #a1a1aa; line-height: 1.6;">
-              © ${new Date().getFullYear()} Careful Baza Labs. Todos os direitos reservados.<br>
-              Contacto: <a href="mailto:carefulbaza@gmail.com" style="color: #09090b;">carefulbaza@gmail.com</a>
+              © ${new Date().getFullYear()} Careful Baza Labs. All rights reserved.<br>
+              Contact: <a href="mailto:carefulbaza@gmail.com" style="color: #09090b;">carefulbaza@gmail.com</a>
             </p>
         </td></tr>
       </table>
@@ -67,19 +68,15 @@ const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
   </table>
 </body></html>`;
 
-// Segurança para rotas fechadas
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: "Acesso negado." });
+  if (!authHeader) return res.status(401).json({ error: "Access denied." });
   jwt.verify(authHeader.split(' ')[1], JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: "Sessão expirada." });
+    if (err) return res.status(403).json({ error: "Session expired." });
     req.user = user; next();
   });
 };
 
-// ==========================================
-// PRODUTOS
-// ==========================================
 app.get('/products', async (req, res) => {
   const products = await prisma.product.findMany({ include: { category: true } });
   res.json(products.map(p => ({ ...p, price: p.price / 100, compareAtPrice: p.compareAtPrice ? p.compareAtPrice / 100 : null })));
@@ -87,17 +84,14 @@ app.get('/products', async (req, res) => {
 
 app.get('/products/:id', async (req, res) => {
   const product = await prisma.product.findUnique({ where: { id: req.params.id }, include: { category: true } });
-  if (!product) return res.status(404).json({ error: "Produto não encontrado" });
+  if (!product) return res.status(404).json({ error: "Product not found." });
   res.json({ ...product, price: product.price / 100, compareAtPrice: product.compareAtPrice ? product.compareAtPrice / 100 : null });
 });
 
-// ==========================================
-// AUTENTICAÇÃO E VERIFICAÇÃO DE E-MAIL
-// ==========================================
 app.post('/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    if (await prisma.customer.findUnique({ where: { email } })) return res.status(400).json({ error: "Este e-mail já está registado." });
+    if (await prisma.customer.findUnique({ where: { email } })) return res.status(400).json({ error: "This email is already registered." });
 
     const verificationToken = crypto.randomBytes(32).toString('hex'); 
     await prisma.customer.create({
@@ -105,94 +99,88 @@ app.post('/auth/register', async (req, res) => {
     });
 
     const link = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verificar-email?token=${verificationToken}`;
-    const html = baseEmailTemplate(`Bem-vindo(a), ${name}.`, "Por favor, confirme o seu e-mail para ativar a sua conta na Careful Baza Labs.", "Verificar E-mail", link);
+    const html = baseEmailTemplate(`Welcome, ${name}.`, "Please confirm your email to activate your Careful Baza Labs account.", "Verify Email", link);
     
     if (process.env.EMAIL_PASS) {
-      await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: email, subject: "Confirme a sua conta", html });
+      await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: email, subject: "Confirm your account", html });
     } else {
-      console.log(`🔗 TESTE LOCAL (VERIFICAR): ${link}`);
+      console.log(`🔗 LOCAL TEST (VERIFY): ${link}`);
     }
-    res.json({ message: "Conta criada! Verifique o seu e-mail." });
-  } catch (error) { res.status(500).json({ error: "Erro ao criar conta." }); }
+    res.json({ message: "Account created! Please check your email." });
+  } catch (error) { res.status(500).json({ error: "Error creating account." }); }
 });
 
 app.post('/auth/verify-email', async (req, res) => {
   const customer = await prisma.customer.findFirst({ where: { verificationToken: req.body.token } });
-  if (!customer) return res.status(400).json({ error: "Link inválido ou expirado." });
+  if (!customer) return res.status(400).json({ error: "Invalid or expired link." });
   await prisma.customer.update({ where: { id: customer.id }, data: { isVerified: true, verificationToken: null } });
-  res.json({ message: "E-mail verificado com sucesso!" });
+  res.json({ message: "Email successfully verified!" });
 });
 
 app.post('/auth/resend-verification', async (req, res) => {
   const customer = await prisma.customer.findUnique({ where: { email: req.body.email } });
-  if (!customer) return res.status(404).json({ error: "Conta não encontrada." });
-  if (customer.isVerified) return res.status(400).json({ error: "Esta conta já está verificada." });
+  if (!customer) return res.status(404).json({ error: "Account not found." });
+  if (customer.isVerified) return res.status(400).json({ error: "This account is already verified." });
 
   const verificationToken = crypto.randomBytes(32).toString('hex');
   await prisma.customer.update({ where: { email: customer.email }, data: { verificationToken } });
   const link = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verificar-email?token=${verificationToken}`;
-  const html = baseEmailTemplate("Novo link de acesso", "Solicitou um novo link de verificação. Clique no botão abaixo para ativar a sua conta.", "Verificar E-mail", link);
+  const html = baseEmailTemplate("New Access Link", "You requested a new verification link. Click the button below to activate your account.", "Verify Email", link);
   
-  if (process.env.EMAIL_PASS) await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: customer.email, subject: "Reenvio: Confirme a sua conta", html });
-  res.json({ message: "E-mail reenviado!" });
+  if (process.env.EMAIL_PASS) await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: customer.email, subject: "Resend: Confirm your account", html });
+  res.json({ message: "Verification email resent!" });
 });
 
 app.post('/auth/login', async (req, res) => {
   try {
     const customer = await prisma.customer.findUnique({ where: { email: req.body.email } });
-    if (!customer || !await bcrypt.compare(req.body.password, customer.password)) return res.status(401).json({ error: "E-mail ou senha incorretos." });
+    if (!customer || !await bcrypt.compare(req.body.password, customer.password)) return res.status(401).json({ error: "Incorrect email or password." });
     
-    if (!customer.isVerified) return res.status(403).json({ error: "Por favor, confirme o seu e-mail antes de entrar.", needsVerification: true, email: customer.email });
+    if (!customer.isVerified) return res.status(403).json({ error: "Please verify your email before logging in.", needsVerification: true, email: customer.email });
 
     res.json({ token: jwt.sign({ customerId: customer.id }, JWT_SECRET, { expiresIn: '7d' }), user: { id: customer.id, name: customer.name, email: customer.email, phone: customer.phone } });
-  } catch (error) { res.status(500).json({ error: "Erro no servidor." }); }
+  } catch (error) { res.status(500).json({ error: "Server error." }); }
 });
 
-// ==========================================
-// RECUPERAÇÃO DE SENHA
-// ==========================================
 app.post('/auth/forgot-password', async (req, res) => {
   try {
     const customer = await prisma.customer.findUnique({ where: { email: req.body.email } });
-    if (!customer) return res.status(200).json({ message: "Se o e-mail existir na nossa base de dados, receberá um link de recuperação." });
+    if (!customer) return res.status(200).json({ message: "If the email exists in our database, you will receive a recovery link." });
 
     const resetToken = crypto.randomBytes(32).toString('hex');
     await prisma.customer.update({ where: { email: customer.email }, data: { resetToken } });
 
     const link = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/redefinir-senha?token=${resetToken}`;
-    const html = baseEmailTemplate("Recuperação de Senha", "Recebemos um pedido para alterar a senha da sua conta. Se não foi você, ignore este e-mail.", "Redefinir Senha", link);
+    const html = baseEmailTemplate("Password Recovery", "We received a request to change your account password. If this was not you, please ignore this email.", "Reset Password", link);
     
     if (process.env.EMAIL_PASS) {
-      await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: customer.email, subject: "Redefinir a sua senha", html });
+      await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: customer.email, subject: "Reset your password", html });
     } else {
-      console.log(`🔗 TESTE LOCAL (REDEFINIR SENHA): ${link}`);
+      console.log(`🔗 LOCAL TEST (RESET PASSWORD): ${link}`);
     }
     
-    res.json({ message: "Se o e-mail existir na nossa base de dados, receberá um link de recuperação." });
-  } catch (error) { res.status(500).json({ error: "Erro ao processar o pedido." }); }
+    res.json({ message: "If the email exists in our database, you will receive a recovery link." });
+  } catch (error) { res.status(500).json({ error: "Error processing request." }); }
 });
 
 app.post('/auth/reset-password', async (req, res) => {
   try {
     const { token, newPassword } = req.body;
     const customer = await prisma.customer.findFirst({ where: { resetToken: token } });
-    if (!customer) return res.status(400).json({ error: "Link de recuperação inválido ou expirado." });
+    if (!customer) return res.status(400).json({ error: "Invalid or expired recovery link." });
 
     await prisma.customer.update({
       where: { id: customer.id },
       data: { password: await bcrypt.hash(newPassword, 10), resetToken: null }
     });
 
-    res.json({ message: "Senha alterada com sucesso! Já pode fazer login." });
-  } catch (error) { res.status(500).json({ error: "Erro ao alterar a senha." }); }
+    res.json({ message: "Password changed successfully! You can now log in." });
+  } catch (error) { res.status(500).json({ error: "Error changing password." }); }
 });
 
-// ==========================================
-// PAINEL DO CLIENTE E DEMONSTRAÇÃO
-// ==========================================
 app.put('/auth/profile', authenticateToken, async (req, res) => {
   const updatedCustomer = await prisma.customer.update({ where: { id: req.user.customerId }, data: { name: req.body.name, phone: req.body.phone } });
-  res.json({ message: "Perfil atualizado!", user: { id: updatedCustomer.id, name: updatedCustomer.name, email: updatedCustomer.email, phone: updatedCustomer.phone } });
+  res.json({ message: "Profile updated successfully!", user: { id: updatedCustomer.id, name: updatedCustomer.name, email: updatedCustomer.email, phone: updatedCustomer.phone } });
 });
 
 app.get('/my-orders', authenticateToken, async (req, res) => {
@@ -203,27 +191,65 @@ app.get('/my-orders', authenticateToken, async (req, res) => {
 app.post('/debug/create-test-order', authenticateToken, async (req, res) => {
   try {
     const product = await prisma.product.findFirst();
-    if (!product) return res.status(400).json({ error: "Não há produtos na loja para criar o teste." });
+    if (!product) return res.status(400).json({ error: "No products available to create a test order." });
 
     await prisma.order.create({
       data: {
         totalAmount: product.price,
         status: 'PAID',
         customerId: req.user.customerId,
-        addressLine1: 'Rua do Teste de Luxo, 100',
-        city: 'São Paulo',
-        state: 'SP',                 
-        zipCode: '01310-100',        
-        trackingCode: `BZ${Math.floor(Math.random() * 1000000000)}BR`, 
+        addressLine1: 'Global Luxury St, 100',
+        city: 'New York',
+        state: 'NY',                 
+        zipCode: '10001',        
+        trackingCode: `BZ${Math.floor(Math.random() * 1000000000)}US`, 
         items: { create: [{ quantity: 1, price: product.price, productId: product.id }] }
       }
     });
-    res.json({ message: "Pedido de teste gerado com sucesso!" });
+    res.json({ message: "Test order generated successfully!" });
   } catch (error) { 
-    console.error("ERRO AO CRIAR PEDIDO DE TESTE:", error);
-    res.status(500).json({ error: "Erro interno ao criar pedido." }); 
+    console.error("ERROR CREATING TEST ORDER:", error);
+    res.status(500).json({ error: "Internal error creating order." }); 
+  }
+});
+
+// ==========================================
+// CHECKOUT GLOBAL COM STRIPE (EM DÓLAR - USD)
+// ==========================================
+app.post('/create-checkout-session', async (req, res) => {
+  try {
+    const { items } = req.body; 
+
+    const lineItems = items.map((item) => ({
+      price_data: {
+        currency: 'usd', // Moeda universal do comércio eletrônico
+        product_data: {
+          name: item.name,
+          images: [item.image],
+        },
+        unit_amount: Math.round(item.price * 100), // Stripe cobra em cêntimos ($189.90 = 18990)
+      },
+      quantity: item.quantity,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      // Adicionado suporte a Apple Pay e Google Pay automaticamente pela Stripe
+      payment_method_types: ['card', 'paypal'], 
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: 'http://localhost:5173/checkout?status=success',
+      cancel_url: 'http://localhost:5173/checkout?status=error',
+    });
+
+    res.json({ url: session.url });
+
+  } catch (error) {
+    console.error("Error creating Stripe session:", error);
+    res.status(500).json({ error: 'Failed to process payment with Stripe.' });
   }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => { console.log(`✅ Servidor a correr na porta ${PORT}`); });
+app.listen(PORT, () => { 
+  console.log(`✅ Global Server running on port ${PORT} with Stripe (USD)!`); 
+});

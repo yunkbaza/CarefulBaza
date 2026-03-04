@@ -251,7 +251,7 @@ export default function CheckoutPage() {
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 shadow-sm mb-6 transition-colors">
                   <label className="flex items-center gap-3 cursor-pointer mb-4">
                     <input type="radio" name="payment" defaultChecked className="w-4 h-4 text-baza-lavender dark:text-baza-mint accent-baza-lavender dark:accent-baza-mint" />
-                    <span className="font-bold text-gray-900 dark:text-white text-sm">Cartão de Crédito ou Boleto (Stripe)</span>
+                    <span className="font-bold text-gray-900 dark:text-white text-sm">Pix, Cartão (até 12x) ou Boleto</span>
                   </label>
                   <p className="text-xs text-gray-500 dark:text-gray-400 p-4 bg-gray-50 dark:bg-gray-900 rounded-sm border border-gray-100 dark:border-gray-800">
                     Ao clicar em confirmar, você será redirecionado(a) para o ambiente criptografado do Stripe para introduzir os dados do seu cartão com total segurança.
