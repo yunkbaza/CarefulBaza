@@ -39,7 +39,7 @@
     "title": "Your Bag",
     "empty_btn": "Empty",
     "free_shipping_success": "✨ You've unlocked Free Shipping!",
-    "free_shipping_away": "Only ${{amount}} away from Free Shipping",
+    "free_shipping_away": "Only {{amount}} away from Free Shipping",
     "empty_cart": "Your bag is empty.",
     "subtotal": "Subtotal",
     "checkout_btn": "Proceed to Checkout"
@@ -233,6 +233,32 @@
     "solution_title": "Ideal Solution",
     "why_works": "Why does it work?",
     "add_btn": "Add to Bag"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shipping_address": "Shipping Address",
+    "email_label": "Email for Notifications",
+    "name_label": "Full Name",
+    "address_label": "Address",
+    "city_label": "City",
+    "zip_label": "ZIP / Postal Code",
+    "payment_method": "Payment Method",
+    "order_summary": "Order Summary",
+    "total": "Total",
+    "complete_btn": "Complete Secure Payment",
+    "secure_notice": "Payment processed with 256-bit encryption.",
+    "back_cart": "Back to Cart"
+  },
+  "products": {
+    "Sérum Renovador Niacinamida": "Niacinamide Renewing Serum",
+    "Hidratante Aqua Glow": "Aqua Glow Moisturizer",
+    "Óleo Reparador Botânico": "Botanical Repairing Oil",
+    "Essência Noturna Retinol": "Retinol Night Essence",
+    "Bruma Calmante Revitalizante": "Revitalizing Soothing Mist",
+    "Perfume Sólido Amadeirado": "Woody Solid Perfume",
+    "Kit Viagem Essencial": "Essential Travel Kit",
+    "Espuma de Limpeza Purificante": "Purifying Cleansing Foam",
+    "Kit Rotina Completa 5 Passos": "Complete 5-Step Routine Kit"
   },
   "footer": {
     "desc": "The science of purity. High-performance dermatological formulas with proven results.",

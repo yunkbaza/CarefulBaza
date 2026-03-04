@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState } from 'react'; // Removido o useEffect daqui
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../hooks/useCurrency';
 
 const SEARCH_DB = [
   { id: 1, name: 'Sérum Renovador Niacinamida', category: 'skincare', price: 39.90, image: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbce5ce?q=80&w=600&auto=format&fit=crop' },
@@ -20,6 +21,7 @@ const normalize = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, ''
 export default function SearchModal({ isOpen, onClose }) {
   const [query, setQuery] = useState('');
   const { t } = useTranslation();
+  const { convertAndFormat } = useCurrency();
 
   const results = query.length > 1
     ? SEARCH_DB.filter(product => normalize(product.name).includes(normalize(query)))
@@ -37,7 +39,7 @@ export default function SearchModal({ isOpen, onClose }) {
           <input 
             type="text" autoFocus value={query} onChange={(e) => setQuery(e.target.value)}
             placeholder={t('search.placeholder')} 
-            className="w-full bg-transparent border-none outline-none font-syne text-2xl md:text-4xl text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-gray-700"
+            className="w-full bg-transparent border-none outline-none font-syne text-2xl md:text-4xl text-gray-900 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-700"
           />
         </div>
         <button onClick={handleClose} className="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all hover:rotate-90">
@@ -82,7 +84,9 @@ export default function SearchModal({ isOpen, onClose }) {
                       <div className="flex flex-col justify-center">
                         <span className="text-[9px] text-baza-lavender dark:text-baza-mint uppercase font-extrabold mb-1">{product.category}</span>
                         <h4 className="font-syne font-bold text-gray-900 dark:text-white text-base leading-tight mb-2 group-hover:text-baza-lavender transition-colors">{product.name}</h4>
-                        <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">${product.price.toFixed(2)}</span>
+                        <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">
+                          {convertAndFormat(product.price)}
+                        </span>
                       </div>
                     </Link>
                   ))}

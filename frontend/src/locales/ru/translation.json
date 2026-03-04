@@ -39,7 +39,7 @@
     "title": "Ваша сумка",
     "empty_btn": "Очистить",
     "free_shipping_success": "✨ Бесплатная доставка получена!",
-    "free_shipping_away": "Еще ${{amount}} до бесплатной доставки",
+    "free_shipping_away": "Еще {{amount}} до бесплатной доставки",
     "empty_cart": "Ваша сумка пуста.",
     "subtotal": "Подытог",
     "checkout_btn": "Оформить заказ"
@@ -233,6 +233,32 @@
     "solution_title": "Идеальное решение",
     "why_works": "Почему это работает?",
     "add_btn": "В сумку"
+  },
+  "checkout": {
+    "title": "Оформление заказа",
+    "shipping_address": "Адрес доставки",
+    "email_label": "Email для уведомлений",
+    "name_label": "Полное имя",
+    "address_label": "Адрес",
+    "city_label": "Город",
+    "zip_label": "Индекс",
+    "payment_method": "Способ оплаты",
+    "order_summary": "Итог заказа",
+    "total": "Итого",
+    "complete_btn": "Завершить безопасный платеж",
+    "secure_notice": "Платеж защищен 256-битным шифрованием.",
+    "back_cart": "Вернуться в корзину"
+  },
+  "products": {
+    "Sérum Renovador Niacinamida": "Обновляющая сыворотка с ниацинамидом",
+    "Hidratante Aqua Glow": "Увлажняющий крем Aqua Glow",
+    "Óleo Reparador Botânico": "Ботаническое восстанавливающее масло",
+    "Essência Noturna Retinol": "Ночная эссенция с ретинолом",
+    "Bruma Calmante Revitalizante": "Восстанавливающая успокаивающая дымка",
+    "Perfume Sólido Amadeirado": "Древесные твердые духи",
+    "Kit Viagem Essencial": "Дорожный набор",
+    "Espuma de Limpeza Purificante": "Очищающая пенка",
+    "Kit Rotina Completa 5 Passos": "Набор 5 шагов"
   },
   "footer": {
     "desc": "Наука чистоты. Высокоэффективные формулы с доказанным результатом.",

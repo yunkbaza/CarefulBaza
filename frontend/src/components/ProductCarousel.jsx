@@ -2,10 +2,12 @@ import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../hooks/useCurrency'; // <-- Importando o motor de câmbio
 
 export default function ProductCarousel({ products, title, subtitle }) {
   const { addToCart } = useCart();
   const { t } = useTranslation();
+  const { convertAndFormat } = useCurrency(); // <-- Inicializando o motor de câmbio
   const carouselRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -63,19 +65,38 @@ export default function ProductCarousel({ products, title, subtitle }) {
                 <div className="pointer-events-auto h-full flex flex-col">
                   <div className="relative aspect-[4/5] bg-gray-50 dark:bg-gray-800 overflow-hidden mb-5 rounded-sm border border-gray-100 dark:border-gray-800">
                     {product.compareAtPrice && (
-                      <div className="absolute top-3 left-3 z-10 bg-baza-mint text-baza-lavender px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest rounded-sm">{t('product_ui.offer')}</div>
+                      <div className="absolute top-3 left-3 z-10 bg-baza-mint text-baza-lavender px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest rounded-sm">
+                        {t('product_ui.offer')}
+                      </div>
                     )}
                     <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
-                      <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!isDragging) addToCart(product); }} className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors duration-300 rounded-sm shadow-xl">{t('product_ui.buy_now')}</button>
+                      <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!isDragging) addToCart(product); }} className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors duration-300 rounded-sm shadow-xl">
+                        {t('product_ui.buy_now')}
+                      </button>
                     </div>
                   </div>
                   <div className="flex flex-col flex-1">
-                    <span className="text-[9px] text-baza-lavender dark:text-baza-mint uppercase tracking-widest font-bold mb-1.5">{product.category?.name || 'Careful Baza'}</span>
-                    <h3 className="font-syne font-bold text-gray-900 dark:text-white text-lg mb-2 group-hover:text-baza-lavender transition-colors line-clamp-1">{product.name}</h3>
+                    <span className="text-[9px] text-baza-lavender dark:text-baza-mint uppercase tracking-widest font-bold mb-1.5">
+                      {product.category?.name || 'Careful Baza'}
+                    </span>
+                    
+                    {/* NOME TRADUZIDO */}
+                    <h3 className="font-syne font-bold text-gray-900 dark:text-white text-lg mb-2 group-hover:text-baza-lavender transition-colors line-clamp-1">
+                      {t(`products.${product.name}`, product.name)}
+                    </h3>
+                    
                     <div className="mt-auto flex items-center gap-2">
-                      {product.compareAtPrice && <span className="text-sm font-mono line-through text-gray-400">${Number(product.compareAtPrice).toFixed(2)}</span>}
-                      <span className="text-lg font-mono font-bold text-gray-900 dark:text-gray-200">${Number(product.price).toFixed(2)}</span>
+                      {/* PREÇO ANTIGO CONVERTIDO */}
+                      {product.compareAtPrice && (
+                        <span className="text-sm font-mono line-through text-gray-400">
+                          {convertAndFormat(product.compareAtPrice)}
+                        </span>
+                      )}
+                      {/* PREÇO ATUAL CONVERTIDO */}
+                      <span className="text-lg font-mono font-bold text-gray-900 dark:text-gray-200">
+                        {convertAndFormat(product.price)}
+                      </span>
                     </div>
                   </div>
                 </div>

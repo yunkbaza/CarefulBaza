@@ -39,7 +39,7 @@
     "title": "A Sua Sacola",
     "empty_btn": "Esvaziar",
     "free_shipping_success": "✨ Ganhou Frete Grátis!",
-    "free_shipping_away": "Faltam ${{amount}} para Frete Grátis",
+    "free_shipping_away": "Faltam {{amount}} para Frete Grátis",
     "empty_cart": "A sua sacola está vazia.",
     "subtotal": "Subtotal",
     "checkout_btn": "Finalizar Compra"
@@ -233,6 +233,32 @@
     "solution_title": "A Solução Ideal",
     "why_works": "Por que funciona?",
     "add_btn": "Adicionar"
+  },
+  "checkout": {
+    "title": "Finalizar Compra",
+    "shipping_address": "Endereço de Envio",
+    "email_label": "E-mail para Notificações",
+    "name_label": "Nome Completo",
+    "address_label": "Endereço",
+    "city_label": "Cidade",
+    "zip_label": "Código Postal / CEP",
+    "payment_method": "Método de Pagamento",
+    "order_summary": "Resumo do Pedido",
+    "total": "Total",
+    "complete_btn": "Concluir Pagamento Seguro",
+    "secure_notice": "Pagamento processado com criptografia de 256 bits.",
+    "back_cart": "Voltar ao Carrinho"
+  },
+  "products": {
+    "Sérum Renovador Niacinamida": "Sérum Renovador Niacinamida",
+    "Hidratante Aqua Glow": "Hidratante Aqua Glow",
+    "Óleo Reparador Botânico": "Óleo Reparador Botânico",
+    "Essência Noturna Retinol": "Essência Noturna Retinol",
+    "Bruma Calmante Revitalizante": "Bruma Calmante Revitalizante",
+    "Perfume Sólido Amadeirado": "Perfume Sólido Amadeirado",
+    "Kit Viagem Essencial": "Kit Viagem Essencial",
+    "Espuma de Limpeza Purificante": "Espuma de Limpeza Purificante",
+    "Kit Rotina Completa 5 Passos": "Kit Rotina Completa 5 Passos"
   },
   "footer": {
     "desc": "A ciência da pureza. Fórmulas dermatológicas de alta performance e resultados comprovados.",

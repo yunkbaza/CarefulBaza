@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
 const crypto = require('crypto'); 
 const nodemailer = require('nodemailer'); 
+// Se usar Node < 18, descomente a linha abaixo e faça 'npm install node-fetch'
+// const fetch = require('node-fetch'); 
 
 const { PrismaClient } = require('@prisma/client');
 const { PrismaPg } = require('@prisma/adapter-pg');
@@ -214,31 +216,75 @@ app.post('/debug/create-test-order', authenticateToken, async (req, res) => {
 });
 
 // ==========================================
-// CHECKOUT GLOBAL COM STRIPE (EM DÓLAR - USD)
+// CHECKOUT GLOBAL COM STRIPE E CÂMBIO DINÂMICO
 // ==========================================
 app.post('/create-checkout-session', async (req, res) => {
   try {
-    const { items } = req.body; 
+    const { items, currency = 'usd' } = req.body; // currency vem do frontend
 
-    const lineItems = items.map((item) => ({
-      price_data: {
-        currency: 'usd', // Moeda universal do comércio eletrônico
-        product_data: {
-          name: item.name,
-          images: [item.image],
+    // 1. Busca a taxa de conversão (Base = BRL)
+    const EXCHANGE_API_KEY = process.env.EXCHANGE_API_KEY; 
+    let rate = 1; // Fallback seguro para 1 se a API falhar ou não houver chave
+    
+    if (EXCHANGE_API_KEY && currency.toLowerCase() !== 'brl') {
+      try {
+        const exchangeResponse = await fetch(`https://v6.exchangerate-api.com/v6/${EXCHANGE_API_KEY}/latest/BRL`);
+        const exchangeData = await exchangeResponse.json();
+        
+        if (exchangeData.result === 'success') {
+          // Ex: Se currency for 'usd', rate será algo como 0.17 (1 BRL = 0.17 USD)
+          rate = exchangeData.conversion_rates[currency.toUpperCase()] || 1;
+        }
+      } catch (err) {
+        console.error("Falha ao buscar câmbio na API, usando taxa fallback 1:1", err);
+      }
+    }
+
+    // 2. Prepara os itens convertendo o preço do banco (BRL) para a moeda do cliente
+    const lineItems = items.map((item) => {
+      const priceInClientCurrency = item.price * rate;
+
+      return {
+        price_data: {
+          currency: currency.toLowerCase(), 
+          product_data: {
+            name: item.name,
+            images: [item.image],
+          },
+          // Multiplica por 100 e arredonda porque o Stripe cobra em centavos
+          unit_amount: Math.round(priceInClientCurrency * 100), 
         },
-        unit_amount: Math.round(item.price * 100), // Stripe cobra em cêntimos ($189.90 = 18990)
-      },
-      quantity: item.quantity,
-    }));
+        quantity: item.quantity,
+      };
+    });
 
+    // 3. Verifica o Frete Grátis com base no valor total em REAIS
+    const totalEmReais = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const FRETE_GRATIS_META_BRL = 250; 
+    const valorFreteFixoBRL = 25.90;
+
+    if (totalEmReais < FRETE_GRATIS_META_BRL) {
+      // Converte o frete fixo de R$ 25,90 para a moeda do cliente
+      const shippingInClientCurrency = valorFreteFixoBRL * rate;
+      lineItems.push({
+        price_data: {
+          currency: currency.toLowerCase(),
+          product_data: {
+            name: 'Shipping / Frete',
+          },
+          unit_amount: Math.round(shippingInClientCurrency * 100),
+        },
+        quantity: 1,
+      });
+    }
+
+    // 4. Cria a Sessão no Stripe
     const session = await stripe.checkout.sessions.create({
-      // Adicionado suporte a Apple Pay e Google Pay automaticamente pela Stripe
-      payment_method_types: ['card', 'paypal'], 
+      payment_method_types: ['card'], // O Stripe cuida de Apple Pay/Google Pay automaticamente
       line_items: lineItems,
       mode: 'payment',
-      success_url: 'http://localhost:5173/checkout?status=success',
-      cancel_url: 'http://localhost:5173/checkout?status=error',
+      success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=success`,
+      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=error`,
     });
 
     res.json({ url: session.url });
@@ -251,5 +297,5 @@ app.post('/create-checkout-session', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => { 
-  console.log(`✅ Global Server running on port ${PORT} with Stripe (USD)!`); 
+  console.log(`✅ Global Server running on port ${PORT} with Dynamic Stripe Checkout!`); 
 });

@@ -39,7 +39,7 @@
     "title": "Deine Tasche",
     "empty_btn": "Leeren",
     "free_shipping_success": "✨ Kostenloser Versand freigeschaltet!",
-    "free_shipping_away": "Noch ${{amount}} bis zum kostenlosen Versand",
+    "free_shipping_away": "Noch {{amount}} bis zum kostenlosen Versand",
     "empty_cart": "Deine Tasche ist leer.",
     "subtotal": "Zwischensumme",
     "checkout_btn": "Zur Kasse"
@@ -233,6 +233,32 @@
     "solution_title": "Ideale Lösung",
     "why_works": "Warum funktioniert es?",
     "add_btn": "Hinzufügen"
+  },
+  "checkout": {
+    "title": "Kasse",
+    "shipping_address": "Lieferadresse",
+    "email_label": "E-Mail für Benachrichtigungen",
+    "name_label": "Vollständiger Name",
+    "address_label": "Adresse",
+    "city_label": "Stadt",
+    "zip_label": "Postleitzahl",
+    "payment_method": "Zahlungsmethode",
+    "order_summary": "Bestellübersicht",
+    "total": "Gesamt",
+    "complete_btn": "Sichere Zahlung abschließen",
+    "secure_notice": "Zahlung mit 256-Bit-Verschlüsselung verarbeitet.",
+    "back_cart": "Zurück zum Warenkorb"
+  },
+  "products": {
+    "Sérum Renovador Niacinamida": "Niacinamid Erneuerungsserum",
+    "Hidratante Aqua Glow": "Aqua Glow Feuchtigkeitscreme",
+    "Óleo Reparador Botânico": "Botanisches Reparaturöl",
+    "Essência Noturna Retinol": "Retinol Nachtessenz",
+    "Bruma Calmante Revitalizante": "Revitalisierender Beruhigungsnebel",
+    "Perfume Sólido Amadeirado": "Holziges Festes Parfüm",
+    "Kit Viagem Essencial": "Essentielles Reise-Kit",
+    "Espuma de Limpeza Purificante": "Reinigungsschaum",
+    "Kit Rotina Completa 5 Passos": "Komplette 5-Schritte-Routine"
   },
   "footer": {
     "desc": "Die Wissenschaft der Reinheit. Hochleistungs-Hautpflege mit nachgewiesenen Ergebnissen.",

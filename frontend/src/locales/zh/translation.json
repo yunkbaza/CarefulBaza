@@ -39,7 +39,7 @@
     "title": "您的购物袋",
     "empty_btn": "清空",
     "free_shipping_success": "✨ 已解锁免邮！",
-    "free_shipping_away": "还差 ${{amount}} 即可免邮",
+    "free_shipping_away": "还差 {{amount}} 即可免邮",
     "empty_cart": "您的购物袋是空的。",
     "subtotal": "小计",
     "checkout_btn": "结账"
@@ -233,6 +233,32 @@
     "solution_title": "理想方案",
     "why_works": "为什么有效？",
     "add_btn": "加入"
+  },
+  "checkout": {
+    "title": "结账",
+    "shipping_address": "送货地址",
+    "email_label": "接收通知的电子邮件",
+    "name_label": "姓名",
+    "address_label": "地址",
+    "city_label": "城市",
+    "zip_label": "邮政编码",
+    "payment_method": "付款方式",
+    "order_summary": "订单摘要",
+    "total": "总计",
+    "complete_btn": "完成安全付款",
+    "secure_notice": "使用 256 位加密处理付款。",
+    "back_cart": "返回购物袋"
+  },
+  "products": {
+    "Sérum Renovador Niacinamida": "烟酰胺焕活精华",
+    "Hidratante Aqua Glow": "Aqua Glow 保湿霜",
+    "Óleo Reparador Botânico": "植物修复油",
+    "Essência Noturna Retinol": "视黄醇夜间精华",
+    "Bruma Calmante Revitalizante": "焕活舒缓喷雾",
+    "Perfume Sólido Amadeirado": "木质固体香水",
+    "Kit Viagem Essencial": "旅行基础套装",
+    "Espuma de Limpeza Purificante": "净化洁面泡沫",
+    "Kit Rotina Completa 5 Passos": "完整5步护肤套装"
   },
   "footer": {
     "desc": "纯净科学。高效皮肤病学配方，效果经临床验证。",

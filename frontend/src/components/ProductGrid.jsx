@@ -2,11 +2,12 @@ import { useRef, useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { formatPrice } from '../i18n';
 
 export default function ProductGrid() {
   const sliderRef = useRef(null);
   const { addToCart } = useCart();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,8 +76,14 @@ export default function ProductGrid() {
                 <span className="text-[9px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold">{product.category?.name || 'Skincare'}</span>
                 <h3 className="font-syne font-bold text-gray-900 dark:text-white text-base mb-1 line-clamp-1 group-hover:text-baza-lavender transition-colors">{product.name}</h3>
                 <div className="mt-auto flex items-center gap-2">
-                  {product.compareAtPrice && <span className="text-xs font-mono line-through text-gray-400">${Number(product.compareAtPrice).toFixed(2)}</span>}
-                  <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300 transition-colors duration-300">${Number(product.price).toFixed(2)}</span>
+                  {product.compareAtPrice && (
+                    <span className="text-xs font-mono line-through text-gray-400">
+                      {formatPrice(product.compareAtPrice, i18n.language)}
+                    </span>
+                  )}
+                  <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300 transition-colors duration-300">
+                    {formatPrice(product.price, i18n.language)}
+                  </span>
                 </div>
               </div>
             </Link>

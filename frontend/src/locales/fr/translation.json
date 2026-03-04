@@ -39,7 +39,7 @@
     "title": "Votre Panier",
     "empty_btn": "Vider",
     "free_shipping_success": "✨ Livraison gratuite offerte !",
-    "free_shipping_away": "Plus que {{amount}}$ pour la livraison gratuite",
+    "free_shipping_away": "Plus que {{amount}} pour la livraison gratuite",
     "empty_cart": "Votre panier est vide.",
     "subtotal": "Sous-total",
     "checkout_btn": "Paiement"
@@ -102,7 +102,7 @@
     "forgot_desc": "Entrez l'e-mail associé à votre compte pour recevoir un lien de récupération.",
     "forgot_label": "Votre E-mail",
     "forgot_btn": "Envoyer le lien",
-    "sending": "Envoi en cours...",
+    "sending": "Enviando...",
     "back_login": "Retour à la connexion",
     "reset_title": "Nouveau mot de passe",
     "reset_desc": "Entrez votre nouveau mot de passe.",
@@ -233,6 +233,32 @@
     "solution_title": "Solution Idéale",
     "why_works": "Pourquoi ça marche ?",
     "add_btn": "Ajouter"
+  },
+  "checkout": {
+    "title": "Paiement",
+    "shipping_address": "Adresse de Livraison",
+    "email_label": "E-mail pour Notifications",
+    "name_label": "Nom Complet",
+    "address_label": "Adresse",
+    "city_label": "Ville",
+    "zip_label": "Code Postal",
+    "payment_method": "Méthode de Paiement",
+    "order_summary": "Résumé de la Commande",
+    "total": "Total",
+    "complete_btn": "Finaliser le Paiement Sécurisé",
+    "secure_notice": "Paiement traité avec un cryptage 256 bits.",
+    "back_cart": "Retour au Panier"
+  },
+  "products": {
+    "Sérum Renovador Niacinamida": "Sérum Rénovateur Niacinamide",
+    "Hidratante Aqua Glow": "Hydratant Aqua Glow",
+    "Óleo Reparador Botânico": "Huile Réparatrice Botanique",
+    "Essência Noturna Retinol": "Essence de Nuit Rétinol",
+    "Bruma Calmante Revitalizante": "Brume Apaisante Revitalisante",
+    "Perfume Sólido Amadeirado": "Parfum Solide Boisé",
+    "Kit Viagem Essencial": "Kit de Voyage Essentiel",
+    "Espuma de Limpeza Purificante": "Mousse Nettoyante Purifiante",
+    "Kit Rotina Completa 5 Passos": "Kit Routine Complète 5 Étapes"
   },
   "footer": {
     "desc": "La science de la pureté. Formules dermatologiques haute performance aux résultats prouvés.",

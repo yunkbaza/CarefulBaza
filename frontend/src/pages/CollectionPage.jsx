@@ -1,12 +1,14 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useState, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next'; // Importar tradutor
+import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../hooks/useCurrency';
 
 export default function CollectionPage() {
   const { categoryId } = useParams(); 
   const { addToCart } = useCart();
-  const { t } = useTranslation(); // Inicializar tradutor
+  const { t, i18n } = useTranslation(); 
+  const { convertAndFormat } = useCurrency();
   const [sortOrder, setSortOrder] = useState('relevance');
   
   const [products, setProducts] = useState([]);
@@ -48,11 +50,20 @@ export default function CollectionPage() {
     return filtered;
   }, [products, categoryId, sortOrder]);
 
-  // Título e Descrição Dinâmicos puxando do dicionário
   const pageTitle = categoryId ? t(`shop.titles.${categoryId}`, categoryId.replace('-', ' ')) : t('shop.titles.all');
   const pageDescription = categoryId && categoryId !== 'mais-vendidos' 
     ? t('shop.descriptions.category')
     : t('shop.descriptions.all');
+
+  // Função auxiliar para depurar as traduções dos produtos
+  const getTranslatedName = (productName) => {
+    const translated = t(`products.${productName}`, { defaultValue: 'NOT_FOUND' });
+    if (translated === 'NOT_FOUND' && i18n.language !== 'pt') {
+      console.warn(`Falta traduzir este produto no JSON (${i18n.language}): "${productName}"`);
+      return productName; // Retorna o nome em português como fallback
+    }
+    return translated === 'NOT_FOUND' ? productName : translated;
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 pt-10 pb-24 px-6 md:px-16">
@@ -127,13 +138,22 @@ export default function CollectionPage() {
                     <span className="text-[9px] font-mono text-gray-500">({product.reviews})</span>
                   </div>
                 </div>
-                <h3 className="font-syne font-bold text-gray-900 dark:text-white text-base mb-2 group-hover:text-baza-lavender dark:group-hover:text-baza-mint transition-colors line-clamp-1">{product.name}</h3>
                 
-                <div className="mt-auto flex items-center gap-2">
+                {/* NOME TRADUZIDO COM FUNÇÃO DE SEGURANÇA */}
+                <h3 className="font-syne font-bold text-gray-900 dark:text-white text-base mb-2 group-hover:text-baza-lavender dark:group-hover:text-baza-mint transition-colors line-clamp-1">
+                  {getTranslatedName(product.name)}
+                </h3>
+                
+                <div className="mt-auto flex flex-col gap-0.5">
                   {product.compareAtPrice && (
-                    <span className="text-sm font-mono line-through text-gray-400">${product.compareAtPrice.toFixed(2)}</span>
+                    <span className="text-xs font-mono line-through text-gray-400">
+                      {convertAndFormat(product.compareAtPrice)}
+                    </span>
                   )}
-                  <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">${product.price.toFixed(2)}</span>
+                  {/* PREÇO CONVERTIDO */}
+                  <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">
+                    {convertAndFormat(product.price)}
+                  </span>
                 </div>
               </div>
             </Link>
