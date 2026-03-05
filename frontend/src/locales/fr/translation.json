@@ -168,7 +168,7 @@
     "result_tag": "Votre Routine Idéale",
     "result_title": "La combinaison parfaite pour vous.",
     "result_desc": "Pour cibler {{goal}} et traiter votre peau {{skin}}, nous avons choisi ce protocole.",
-    "free_shipping": "Livraison Gratuite Incluse",
+    "free_shipping": "Livraison Gratuite",
     "add_btn": "Ajouter au Panier",
     "decline_btn": "Pas maintenant, merci",
     "q_skin_type": "Comment décririez-vous votre peau ?",
@@ -247,7 +247,11 @@
     "total": "Total",
     "complete_btn": "Finaliser le Paiement Sécurisé",
     "secure_notice": "Paiement traité avec un cryptage 256 bits.",
-    "back_cart": "Retour au Panier"
+    "back_cart": "Retour au Panier",
+    "error_badge": "Paiement Interrompu",
+    "error_title": "Paiement Refusé",
+    "error_msg": "Le paiement n'a pas abouti ou a été annulé. Vos produits sont toujours dans le panier si vous souhaitez réessayer.",
+    "try_again": "Réessayer"
   },
   "products": {
     "Sérum Renovador Niacinamida": "Sérum Rénovateur Niacinamide",

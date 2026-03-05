@@ -168,7 +168,7 @@
     "result_tag": "Sua Rotina Ideal",
     "result_title": "A combinação perfeita para você.",
     "result_desc": "Para focar em {{goal}} e tratar sua pele {{skin}}, separamos este protocolo completo.",
-    "free_shipping": "Frete Grátis Integrado",
+    "free_shipping": "Frete Grátis",
     "add_btn": "Adicionar à Sacola",
     "decline_btn": "Agora não, obrigado",
     "q_skin_type": "Como você descreve a sua pele hoje?",
@@ -247,7 +247,12 @@
     "total": "Total",
     "complete_btn": "Concluir Pagamento Seguro",
     "secure_notice": "Pagamento processado com criptografia de 256 bits.",
-    "back_cart": "Voltar ao Carrinho"
+    "back_cart": "Voltar ao Carrinho",
+    "error_badge": "Pagamento Interrompido",
+    "error_title": "Pagamento Recusado",
+    "error_msg": "O pagamento não foi concluído ou foi cancelado. Os seus produtos continuam no carrinho, caso queira tentar novamente.",
+    "try_again": "Tentar Novamente"
+    
   },
   "products": {
     "Sérum Renovador Niacinamida": "Sérum Renovador Niacinamida",
@@ -280,4 +285,5 @@
     "item2": "Eficácia Comprovada",
     "item3": "Ativos Concentrados"
   }
+  
 }

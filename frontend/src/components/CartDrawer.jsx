@@ -1,17 +1,21 @@
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Importação necessária
+import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../hooks/useCurrency';
 
 export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, cartItems, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
   const navigate = useNavigate();
-  const { t } = useTranslation(); // Inicialização da tradução
+  const { t } = useTranslation();
+  const { convertAndFormat } = useCurrency(); // Motor de Câmbio
   
-  // Meta do Frete Grátis Global (ajustada para 199 USD como exemplo)
-  const FREE_SHIPPING_GOAL = 199;
-  const safeCartTotal = cartTotal || 0; 
-  const progressPercent = Math.min((safeCartTotal / FREE_SHIPPING_GOAL) * 100, 100);
-  const amountLeft = Math.max(FREE_SHIPPING_GOAL - safeCartTotal, 0);
+  // A Meta do Frete Grátis deve ser calculada baseada na moeda origem (BRL)
+  const FREE_SHIPPING_GOAL_BRL = 250;
+  const safeCartTotalBRL = cartTotal || 0; 
+  
+  // O progresso da barra (calculado em cima do valor base)
+  const progressPercent = Math.min((safeCartTotalBRL / FREE_SHIPPING_GOAL_BRL) * 100, 100);
+  const amountLeftBRL = Math.max(FREE_SHIPPING_GOAL_BRL - safeCartTotalBRL, 0);
 
   return (
     <>
@@ -40,9 +44,10 @@ export default function CartDrawer() {
         {/* BARRA DE FRETE GRÁTIS DINÂMICA */}
         <div className="bg-baza-lavender/5 dark:bg-baza-lavender/10 p-4 border-b border-gray-100 dark:border-gray-800 transition-colors">
           <p className="text-[11px] font-bold text-center text-gray-900 dark:text-white mb-2 uppercase tracking-widest">
-            {safeCartTotal >= FREE_SHIPPING_GOAL 
+            {safeCartTotalBRL >= FREE_SHIPPING_GOAL_BRL 
               ? t('cart.free_shipping_success') 
-              : t('cart.free_shipping_away', { amount: amountLeft.toFixed(2) })}
+              // O valor faltante é convertido para a moeda do cliente
+              : t('cart.free_shipping_away', { amount: convertAndFormat(amountLeftBRL) })}
           </p>
           <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div 
@@ -71,8 +76,9 @@ export default function CartDrawer() {
                   <div className="flex-1 flex flex-col justify-between py-1">
                     <div className="flex justify-between items-start gap-2">
                       <div>
+                        {/* TRADUÇÃO DINÂMICA DO NOME */}
                         <h3 className="font-syne font-bold text-gray-900 dark:text-white text-sm line-clamp-1">
-                          {item.name}
+                          {t(`products.${item.name}`, item.name)}
                         </h3>
                       </div>
                       <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500 transition-colors">
@@ -85,8 +91,9 @@ export default function CartDrawer() {
                         <span className="text-xs font-bold w-6 text-center text-gray-900 dark:text-white">{itemQuantity}</span>
                         <button onClick={() => updateQuantity(item.id, 1)} className="px-2.5 py-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">+</button>
                       </div>
+                      {/* PREÇO CONVERTIDO DO ITEM */}
                       <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">
-                        ${(itemPrice * itemQuantity).toFixed(2)}
+                        {convertAndFormat(itemPrice * itemQuantity)}
                       </span>
                     </div>
                   </div>
@@ -100,8 +107,9 @@ export default function CartDrawer() {
         <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
           <div className="flex justify-between items-center mb-6">
             <span className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">{t('cart.subtotal')}</span>
+            {/* SUBTOTAL CONVERTIDO */}
             <span className="font-mono text-lg font-bold text-gray-900 dark:text-white">
-              ${safeCartTotal.toFixed(2)}
+              {convertAndFormat(safeCartTotalBRL)}
             </span>
           </div>
           <button 

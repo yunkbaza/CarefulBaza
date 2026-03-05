@@ -168,7 +168,7 @@
     "result_tag": "Your Ideal Routine",
     "result_title": "The perfect combination for you.",
     "result_desc": "To focus on {{goal}} and treat your {{skin}} skin, we've selected this complete protocol.",
-    "free_shipping": "Free Shipping Included",
+    "free_shipping": "Free Shipping",
     "add_btn": "Add to Bag",
     "decline_btn": "Not now, thanks",
     "q_skin_type": "How would you describe your skin today?",
@@ -247,7 +247,11 @@
     "total": "Total",
     "complete_btn": "Complete Secure Payment",
     "secure_notice": "Payment processed with 256-bit encryption.",
-    "back_cart": "Back to Cart"
+    "back_cart": "Back to Cart",
+    "error_badge": "Payment Interrupted",
+    "error_title": "Payment Declined",
+    "error_msg": "The payment was not completed or was cancelled. Your products are still in the cart if you want to try again.",
+    "try_again": "Try Again"
   },
   "products": {
     "Sérum Renovador Niacinamida": "Niacinamide Renewing Serum",

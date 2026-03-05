@@ -1,13 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const Stripe = require('stripe'); // Voltamos para a Stripe (Global)
+const Stripe = require('stripe'); 
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken'); 
 const crypto = require('crypto'); 
 const nodemailer = require('nodemailer'); 
-// Se usar Node < 18, descomente a linha abaixo e faça 'npm install node-fetch'
-// const fetch = require('node-fetch'); 
+const axios = require('axios'); 
 
 const { PrismaClient } = require('@prisma/client');
 const { PrismaPg } = require('@prisma/adapter-pg');
@@ -15,7 +14,6 @@ const { Pool } = require('pg');
 
 const app = express();
 
-// Inicializamos a Stripe com a chave do .env
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -35,9 +33,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// ==========================================
-// TEMPLATES DE E-MAIL (AGORA EM INGLÊS DE LUXO)
-// ==========================================
 const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -119,20 +114,6 @@ app.post('/auth/verify-email', async (req, res) => {
   res.json({ message: "Email successfully verified!" });
 });
 
-app.post('/auth/resend-verification', async (req, res) => {
-  const customer = await prisma.customer.findUnique({ where: { email: req.body.email } });
-  if (!customer) return res.status(404).json({ error: "Account not found." });
-  if (customer.isVerified) return res.status(400).json({ error: "This account is already verified." });
-
-  const verificationToken = crypto.randomBytes(32).toString('hex');
-  await prisma.customer.update({ where: { email: customer.email }, data: { verificationToken } });
-  const link = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verificar-email?token=${verificationToken}`;
-  const html = baseEmailTemplate("New Access Link", "You requested a new verification link. Click the button below to activate your account.", "Verify Email", link);
-  
-  if (process.env.EMAIL_PASS) await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: customer.email, subject: "Resend: Confirm your account", html });
-  res.json({ message: "Verification email resent!" });
-});
-
 app.post('/auth/login', async (req, res) => {
   try {
     const customer = await prisma.customer.findUnique({ where: { email: req.body.email } });
@@ -144,145 +125,76 @@ app.post('/auth/login', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Server error." }); }
 });
 
-app.post('/auth/forgot-password', async (req, res) => {
+async function getExchangeRate(targetCurrency) {
+  if (targetCurrency.toLowerCase() === 'brl') return 1;
+  const apiKey = process.env.EXCHANGE_API_KEY;
+  if (!apiKey) return 1; 
+
   try {
-    const customer = await prisma.customer.findUnique({ where: { email: req.body.email } });
-    if (!customer) return res.status(200).json({ message: "If the email exists in our database, you will receive a recovery link." });
-
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    await prisma.customer.update({ where: { email: customer.email }, data: { resetToken } });
-
-    const link = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/redefinir-senha?token=${resetToken}`;
-    const html = baseEmailTemplate("Password Recovery", "We received a request to change your account password. If this was not you, please ignore this email.", "Reset Password", link);
-    
-    if (process.env.EMAIL_PASS) {
-      await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: customer.email, subject: "Reset your password", html });
-    } else {
-      console.log(`🔗 LOCAL TEST (RESET PASSWORD): ${link}`);
-    }
-    
-    res.json({ message: "If the email exists in our database, you will receive a recovery link." });
-  } catch (error) { res.status(500).json({ error: "Error processing request." }); }
-});
-
-app.post('/auth/reset-password', async (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
-    const customer = await prisma.customer.findFirst({ where: { resetToken: token } });
-    if (!customer) return res.status(400).json({ error: "Invalid or expired recovery link." });
-
-    await prisma.customer.update({
-      where: { id: customer.id },
-      data: { password: await bcrypt.hash(newPassword, 10), resetToken: null }
-    });
-
-    res.json({ message: "Password changed successfully! You can now log in." });
-  } catch (error) { res.status(500).json({ error: "Error changing password." }); }
-});
-
-app.put('/auth/profile', authenticateToken, async (req, res) => {
-  const updatedCustomer = await prisma.customer.update({ where: { id: req.user.customerId }, data: { name: req.body.name, phone: req.body.phone } });
-  res.json({ message: "Profile updated successfully!", user: { id: updatedCustomer.id, name: updatedCustomer.name, email: updatedCustomer.email, phone: updatedCustomer.phone } });
-});
-
-app.get('/my-orders', authenticateToken, async (req, res) => {
-  const orders = await prisma.order.findMany({ where: { customerId: req.user.customerId }, include: { items: { include: { product: true } } }, orderBy: { createdAt: 'desc' } });
-  res.json(orders.map(o => ({ ...o, totalAmount: o.totalAmount / 100, items: o.items.map(i => ({ ...i, price: i.price / 100 })) })));
-});
-
-app.post('/debug/create-test-order', authenticateToken, async (req, res) => {
-  try {
-    const product = await prisma.product.findFirst();
-    if (!product) return res.status(400).json({ error: "No products available to create a test order." });
-
-    await prisma.order.create({
-      data: {
-        totalAmount: product.price,
-        status: 'PAID',
-        customerId: req.user.customerId,
-        addressLine1: 'Global Luxury St, 100',
-        city: 'New York',
-        state: 'NY',                 
-        zipCode: '10001',        
-        trackingCode: `BZ${Math.floor(Math.random() * 1000000000)}US`, 
-        items: { create: [{ quantity: 1, price: product.price, productId: product.id }] }
-      }
-    });
-    res.json({ message: "Test order generated successfully!" });
-  } catch (error) { 
-    console.error("ERROR CREATING TEST ORDER:", error);
-    res.status(500).json({ error: "Internal error creating order." }); 
+    const response = await axios.get(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/BRL`);
+    if (response.data.result === 'success') {
+      return response.data.conversion_rates[targetCurrency.toUpperCase()] || 1;
+    } 
+  } catch (error) {
+    console.error("🔴 FALHA DE CONEXÃO COM A API DE CÂMBIO:", error.message);
   }
-});
+  return 1;
+}
 
 // ==========================================
-// CHECKOUT GLOBAL COM STRIPE E CÂMBIO DINÂMICO
+// CHECKOUT EXCLUSIVO COM STRIPE (AGORA BILÍNGUE)
 // ==========================================
 app.post('/create-checkout-session', async (req, res) => {
   try {
-    const { items, currency = 'usd' } = req.body; // currency vem do frontend
-
-    // 1. Busca a taxa de conversão (Base = BRL)
-    const EXCHANGE_API_KEY = process.env.EXCHANGE_API_KEY; 
-    let rate = 1; // Fallback seguro para 1 se a API falhar ou não houver chave
+    // 1. Recebemos também o 'locale' que o site nos enviar
+    const { items, currency = 'usd', locale = 'pt' } = req.body; 
     
-    if (EXCHANGE_API_KEY && currency.toLowerCase() !== 'brl') {
-      try {
-        const exchangeResponse = await fetch(`https://v6.exchangerate-api.com/v6/${EXCHANGE_API_KEY}/latest/BRL`);
-        const exchangeData = await exchangeResponse.json();
-        
-        if (exchangeData.result === 'success') {
-          // Ex: Se currency for 'usd', rate será algo como 0.17 (1 BRL = 0.17 USD)
-          rate = exchangeData.conversion_rates[currency.toUpperCase()] || 1;
-        }
-      } catch (err) {
-        console.error("Falha ao buscar câmbio na API, usando taxa fallback 1:1", err);
-      }
-    }
+    // 2. Traduzimos o idioma do seu site para o formato que o Stripe entende
+    const stripeLocales = {
+      'pt': 'pt-BR',
+      'en': 'en',
+      'es': 'es',
+      'fr': 'fr',
+      'de': 'de',
+      'ru': 'ru',
+      'zh': 'zh'
+    };
+    const stripeLocale = stripeLocales[locale] || 'auto';
 
-    // 2. Prepara os itens convertendo o preço do banco (BRL) para a moeda do cliente
+    const rate = await getExchangeRate(currency);
+    
     const lineItems = items.map((item) => {
       const priceInClientCurrency = item.price * rate;
-
       return {
         price_data: {
           currency: currency.toLowerCase(), 
-          product_data: {
-            name: item.name,
-            images: [item.image],
-          },
-          // Multiplica por 100 e arredonda porque o Stripe cobra em centavos
+          product_data: { name: item.name, images: [item.image] },
           unit_amount: Math.round(priceInClientCurrency * 100), 
         },
         quantity: item.quantity,
       };
     });
 
-    // 3. Verifica o Frete Grátis com base no valor total em REAIS
     const totalEmReais = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const FRETE_GRATIS_META_BRL = 250; 
     const valorFreteFixoBRL = 25.90;
 
     if (totalEmReais < FRETE_GRATIS_META_BRL) {
-      // Converte o frete fixo de R$ 25,90 para a moeda do cliente
       const shippingInClientCurrency = valorFreteFixoBRL * rate;
       lineItems.push({
         price_data: {
           currency: currency.toLowerCase(),
-          product_data: {
-            name: 'Shipping / Frete',
-          },
+          product_data: { name: 'Shipping / Frete' },
           unit_amount: Math.round(shippingInClientCurrency * 100),
         },
         quantity: 1,
       });
     }
 
-    // 4. Cria a Sessão no Stripe
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'], // O Stripe cuida de Apple Pay/Google Pay automaticamente
       line_items: lineItems,
       mode: 'payment',
+      locale: stripeLocale, // <-- Isto força o Stripe a mudar a linguagem da tela inteira!
       success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=success`,
       cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=error`,
     });
@@ -297,5 +209,5 @@ app.post('/create-checkout-session', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => { 
-  console.log(`✅ Global Server running on port ${PORT} with Dynamic Stripe Checkout!`); 
+  console.log(`✅ Global Server running on port ${PORT} with Stripe exclusively!`); 
 });

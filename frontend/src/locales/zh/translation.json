@@ -168,7 +168,7 @@
     "result_tag": "您的理想方案",
     "result_title": "为您量身定制的组合。",
     "result_desc": "针对 {{goal}} 并护理您的 {{skin}} 肌肤，我们选择了此方案。",
-    "free_shipping": "包含免邮",
+    "free_shipping": "免邮",
     "add_btn": "加入购物袋",
     "decline_btn": "暂时不需要，谢谢",
     "q_skin_type": "您如何描述目前的肤质？",
@@ -247,7 +247,11 @@
     "total": "总计",
     "complete_btn": "完成安全付款",
     "secure_notice": "使用 256 位加密处理付款。",
-    "back_cart": "返回购物袋"
+    "back_cart": "返回购物袋",
+    "error_badge": "支付中断",
+    "error_title": "支付被拒",
+    "error_msg": "支付未完成或已被取消。如果您想再试一次，您的商品仍在购物车中。",
+    "try_again": "重试"
   },
   "products": {
     "Sérum Renovador Niacinamida": "烟酰胺焕活精华",

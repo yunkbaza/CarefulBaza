@@ -247,7 +247,11 @@
     "total": "Gesamt",
     "complete_btn": "Sichere Zahlung abschließen",
     "secure_notice": "Zahlung mit 256-Bit-Verschlüsselung verarbeitet.",
-    "back_cart": "Zurück zum Warenkorb"
+    "back_cart": "Zurück zum Warenkorb",
+    "error_badge": "Zahlung Unterbrochen",
+    "error_title": "Zahlung Abgelehnt",
+    "error_msg": "Die Zahlung wurde nicht abgeschlossen oder abgebrochen. Ihre Produkte befinden sich weiterhin im Warenkorb, falls Sie es erneut versuchen möchten.",
+    "try_again": "Erneut Versuchen"
   },
   "products": {
     "Sérum Renovador Niacinamida": "Niacinamid Erneuerungsserum",
