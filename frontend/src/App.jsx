@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
+import { useTranslation } from 'react-i18next'; // 🌍 Adicionamos a importação da tradução
 import AnnouncementBar from './components/AnnouncementBar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -34,6 +35,7 @@ function ScrollToTop() {
 
 function MainLayout() {
   const { isCartOpen } = useCart();
+  const { i18n } = useTranslation(); // 🌍 Trazemos a instância de idiomas
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -43,9 +45,10 @@ function MainLayout() {
     return savedTheme === 'dark';
   });
 
+  // 🌍 Atualizado: O idioma do HTML agora muda dinamicamente
   useEffect(() => {
     const htmlElement = document.documentElement;
-    htmlElement.lang = 'pt-BR'; 
+    htmlElement.lang = i18n.language || 'pt-BR'; 
     
     if (isDarkMode) {
       htmlElement.classList.add('dark');
@@ -54,7 +57,7 @@ function MainLayout() {
       htmlElement.classList.remove('dark');
       localStorage.setItem('@CarefulBaza:theme', 'light');
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, i18n.language]);
 
   useEffect(() => {
     if (isCartOpen || isMobileMenuOpen || isQuizOpen || isSearchOpen) {
@@ -90,7 +93,7 @@ function MainLayout() {
             <Route path="/shop" element={<CollectionPage />} />
             <Route path="/colecao/:categoryId" element={<CollectionPage />} />
             <Route path="/sobre" element={<AboutPage />} />
-            <Route path="/ciencia/:topicId" element={<SciencePage />} />
+            <Route path="/ciencia/:topicId?" element={<SciencePage />} /> {/* 🛡️ Adicionado o '?' para evitar tela branca */}
             <Route path="/rastreio" element={<TrackPage />} />
             <Route path="/info/:pageId" element={<LegalPage />} />
             

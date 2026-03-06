@@ -57,9 +57,26 @@ export default function MobileMenu({ isOpen, onClose, onOpenQuiz }) {
             </div>
           </div>
 
-          <Link to="/ciencia/ativos" onClick={onClose} className="font-syne text-3xl font-bold text-gray-900 dark:text-white hover:text-baza-lavender dark:hover:text-baza-mint transition-colors">
-            {t('nav.science')}
-          </Link>
+          {/* Secção da Ciência Corrigida */}
+          <div className="flex flex-col gap-5">
+            <span className="font-syne text-3xl font-bold text-gray-900 dark:text-white cursor-default">
+              {t('nav.science')}
+            </span>
+            <div className="flex flex-col gap-4 pl-4 border-l-2 border-baza-mint/30 dark:border-baza-mint/20 transition-colors duration-300">
+              <Link to="/ciencia/tipos-de-pele" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">
+                {t('nav.skin_types')}
+              </Link>
+              <Link to="/ciencia/tipos-de-cabelo" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">
+                {t('nav.hair_types')}
+              </Link>
+              <Link to="/ciencia/ativos" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">
+                {t('nav.ingredients')}
+              </Link>
+              <Link to="/ciencia/dicas" onClick={onClose} className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-baza-lavender dark:hover:text-baza-mint uppercase tracking-widest transition-colors">
+                {t('nav.tips')}
+              </Link>
+            </div>
+          </div>
           
           <button 
             onClick={() => { onOpenQuiz(); onClose(); }} 

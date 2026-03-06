@@ -225,14 +225,120 @@
     }
   },
   "science": {
-    "back": "Voltar para Home",
-    "default_title": "Editorial Care",
-    "default_subtitle": "Nossos cadernos científicos estão em atualização.",
-    "default_intro": "Selecione uma categoria no menu para aceder aos artigos.",
-    "golden_tip": "A Dica de Ouro",
-    "solution_title": "A Solução Ideal",
-    "why_works": "Por que funciona?",
-    "add_btn": "Adicionar"
+    "ui": {
+      "back_home": "Voltar para Home",
+      "golden_tip": "A Dica de Ouro",
+      "ideal_solution": "A Solução Ideal",
+      "why_it_works": "Por que funciona?",
+      "add_btn": "Adicionar",
+      "disclaimer": "As informações deste editorial têm fins estritamente educativos e traduzem a ciência dermatológica para o dia a dia. Em caso de patologias, alergias extremas ou condições inflamatórias severas, suspenda o uso de cosméticos e consulte um médico de sua confiança."
+    },
+    "fallback": {
+      "title": "Editorial Care",
+      "subtitle": "Nossos cadernos científicos estão em atualização.",
+      "intro": "Selecione uma categoria no menu \"A Ciência\" para acessar nossos artigos mais recentes."
+    },
+    "skin": {
+      "title": "Guia Definitivo: Tipos de Pele",
+      "subtitle": "Entenda a biologia do seu rosto para uma rotina de alta performance.",
+      "intro": "Identificar seu tipo de pele é o primeiro passo para parar de gastar dinheiro com produtos errados. A pele é um órgão vivo e dinâmico, e suas necessidades mudam. Abaixo, mapeamos os perfis mais comuns e a ciência exata para tratá-los.",
+      "oily": {
+        "title": "Pele Oleosa e com Poros Dilatados",
+        "body": "Caracterizada pela superprodução de sebo pelas glândulas sebáceas. O brilho excessivo aparece poucas horas após a lavagem e os poros ficam visíveis. O erro mais comum é lavar o rosto várias vezes ao dia com sabonetes fortes, o que remove a proteção natural e causa o \"efeito rebote\" (a pele entra em pânico e produz o dobro de óleo).",
+        "tip": "Evite esfoliantes de bolinhas grossas. Eles geram microlesões que inflamam os poros. Prefira uma esfoliação química suave e hidratação ultraleve em gel.",
+        "prod_name": "Sérum Renovador",
+        "prod_cat": "Controle de Oleosidade",
+        "prod_tag": "Mais Vendido",
+        "why": "A Niacinamida penetra nos poros e \"avisa\" a glândula para diminuir a produção de óleo, enquanto o Zinco age secando as espinhas ativas."
+      },
+      "dry": {
+        "title": "Pele Seca e Barreira Comprometida",
+        "body": "Ao contrário da pele desidratada (que apenas precisa de água), a pele seca não produz lipídios (óleos naturais) suficientes. Sem esse \"cimento\" natural, a água que você bebe evapora pela pele facilmente. Ela repuxa, tem textura áspera e descama.",
+        "tip": "Nunca lave o rosto com água quente do chuveiro. A alta temperatura derrete os poucos óleos naturais que sua pele conseguiu produzir para se defender.",
+        "prod_name": "Hidratante Aqua Glow",
+        "prod_cat": "Reposição Lipídica",
+        "prod_tag": "Para Viço",
+        "why": "Combina Ácido Hialurônico (para puxar água) e Ceramidas (para trancar essa água lá dentro), restaurando o conforto no primeiro uso."
+      },
+      "sensitive": {
+        "title": "Pele Sensível e Avermelhada",
+        "body": "A pele sensível é uma condição de inflamação. A barreira de proteção está tão fina que vento, cosméticos e até o estresse penetram fácil, ativando alertas que geram vermelhidão e ardência. O foco aqui não é renovar, é acalmar.",
+        "tip": "Adote o minimalismo (Skin Diet). Quando a pele estiver em crise ardendo, suspenda ácidos e use apenas sabonete suave e um hidratante calmante.",
+        "prod_name": "Bruma Revitalizante",
+        "prod_cat": "S.O.S Barreira Cutânea",
+        "prod_tag": "Dermatológico",
+        "why": "Seus prebióticos botânicos alimentam as \"bactérias boas\" da pele, criando uma camada protetora que reduz a vermelhidão na mesma hora."
+      }
+    },
+    "ingredients": {
+      "title": "Dicionário Clínico de Ativos",
+      "subtitle": "Transparência total sobre o que realmente transforma sua pele.",
+      "intro": "A indústria cosmética lucra com promessas vazias e nomes complicados. Na Careful Baza Labs, nós traduzimos a ciência para você saber exatamente no que está investindo.",
+      "niacinamide": {
+        "title": "Niacinamida (Vitamina B3)",
+        "body": "É como o \"faz-tudo\" do skincare. Ela clareia manchas (bloqueando o pigmento de subir para a superfície), diminui o tamanho visual dos poros e acalma espinhas inflamadas. O melhor de tudo? Não irrita e pode ser usada sob o sol.",
+        "tip": "Séruns de Niacinamida combinam com tudo. Você pode misturar com Vitamina C de manhã ou Retinol à noite sem medo de dar reação.",
+        "prod_name": "Sérum Renovador",
+        "prod_cat": "Niacinamida 10%",
+        "prod_tag": "Alta Concentração",
+        "why": "Uma dose clínica de 10% garante resultados visíveis em 14 dias para poros e textura irregular, com zero ardência."
+      },
+      "retinol": {
+        "title": "Retinol (Vitamina A)",
+        "body": "O único ativo provado por cientistas que realmente reverte o envelhecimento. Ele entra na célula e manda ela \"trabalhar mais rápido\", trocando a pele velha por uma nova. Afina a parte de cima (dando brilho) e engrossa a de baixo (estimulando colágeno).",
+        "tip": "Se você é iniciante no Retinol, use a técnica do \"Sanduíche\": Aplique hidratante, depois o Retinol, e depois hidratante por cima de novo. Isso evita descamação.",
+        "prod_name": "Essência Noturna",
+        "prod_cat": "Renovação Celular",
+        "prod_tag": "Uso Noturno",
+        "why": "Envelopamos o ativo em nanocápsulas. Ele entra na pele e só se abre lá no fundo, garantindo colágeno novo sem deixar o rosto vermelho."
+      }
+    },
+    "hair": {
+      "title": "A Ciência da Tricologia",
+      "subtitle": "Diagnosticando a saúde estrutural dos seus fios.",
+      "intro": "Saber se o seu cabelo é liso ou crespo é apenas estética. Para tratar de verdade, precisamos olhar no microscópio e entender a porosidade (o nível de dano da \"capa\" que protege o fio).",
+      "porous": {
+        "title": "Cabelo Poroso e Danificado (Com Frizz)",
+        "body": "Imagine o fio de cabelo como um telhado. Num cabelo saudável, as telhas (cutículas) estão bem fechadas. No cabelo poroso (por causa de chapinha, descoloração ou sol), as telhas estão levantadas. A água do chuveiro entra fácil, mas evapora em segundos, deixando o fio seco e armado.",
+        "tip": "Faça o teste do copo: coloque um fio de cabelo solto num copo d'água. Se afundar rápido, é poroso (precisa de óleo e reconstrução). Se ficar boiando no topo, é pouco poroso (só precisa de hidratação leve).",
+        "prod_name": "Óleo Reparador Botânico",
+        "prod_cat": "Selagem de Cutículas",
+        "prod_tag": "Tratamento",
+        "why": "Os óleos vegetais densos agem como uma \"cola\" para as telhas do cabelo, selando as cutículas e impedindo a umidade de escapar ao longo do dia."
+      },
+      "fine": {
+        "title": "Fios Finos, Oleosos e Sem Volume",
+        "body": "O cabelo fino é muito delicado e tem menos \"corpo\". Como o fio é muito liso e leve, a oleosidade natural que o couro cabeludo produz escorrega até as pontas muito rápido, deixando o cabelo com aspecto \"murcho\" no mesmo dia que lavou.",
+        "tip": "A regra de ouro para cabelos finos: O condicionador nunca deve tocar do meio para cima da cabeça. Aplique apenas nas pontinhas extremas para não pesar a raiz.",
+        "prod_name": "Bruma Revitalizante (Uso Capilar)",
+        "prod_cat": "Detox Capilar",
+        "prod_tag": "Volume Natural",
+        "why": "Sendo 100% livre de silicones pesados, desembaraça o cabelo fino trazendo maciez, sem adicionar o peso de cremes tradicionais."
+      }
+    },
+    "tips": {
+      "title": "Protocolos de Rotina",
+      "subtitle": "A engenharia por trás de um skincare impecável.",
+      "intro": "Comprar produtos caros e aplicar na ordem errada joga dinheiro no lixo. A regra universal da cosmetologia é simples: aplique sempre do produto mais líquido para o mais grosso.",
+      "morning": {
+        "title": "A Rotina da Manhã (Ataque & Defesa)",
+        "body": "O objetivo da manhã não é tratar problemas graves, é proteger seu rosto do sol, da fumaça dos carros e da luz do celular. O protocolo correto é: 1. Limpeza Suave > 2. Antioxidante (ex: Vitamina C) > 3. Hidratante Leve > 4. Protetor Solar.",
+        "tip": "Se a sua pele for normal a seca, você não precisa usar sabonete de manhã! Apenas lave o rosto com água fria. Isso salva a hidratação que sua pele construiu enquanto você dormia.",
+        "prod_name": "Sérum Renovador",
+        "prod_cat": "Defesa Antioxidante",
+        "prod_tag": "Uso Diurno",
+        "why": "A Niacinamida age como um escudo que protege as células contra o escurecimento de manchas causado pela radiação e poluição diária."
+      },
+      "night": {
+        "title": "A Rotina Noturna (Conserto & Reparação)",
+        "body": "Durante o sono profundo, o seu fluxo de sangue no rosto aumenta e a pele entra em \"modo reforma\". Essa é a hora de colocar os ativos fortes (como os ácidos) para trabalhar. A ordem é: 1. Limpeza Profunda > 2. Tratamento Específico (Séruns) > 3. Creme Hidratante Rico.",
+        "tip": "O segredo coreano da Limpeza Dupla (Double Cleansing): Use um produto à base de óleo primeiro para derreter a maquiagem e o protetor solar, e depois lave com seu sabonete facial em gel para limpar os poros de verdade.",
+        "prod_name": "Hidratante Aqua Glow",
+        "prod_cat": "Selamento Noturno",
+        "prod_tag": "Creme Noturno",
+        "why": "Usado como último passo da noite, ele cria um \"cobertor\" invisível sobre a pele, impedindo que a água e os séruns evaporem enquanto você dorme."
+      }
+    }
   },
   "checkout": {
     "title": "Finalizar Compra",
@@ -252,7 +358,6 @@
     "error_title": "Pagamento Recusado",
     "error_msg": "O pagamento não foi concluído ou foi cancelado. Os seus produtos continuam no carrinho, caso queira tentar novamente.",
     "try_again": "Tentar Novamente"
-    
   },
   "products": {
     "Sérum Renovador Niacinamida": "Sérum Renovador Niacinamida",
@@ -307,5 +412,4 @@
     "successUpdate": "Os seus dados foram salvos com sucesso.",
     "errorUpdate": "Erro ao atualizar os dados."
   }
-  
 }

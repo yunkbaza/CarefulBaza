@@ -92,10 +92,10 @@ export default function Navbar({ onOpenMenu, onOpenQuiz, toggleDarkMode, isDarkM
         </Link>
       </div>
 
-      {/* Lado Direito: Ferramentas e Seletor de Idioma (LIMPO) */}
+      {/* Lado Direito: Ferramentas e Seletor de Idioma */}
       <div className="flex items-center gap-5 md:gap-7 text-gray-900 dark:text-white">
         
-        {/* SELETOR DE IDIOMA - DROPDOWN MINIMALISTA */}
+        {/* SELETOR DE IDIOMA */}
         <div className="relative group hidden md:block py-2">
           <button className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">
             {i18n.language ? i18n.language.substring(0, 2).toUpperCase() : 'EN'}
