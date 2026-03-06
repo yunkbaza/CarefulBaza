@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // 🛡️ ADICIONADO useLocation
 import { useAuth } from '../context/AuthContext';
-import { useTranslation } from 'react-i18next'; // Importação do tradutor
+import { useTranslation } from 'react-i18next';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,8 +14,9 @@ export default function LoginPage() {
   const [resendMessage, setResendMessage] = useState('');
 
   const navigate = useNavigate();
+  const location = useLocation(); // 🛡️ INICIALIZADO useLocation
   const { login } = useAuth();
-  const { t } = useTranslation(); // Inicialização
+  const { t } = useTranslation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -40,7 +41,12 @@ export default function LoginPage() {
       }
 
       login(data.user, data.token);
-      navigate('/minha-conta');
+      
+      // 🛡️ A MAGIA DO REDIRECIONAMENTO INTELIGENTE
+      // Se veio do checkout, volta para lá. Se não, vai para a conta.
+      const from = location.state?.from || '/minha-conta'; 
+      navigate(from);
+
     } catch (err) {
       setError(err.message);
     } finally {

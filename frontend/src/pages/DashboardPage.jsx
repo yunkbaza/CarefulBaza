@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateMessage, setUpdateMessage] = useState({ type: '', text: '' });
 
+  // Proteção da rota e carregamento de dados
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -43,9 +44,12 @@ export default function DashboardPage() {
       }
     };
 
-    fetchOrders();
+    if (token) {
+      fetchOrders();
+    }
   }, [user, token, navigate]);
 
+  // Função para atualizar os dados do perfil
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setIsUpdating(true);
@@ -65,32 +69,12 @@ export default function DashboardPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
 
-      login(data.user, token);
-      setUpdateMessage({ type: 'success', text: 'Your details have been saved successfully.' });
+      login(data.user, token); // Atualiza o contexto com os novos dados
+      setUpdateMessage({ type: 'success', text: 'Seus dados foram atualizados com sucesso.' });
     } catch (err) {
-      setUpdateMessage({ type: 'error', text: err.message || 'Error updating details.' });
+      setUpdateMessage({ type: 'error', text: err.message || 'Erro ao atualizar os dados.' });
     } finally {
       setIsUpdating(false);
-    }
-  };
-
-  const handleCreateTestOrder = async () => {
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/debug/create-test-order`, { 
-        method: 'POST', 
-        headers: { 'Authorization': `Bearer ${token}` } 
-      });
-      
-      if (response.ok) {
-        window.location.reload(); 
-      } else {
-        const errorData = await response.json();
-        alert("Server error: " + errorData.error);
-      }
-    } catch (error) { 
-      console.error("Error generating test order:", error); 
-      alert("Failed to communicate with the server.");
     }
   };
 
@@ -105,7 +89,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-32 px-6 md:px-16 transition-colors duration-300">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12">
         
-        {/* Profile Sidebar */}
+        {/* Menu Lateral (Sidebar) */}
         <aside className="w-full lg:w-1/4">
           <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-8 shadow-sm transition-colors rounded-sm">
             <div className="w-16 h-16 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full flex items-center justify-center font-syne font-bold text-2xl mb-6">
@@ -128,7 +112,6 @@ export default function DashboardPage() {
                 Personal Details
               </button>
               
-              {/* NOVA OPÇÃO DE RASTREIO AQUI! */}
               <Link 
                 to="/rastreio" 
                 className="text-left text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -143,10 +126,10 @@ export default function DashboardPage() {
           </div>
         </aside>
 
-        {/* Main Content */}
+        {/* Conteúdo Principal */}
         <main className="w-full lg:w-3/4">
           
-          {/* TAB: MY ORDERS */}
+          {/* ABA: MEUS PEDIDOS */}
           {activeTab === 'orders' && (
             <div className="animate-in fade-in duration-500">
               <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-8">My Orders</h1>
@@ -158,17 +141,9 @@ export default function DashboardPage() {
               ) : orders.length === 0 ? (
                 <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-12 text-center transition-colors">
                   <p className="text-gray-500 dark:text-gray-400 mb-6">You haven't placed any orders yet.</p>
-                  <div className="flex flex-col sm:flex-row justify-center gap-4">
-                    <Link to="/shop" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-all shadow-md inline-block">
-                      Explore Collection
-                    </Link>
-                    <button 
-                      onClick={handleCreateTestOrder}
-                      className="border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      Generate Demo Order
-                    </button>
-                  </div>
+                  <Link to="/shop" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-all shadow-md inline-block">
+                    Explore Collection
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-6">
@@ -201,7 +176,7 @@ export default function DashboardPage() {
                         ))}
                       </div>
 
-                      {/* Tracking Section */}
+                      {/* Secção de Rastreio */}
                       {order.trackingCode ? (
                         <div className="mt-8 bg-baza-mint/5 dark:bg-baza-mint/10 border border-baza-mint/20 p-4 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4">
                           <div>
@@ -227,7 +202,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* TAB: PERSONAL DETAILS */}
+          {/* ABA: DADOS PESSOAIS */}
           {activeTab === 'profile' && (
             <div className="animate-in fade-in duration-500">
               <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-8">Personal Information</h1>

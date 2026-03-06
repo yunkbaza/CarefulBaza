@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useTranslation } from 'react-i18next';
 import { useCurrency, CURRENCY_MAP } from '../hooks/useCurrency';
+import { useAuth } from '../context/AuthContext'; // 🛡️ Importação do Contexto de Auth
 
 // --- FUNÇÕES DE MÁSCARA ---
 const maskPhone = (val) => val.replace(/\D/g, '').replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{4,5})(\d{4}).*/, '$1-$2').substring(0, 15);
@@ -11,6 +12,7 @@ const maskCEP = (val) => val.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart } = useCart();
+  const { user } = useAuth(); // 🛡️ Pegamos o utilizador logado
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
@@ -33,24 +35,35 @@ export default function CheckoutPage() {
   const shippingCost = hasFreeShipping ? 0 : FIXED_SHIPPING_COST_BRL;
   const finalTotal = cartTotal + shippingCost;
 
+  // 🛡️ BLOQUEIO DE SEGURANÇA E PROTEÇÃO DE LOOP
   useEffect(() => {
     const query = new URLSearchParams(location.search);
-    if (query.get('status') === 'success') {
+    const status = query.get('status');
+
+    // REGRA 1: Se o utilizador NÃO estiver logado, bloqueia e manda para o Login
+    if (!user && checkoutStatus !== 'success' && checkoutStatus !== 'error') {
+      navigate('/login', { state: { from: '/checkout' } }); 
+      return; 
+    }
+
+    // REGRA 2: Se está logado mas o carrinho está vazio, manda para a loja
+    if (user && cartItems.length === 0 && checkoutStatus !== 'success' && checkoutStatus !== 'error') {
+      navigate('/shop');
+      return;
+    }
+
+    // REGRA 3: Lida com o retorno do Stripe (Evita Loop)
+    if (status === 'success' && checkoutStatus !== 'success') {
       const randomOrder = `BZ-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
       setOrderNumber(randomOrder);
       setCheckoutStatus('success');
       clearCart();
     }
-    if (query.get('status') === 'error') {
+    
+    if (status === 'error' && checkoutStatus !== 'error') {
       setCheckoutStatus('error');
     }
-  }, [location.search, clearCart]);
-
-  useEffect(() => {
-    if (cartItems.length === 0 && checkoutStatus !== 'success' && checkoutStatus !== 'error') {
-      navigate('/shop');
-    }
-  }, [cartItems, checkoutStatus, navigate]);
+  }, [user, location.search, checkoutStatus, clearCart, cartItems.length, navigate]);
 
   const handleCheckout = async (e) => {
     e.preventDefault();
@@ -64,7 +77,8 @@ export default function CheckoutPage() {
         body: JSON.stringify({ 
           items: cartItems,
           currency: targetCurrency.toLowerCase(),
-          locale: currentLng // <-- Agora avisamos o servidor qual é a língua atual!
+          locale: currentLng,
+          userId: user?.id // 🛡️ AGORA ENVIAMOS QUEM ESTÁ A COMPRAR!
         }), 
       });
 
@@ -94,14 +108,14 @@ export default function CheckoutPage() {
           <div className="w-20 h-20 bg-baza-lavender dark:bg-baza-mint text-white dark:text-gray-900 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
-          <span className="text-baza-lavender dark:text-baza-mint font-bold uppercase tracking-widest text-[10px] mb-4 block">Pagamento Aprovado</span>
+          <span className="text-baza-lavender dark:text-baza-mint font-bold uppercase tracking-widest text-[10px] mb-4 block">{t('checkout.success_badge', 'Pagamento Aprovado')}</span>
           <h1 className="font-syne text-4xl font-bold text-gray-900 dark:text-white mb-4">{t('auth.verify_success_title')}</h1>
           <p className="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed">{t('auth.verify_success_msg')}</p>
           <div className="bg-gray-50 dark:bg-gray-900 p-6 border border-gray-100 dark:border-gray-700 mb-10">
-            <span className="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-1">ID do Pedido</span>
+            <span className="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-1">{t('checkout.order_id', 'ID do Pedido')}</span>
             <span className="font-mono text-2xl font-bold text-gray-900 dark:text-white">{orderNumber}</span>
           </div>
-          <Link to="/" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint transition-all shadow-md">
+          <Link to="/" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint transition-all shadow-md inline-block w-full">
             {t('auth.verify_back_btn')}
           </Link>
         </div>
@@ -116,17 +130,16 @@ export default function CheckoutPage() {
           <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg border border-red-200 dark:border-red-800/50">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </div>
-          {/* Adicionadas Traduções Dinâmicas Abaixo */}
-          <span className="text-red-500 font-bold uppercase tracking-widest text-[10px] mb-4 block">{t('checkout.error_badge', 'Pagamento Interrompido')}</span>
-          <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('checkout.error_title', 'Pagamento Recusado')}</h1>
+          <span className="text-red-500 font-bold uppercase tracking-widest text-[10px] mb-4 block">{t('checkout.error_badge')}</span>
+          <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('checkout.error_title')}</h1>
           <p className="text-gray-500 dark:text-gray-400 mb-10 text-sm leading-relaxed">
-            {t('checkout.error_msg', 'O pagamento não foi concluído ou foi cancelado. Os seus produtos continuam no carrinho, caso queira tentar novamente.')}
+            {t('checkout.error_msg')}
           </p>
           <button 
             onClick={() => setCheckoutStatus('form')}
-            className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint transition-colors shadow-md"
+            className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint transition-colors shadow-md w-full"
           >
-            {t('checkout.try_again', 'Tentar Novamente')}
+            {t('checkout.try_again')}
           </button>
         </div>
       </div>
@@ -151,14 +164,15 @@ export default function CheckoutPage() {
             
             <form id="checkout-form" onSubmit={handleCheckout} className="space-y-12">
               <section>
-                <h2 className="font-syne text-xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-800 pb-4 transition-colors">1. Contato</h2>
+                <h2 className="font-syne text-xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-800 pb-4 transition-colors">{t('checkout.contact_title', '1. Contato')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t('checkout.email_label')}</label>
-                    <input type="email" required className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3.5 text-sm text-gray-900 dark:text-white outline-none focus:border-baza-lavender dark:focus:border-baza-mint transition-colors shadow-sm" placeholder="seu@email.com" />
+                    {/* Auto-preenche o email do utilizador logado */}
+                    <input type="email" required defaultValue={user?.email || ''} className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3.5 text-sm text-gray-900 dark:text-white outline-none focus:border-baza-lavender dark:focus:border-baza-mint transition-colors shadow-sm" placeholder="seu@email.com" />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Telefone</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t('checkout.phone_label', 'Telefone')}</label>
                     <input 
                       type="tel" 
                       required 
@@ -177,11 +191,11 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t('checkout.name_label')}</label>
-                      <input type="text" required className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3.5 text-sm text-gray-900 dark:text-white outline-none focus:border-baza-lavender dark:focus:border-baza-mint transition-colors shadow-sm" />
+                      <input type="text" required defaultValue={user?.name || ''} className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3.5 text-sm text-gray-900 dark:text-white outline-none focus:border-baza-lavender dark:focus:border-baza-mint transition-colors shadow-sm" />
                     </div>
                     {i18n.language === 'pt' && (
                       <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">CPF</label>
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t('checkout.cpf_label', 'CPF')}</label>
                         <input type="text" required value={cpf} onChange={(e) => setCpf(maskCPF(e.target.value))} className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3.5 text-sm text-gray-900 dark:text-white outline-none focus:border-baza-lavender dark:focus:border-baza-mint transition-colors shadow-sm" placeholder="000.000.000-00" />
                       </div>
                     )}
@@ -208,17 +222,17 @@ export default function CheckoutPage() {
                   <h2 className="font-syne text-xl font-bold text-gray-900 dark:text-white transition-colors">3. {t('checkout.payment_method')}</h2>
                   <div className="flex items-center gap-1 text-baza-lavender dark:text-baza-mint">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <span className="text-[9px] font-bold uppercase tracking-widest">Seguro SSL</span>
+                    <span className="text-[9px] font-bold uppercase tracking-widest">{t('checkout.ssl_secure', 'Seguro SSL')}</span>
                   </div>
                 </div>
                 
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 shadow-sm mb-6 transition-colors">
                   <label className="flex items-center gap-3 cursor-pointer mb-4">
                     <input type="radio" name="payment" defaultChecked className="w-4 h-4 text-baza-lavender dark:text-baza-mint accent-baza-lavender dark:accent-baza-mint" />
-                    <span className="font-bold text-gray-900 dark:text-white text-sm">Cartão de Crédito Internacional, Apple Pay & Google Pay</span>
+                    <span className="font-bold text-gray-900 dark:text-white text-sm">{t('checkout.payment_methods', 'Cartão de Crédito Internacional, Apple Pay & Google Pay')}</span>
                   </label>
                   <p className="text-xs text-gray-500 dark:text-gray-400 p-4 bg-gray-50 dark:bg-gray-900 rounded-sm border border-gray-100 dark:border-gray-800">
-                    Ao clicar em confirmar, você será redirecionado(a) para o ambiente criptografado e seguro da nossa parceira global para processar o pagamento.
+                    {t('checkout.payment_redirect_msg', 'Ao clicar em confirmar, você será redirecionado(a) para o ambiente criptografado e seguro da nossa parceira global para processar o pagamento.')}
                   </p>
                 </div>
               </section>

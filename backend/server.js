@@ -21,6 +21,68 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 app.use(cors());
+
+// ==========================================
+// 🛡️ O CÃO DE GUARDA: STRIPE WEBHOOK + PRISMA
+// Tem de ficar ANTES do express.json() para validar a segurança!
+// ==========================================
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error(`🔴 Falha na segurança do Webhook: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // O Stripe avisa que o pagamento foi 100% concluído
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    console.log(`✅ DINHEIRO NA CONTA! Pagamento confirmado pelo Stripe.`);
+    
+    // Puxamos a identidade do cliente que configuramos no checkout
+    const customerId = session.client_reference_id; 
+    const totalAmount = session.amount_total; 
+    const stripeId = session.id;
+
+    if (customerId && session.metadata?.cart) {
+      try {
+        const cartItems = JSON.parse(session.metadata.cart);
+        
+        // 🚀 A MÁGICA DO PRISMA: CRIANDO O PEDIDO NO BANCO NEON
+        const novaOrdem = await prisma.order.create({
+          data: {
+            totalAmount: totalAmount,
+            status: "PAID",
+            stripeId: stripeId,
+            customerId: customerId,
+            items: {
+              create: cartItems.map(item => ({
+                quantity: item.quantity,
+                price: Math.round(item.price * 100), // Converte para centavos no banco
+                product: { connect: { id: item.id } }
+              }))
+            }
+          }
+        });
+
+        console.log(`🎉 SUCESSO! Pedido guardado no banco Neon. ID: ${novaOrdem.id}`);
+      } catch (dbError) {
+        console.error(`🔴 Erro fatal ao salvar pedido no Prisma:`, dbError);
+      }
+    } else {
+      console.log(`⚠️ Pedido aprovado, mas sem ID de cliente ou carrinho atrelado.`);
+    }
+  }
+
+  res.send(); // Responde ao Stripe com "Recebido!"
+});
+
+// A partir daqui, o servidor volta ao normal para as outras rotas
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
@@ -125,6 +187,63 @@ app.post('/auth/login', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Server error." }); }
 });
 
+// ==========================================
+// PAINEL MINHA CONTA: BUSCAR PEDIDOS
+// ==========================================
+app.get('/my-orders', authenticateToken, async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: { customerId: req.user.customerId },
+      orderBy: { createdAt: 'desc' }, 
+      include: {
+        items: {
+          include: { product: true } 
+        }
+      }
+    });
+
+    const formattedOrders = orders.map(order => ({
+      ...order,
+      totalAmount: order.totalAmount / 100,
+      items: order.items.map(item => ({
+        ...item,
+        price: item.price / 100
+      }))
+    }));
+
+    res.json(formattedOrders);
+  } catch (error) {
+    console.error("🔴 Erro ao buscar pedidos:", error);
+    res.status(500).json({ error: "Falha ao buscar o histórico de pedidos." });
+  }
+});
+
+// ==========================================
+// PAINEL MINHA CONTA: ATUALIZAR PERFIL
+// ==========================================
+app.put('/auth/profile', authenticateToken, async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    
+    const updatedCustomer = await prisma.customer.update({
+      where: { id: req.user.customerId },
+      data: { name, phone }
+    });
+    
+    res.json({ 
+      user: { 
+        id: updatedCustomer.id, 
+        name: updatedCustomer.name, 
+        email: updatedCustomer.email, 
+        phone: updatedCustomer.phone 
+      } 
+    });
+  } catch (error) {
+    console.error("🔴 Erro ao atualizar perfil:", error);
+    res.status(500).json({ error: "Falha ao salvar os seus dados." });
+  }
+});
+
 async function getExchangeRate(targetCurrency) {
   if (targetCurrency.toLowerCase() === 'brl') return 1;
   const apiKey = process.env.EXCHANGE_API_KEY;
@@ -142,22 +261,14 @@ async function getExchangeRate(targetCurrency) {
 }
 
 // ==========================================
-// CHECKOUT EXCLUSIVO COM STRIPE (AGORA BILÍNGUE)
+// CHECKOUT EXCLUSIVO COM STRIPE
 // ==========================================
 app.post('/create-checkout-session', async (req, res) => {
   try {
-    // 1. Recebemos também o 'locale' que o site nos enviar
-    const { items, currency = 'usd', locale = 'pt' } = req.body; 
+    const { items, currency = 'usd', locale = 'pt', userId } = req.body; 
     
-    // 2. Traduzimos o idioma do seu site para o formato que o Stripe entende
     const stripeLocales = {
-      'pt': 'pt-BR',
-      'en': 'en',
-      'es': 'es',
-      'fr': 'fr',
-      'de': 'de',
-      'ru': 'ru',
-      'zh': 'zh'
+      'pt': 'pt-BR', 'en': 'en', 'es': 'es', 'fr': 'fr', 'de': 'de', 'ru': 'ru', 'zh': 'zh'
     };
     const stripeLocale = stripeLocales[locale] || 'auto';
 
@@ -194,7 +305,12 @@ app.post('/create-checkout-session', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
       mode: 'payment',
-      locale: stripeLocale, // <-- Isto força o Stripe a mudar a linguagem da tela inteira!
+      locale: stripeLocale,
+      client_reference_id: userId, // 🛡️ IDENTIFICA O COMPRADOR PARA O WEBHOOK
+      metadata: {
+        // 🛡️ GUARDA OS DADOS DO CARRINHO PARA O WEBHOOK SALVAR NO BANCO
+        cart: JSON.stringify(items.map(i => ({ id: i.id, quantity: i.quantity, price: i.price })))
+      },
       success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=success`,
       cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=error`,
     });
