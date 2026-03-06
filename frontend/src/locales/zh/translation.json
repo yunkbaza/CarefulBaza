@@ -296,5 +296,27 @@
     "item1": "经过皮肤科测试",
     "item2": "证实功效",
     "item3": "浓缩活性成分"
+  },
+  "dashboard": {
+    "myOrders": "我的订单",
+    "personalDetails": "我的资料",
+    "trackOrder": "追踪订单",
+    "signOut": "登出",
+    "noOrders": "您还没有进行过任何购买。",
+    "exploreStore": "浏览商店",
+    "orderLabel": "订单",
+    "totalLabel": "总计",
+    "qty": "数量",
+    "trackingCodeLabel": "追踪编号",
+    "trackOrderBtn": "追踪订单",
+    "awaitingFulfillment": "等待发货...",
+    "personalInfo": "个人信息",
+    "emailLabel": "电子邮件",
+    "emailWarning": "出于安全原因，电子邮件无法更改。",
+    "fullName": "全名",
+    "phoneLabel": "电话",
+    "saveChanges": "保存更改",
+    "successUpdate": "您的资料已成功保存。",
+    "errorUpdate": "更新资料时出错。"
   }
 }

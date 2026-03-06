@@ -284,6 +284,28 @@
     "item1": "Dermatologicamente Testado",
     "item2": "Eficácia Comprovada",
     "item3": "Ativos Concentrados"
+  },
+  "dashboard": {
+    "myOrders": "Meus Pedidos",
+    "personalDetails": "Meus Dados",
+    "trackOrder": "Rastrear Pedido",
+    "signOut": "Sair da Conta",
+    "noOrders": "Você ainda não efetuou nenhuma compra.",
+    "exploreStore": "Explorar a Loja",
+    "orderLabel": "Pedido",
+    "totalLabel": "Total",
+    "qty": "Qtd",
+    "trackingCodeLabel": "Código de Rastreio",
+    "trackOrderBtn": "Rastrear Pedido",
+    "awaitingFulfillment": "Aguardando envio...",
+    "personalInfo": "Informações Pessoais",
+    "emailLabel": "E-mail",
+    "emailWarning": "O e-mail não pode ser alterado por motivos de segurança.",
+    "fullName": "Nome Completo",
+    "phoneLabel": "Telefone",
+    "saveChanges": "Salvar Alterações",
+    "successUpdate": "Os seus dados foram salvos com sucesso.",
+    "errorUpdate": "Erro ao atualizar os dados."
   }
   
 }

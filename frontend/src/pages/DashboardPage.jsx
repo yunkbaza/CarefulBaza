@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next'; // 🌍 Importando as traduções
 
 export default function DashboardPage() {
   const { user, token, logout, login } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation(); // 🌍 Instanciando o hook
   
   const [activeTab, setActiveTab] = useState('orders'); 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Profile Edit States
+  // Estados de edição do Perfil
   const [editName, setEditName] = useState('');
   const [editPhone, setEditPhone] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateMessage, setUpdateMessage] = useState({ type: '', text: '' });
 
-  // Proteção da rota e carregamento de dados
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -38,7 +39,7 @@ export default function DashboardPage() {
           setOrders(data);
         }
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        console.error('Erro ao buscar pedidos:', error);
       } finally {
         setLoading(false);
       }
@@ -49,7 +50,6 @@ export default function DashboardPage() {
     }
   }, [user, token, navigate]);
 
-  // Função para atualizar os dados do perfil
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setIsUpdating(true);
@@ -69,10 +69,10 @@ export default function DashboardPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
 
-      login(data.user, token); // Atualiza o contexto com os novos dados
-      setUpdateMessage({ type: 'success', text: 'Seus dados foram atualizados com sucesso.' });
+      login(data.user, token); 
+      setUpdateMessage({ type: 'success', text: t('dashboard.successUpdate', 'Os seus dados foram salvos com sucesso.') });
     } catch (err) {
-      setUpdateMessage({ type: 'error', text: err.message || 'Erro ao atualizar os dados.' });
+      setUpdateMessage({ type: 'error', text: err.message || t('dashboard.errorUpdate', 'Erro ao atualizar os dados.') });
     } finally {
       setIsUpdating(false);
     }
@@ -83,13 +83,20 @@ export default function DashboardPage() {
     navigate('/');
   };
 
+  // Função auxiliar para formatar a moeda dependendo da língua atual
+  const formatCurrency = (value) => {
+    const locale = i18n.language === 'pt' ? 'pt-BR' : 'en-US';
+    const currency = i18n.language === 'pt' ? 'BRL' : 'USD';
+    return new Intl.NumberFormat(locale, { style: 'currency', currency: currency }).format(value);
+  };
+
   if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-32 px-6 md:px-16 transition-colors duration-300">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12">
         
-        {/* Menu Lateral (Sidebar) */}
+        {/* Menu Lateral */}
         <aside className="w-full lg:w-1/4">
           <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-8 shadow-sm transition-colors rounded-sm">
             <div className="w-16 h-16 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full flex items-center justify-center font-syne font-bold text-2xl mb-6">
@@ -103,24 +110,24 @@ export default function DashboardPage() {
                 onClick={() => setActiveTab('orders')} 
                 className={`text-left text-xs font-bold uppercase tracking-widest transition-colors ${activeTab === 'orders' ? 'text-baza-lavender dark:text-baza-mint' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}
               >
-                My Orders
+                {t('dashboard.myOrders', 'Meus Pedidos')}
               </button>
               <button 
                 onClick={() => setActiveTab('profile')} 
                 className={`text-left text-xs font-bold uppercase tracking-widest transition-colors ${activeTab === 'profile' ? 'text-baza-lavender dark:text-baza-mint' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'}`}
               >
-                Personal Details
+                {t('dashboard.personalDetails', 'Meus Dados')}
               </button>
               
               <Link 
                 to="/rastreio" 
                 className="text-left text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                Track Order
+                {t('dashboard.trackOrder', 'Rastrear Pedido')}
               </Link>
 
               <button onClick={handleLogout} className="text-left text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors pt-4 border-t border-gray-100 dark:border-gray-700">
-                Sign Out
+                {t('dashboard.signOut', 'Sair da Conta')}
               </button>
             </nav>
           </div>
@@ -132,7 +139,7 @@ export default function DashboardPage() {
           {/* ABA: MEUS PEDIDOS */}
           {activeTab === 'orders' && (
             <div className="animate-in fade-in duration-500">
-              <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-8">My Orders</h1>
+              <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-8">{t('dashboard.myOrders', 'Meus Pedidos')}</h1>
               
               {loading ? (
                 <div className="flex justify-center py-20">
@@ -140,9 +147,9 @@ export default function DashboardPage() {
                 </div>
               ) : orders.length === 0 ? (
                 <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-12 text-center transition-colors">
-                  <p className="text-gray-500 dark:text-gray-400 mb-6">You haven't placed any orders yet.</p>
+                  <p className="text-gray-500 dark:text-gray-400 mb-6">{t('dashboard.noOrders', 'Você ainda não efetuou nenhuma compra.')}</p>
                   <Link to="/shop" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender dark:hover:bg-baza-mint hover:text-white transition-all shadow-md inline-block">
-                    Explore Collection
+                    {t('dashboard.exploreStore', 'Explorar a Loja')}
                   </Link>
                 </div>
               ) : (
@@ -151,14 +158,20 @@ export default function DashboardPage() {
                     <div key={order.id} className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 sm:p-8 shadow-sm transition-colors rounded-sm">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 block mb-1">Order #{order.id.slice(0, 8).toUpperCase()}</span>
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 block mb-1">
+                            {t('dashboard.orderLabel', 'Pedido')} #{order.id.slice(0, 8).toUpperCase()}
+                          </span>
                           <span className="text-sm font-bold text-gray-900 dark:text-white">
-                            {new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            {new Date(order.createdAt).toLocaleDateString(i18n.language === 'pt' ? 'pt-BR' : 'en-US')}
                           </span>
                         </div>
                         <div className="mt-4 sm:mt-0 text-right">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 block mb-1">Total USD</span>
-                          <span className="font-mono font-bold text-gray-900 dark:text-white text-lg">${order.totalAmount.toFixed(2)}</span>
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 block mb-1">
+                            {t('dashboard.totalLabel', 'Total')}
+                          </span>
+                          <span className="font-mono font-bold text-gray-900 dark:text-white text-lg">
+                            {formatCurrency(order.totalAmount)}
+                          </span>
                         </div>
                       </div>
                       
@@ -170,28 +183,31 @@ export default function DashboardPage() {
                             </div>
                             <div>
                               <p className="font-syne font-bold text-sm text-gray-900 dark:text-white">{item.product?.name}</p>
-                              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest mt-1">Qty: {item.quantity} | ${item.price.toFixed(2)}</p>
+                              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest mt-1">
+                                {t('dashboard.qty', 'Qtd')}: {item.quantity} | {formatCurrency(item.price)}
+                              </p>
                             </div>
                           </div>
                         ))}
                       </div>
 
-                      {/* Secção de Rastreio */}
                       {order.trackingCode ? (
                         <div className="mt-8 bg-baza-mint/5 dark:bg-baza-mint/10 border border-baza-mint/20 p-4 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4">
                           <div>
-                            <span className="text-[9px] font-bold uppercase tracking-widest text-baza-mint block mb-1">Tracking Number</span>
+                            <span className="text-[9px] font-bold uppercase tracking-widest text-baza-mint block mb-1">
+                              {t('dashboard.trackingCodeLabel', 'Código de Rastreio')}
+                            </span>
                             <span className="font-mono text-sm text-gray-900 dark:text-white">{order.trackingCode}</span>
                           </div>
                           <Link to="/rastreio" className="w-full sm:w-auto text-center text-[10px] font-bold uppercase tracking-widest bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2.5 hover:bg-baza-lavender dark:hover:bg-baza-mint transition-colors">
-                            Track Order
+                            {t('dashboard.trackOrderBtn', 'Rastrear Pedido')}
                           </Link>
                         </div>
                       ) : (
                         <div className="mt-8 pt-6 border-t border-gray-50 dark:border-gray-800">
                           <p className="text-[10px] text-gray-400 italic font-medium uppercase tracking-widest flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></span>
-                            📦 Awaiting fulfillment...
+                            📦 {t('dashboard.awaitingFulfillment', 'Aguardando envio...')}
                           </p>
                         </div>
                       )}
@@ -205,7 +221,7 @@ export default function DashboardPage() {
           {/* ABA: DADOS PESSOAIS */}
           {activeTab === 'profile' && (
             <div className="animate-in fade-in duration-500">
-              <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-8">Personal Information</h1>
+              <h1 className="font-syne text-3xl font-bold text-gray-900 dark:text-white mb-8">{t('dashboard.personalInfo', 'Informações Pessoais')}</h1>
               <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-8 shadow-sm transition-colors rounded-sm">
                 
                 {updateMessage.text && (
@@ -216,12 +232,12 @@ export default function DashboardPage() {
 
                 <form onSubmit={handleUpdateProfile} className="space-y-6 max-w-lg">
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">Email Address</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">{t('dashboard.emailLabel', 'E-mail')}</label>
                     <input type="email" disabled value={user.email} className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-500 cursor-not-allowed" />
-                    <p className="text-[10px] text-gray-400 mt-1">Email cannot be changed for security reasons.</p>
+                    <p className="text-[10px] text-gray-400 mt-1">{t('dashboard.emailWarning', 'O e-mail não pode ser alterado por motivos de segurança.')}</p>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">Full Name</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">{t('dashboard.fullName', 'Nome Completo')}</label>
                     <input 
                       type="text" 
                       required 
@@ -231,12 +247,12 @@ export default function DashboardPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">Phone Number</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300 mb-2">{t('dashboard.phoneLabel', 'Telefone')}</label>
                     <input 
                       type="tel" 
                       value={editPhone} 
                       onChange={(e) => setEditPhone(e.target.value)} 
-                      placeholder="+1 (555) 000-0000" 
+                      placeholder="(11) 90000-0000" 
                       className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-baza-lavender transition-colors" 
                     />
                   </div>
@@ -249,7 +265,7 @@ export default function DashboardPage() {
                     {isUpdating ? (
                       <div className="w-4 h-4 border-2 border-white dark:border-gray-900 border-t-transparent rounded-full animate-spin"></div>
                     ) : (
-                      'Save Changes'
+                      t('dashboard.saveChanges', 'Salvar Alterações')
                     )}
                   </button>
                 </form>

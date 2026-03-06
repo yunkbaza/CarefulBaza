@@ -283,5 +283,27 @@
     "item1": "Dermatologisch getestet",
     "item2": "Nachgewiesene Wirksamkeit",
     "item3": "Konzentrierte Wirkstoffe"
+  },
+  "dashboard": {
+    "myOrders": "Meine Bestellungen",
+    "personalDetails": "Meine Daten",
+    "trackOrder": "Bestellung Verfolgen",
+    "signOut": "Abmelden",
+    "noOrders": "Sie haben noch keine Einkäufe getätigt.",
+    "exploreStore": "Shop Erkunden",
+    "orderLabel": "Bestellung",
+    "totalLabel": "Gesamt",
+    "qty": "Menge",
+    "trackingCodeLabel": "Sendungsnummer",
+    "trackOrderBtn": "Bestellung Verfolgen",
+    "awaitingFulfillment": "Warten auf Versand...",
+    "personalInfo": "Persönliche Informationen",
+    "emailLabel": "E-Mail",
+    "emailWarning": "Die E-Mail-Adresse kann aus Sicherheitsgründen nicht geändert werden.",
+    "fullName": "Vollständiger Name",
+    "phoneLabel": "Telefon",
+    "saveChanges": "Änderungen Speichern",
+    "successUpdate": "Ihre Daten wurden erfolgreich gespeichert.",
+    "errorUpdate": "Fehler beim Aktualisieren der Daten."
   }
 }

@@ -296,5 +296,27 @@
     "item1": "Dermatologisch getestet",
     "item2": "Nachgewiesene Wirksamkeit",
     "item3": "Konzentrierte Wirkstoffe"
+  },
+  "dashboard": {
+    "myOrders": "Мои заказы",
+    "personalDetails": "Мои данные",
+    "trackOrder": "Отследить заказ",
+    "signOut": "Выйти",
+    "noOrders": "Вы еще не совершали покупок.",
+    "exploreStore": "Изучить магазин",
+    "orderLabel": "Заказ",
+    "totalLabel": "Итого",
+    "qty": "Кол-во",
+    "trackingCodeLabel": "Трек-номер",
+    "trackOrderBtn": "Отследить заказ",
+    "awaitingFulfillment": "Ожидание отправки...",
+    "personalInfo": "Личная информация",
+    "emailLabel": "Эл. почта",
+    "emailWarning": "Электронная почта не может быть изменена в целях безопасности.",
+    "fullName": "Полное имя",
+    "phoneLabel": "Телефон",
+    "saveChanges": "Сохранить изменения",
+    "successUpdate": "Ваши данные успешно сохранены.",
+    "errorUpdate": "Ошибка при обновлении данных."
   }
 }
