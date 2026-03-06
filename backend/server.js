@@ -14,8 +14,12 @@ const { Pool } = require('pg');
 
 const app = express();
 
+// Inicializa o Stripe com a chave secreta (sk_test_...)
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
+// ==========================================
+// 🗄️ CONFIGURAÇÃO DO BANCO DE DADOS (NEON + PRISMA)
+// ==========================================
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
@@ -24,7 +28,7 @@ app.use(cors());
 
 // ==========================================
 // 🛡️ O CÃO DE GUARDA: STRIPE WEBHOOK + PRISMA
-// Tem de ficar ANTES do express.json() para validar a segurança!
+// IMPORTANTE: Tem de ficar ANTES do express.json()!
 // ==========================================
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -44,7 +48,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     const session = event.data.object;
     console.log(`✅ DINHEIRO NA CONTA! Pagamento confirmado pelo Stripe.`);
     
-    // Puxamos a identidade do cliente que configuramos no checkout
+    // Puxamos a identidade do cliente e o carrinho
     const customerId = session.client_reference_id; 
     const totalAmount = session.amount_total; 
     const stripeId = session.id;
@@ -79,14 +83,17 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     }
   }
 
-  res.send(); // Responde ao Stripe com "Recebido!"
+  res.send(); // Responde "200 OK" ao Stripe
 });
 
-// A partir daqui, o servidor volta ao normal para as outras rotas
-app.use(express.json());
+// ==========================================
+// ⚙️ CONFIGURAÇÕES GERAIS DA API
+// ==========================================
+app.use(express.json()); // A partir daqui, o Express volta a ler JSON normal
 
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
 
+// Configuração de E-mail (Nodemailer)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -127,6 +134,7 @@ const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
   </table>
 </body></html>`;
 
+// Middleware de Segurança (Protege rotas privadas)
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: "Access denied." });
@@ -136,6 +144,9 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+// ==========================================
+// 🛍️ ROTAS DE PRODUTOS
+// ==========================================
 app.get('/products', async (req, res) => {
   const products = await prisma.product.findMany({ include: { category: true } });
   res.json(products.map(p => ({ ...p, price: p.price / 100, compareAtPrice: p.compareAtPrice ? p.compareAtPrice / 100 : null })));
@@ -147,6 +158,9 @@ app.get('/products/:id', async (req, res) => {
   res.json({ ...product, price: product.price / 100, compareAtPrice: product.compareAtPrice ? product.compareAtPrice / 100 : null });
 });
 
+// ==========================================
+// 🔐 ROTAS DE AUTENTICAÇÃO
+// ==========================================
 app.post('/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -188,7 +202,7 @@ app.post('/auth/login', async (req, res) => {
 });
 
 // ==========================================
-// PAINEL MINHA CONTA: BUSCAR PEDIDOS
+// 📦 ROTAS DO PAINEL DO CLIENTE (MY ACCOUNT)
 // ==========================================
 app.get('/my-orders', authenticateToken, async (req, res) => {
   try {
@@ -218,9 +232,6 @@ app.get('/my-orders', authenticateToken, async (req, res) => {
   }
 });
 
-// ==========================================
-// PAINEL MINHA CONTA: ATUALIZAR PERFIL
-// ==========================================
 app.put('/auth/profile', authenticateToken, async (req, res) => {
   try {
     const { name, phone } = req.body;
@@ -244,6 +255,9 @@ app.put('/auth/profile', authenticateToken, async (req, res) => {
   }
 });
 
+// ==========================================
+// 💳 ROTA DE CHECKOUT (STRIPE)
+// ==========================================
 async function getExchangeRate(targetCurrency) {
   if (targetCurrency.toLowerCase() === 'brl') return 1;
   const apiKey = process.env.EXCHANGE_API_KEY;
@@ -260,9 +274,6 @@ async function getExchangeRate(targetCurrency) {
   return 1;
 }
 
-// ==========================================
-// CHECKOUT EXCLUSIVO COM STRIPE
-// ==========================================
 app.post('/create-checkout-session', async (req, res) => {
   try {
     const { items, currency = 'usd', locale = 'pt', userId } = req.body; 
