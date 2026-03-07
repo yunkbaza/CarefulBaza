@@ -18,6 +18,13 @@ const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 // ==========================================
+// 🌍 VARIÁVEIS GLOBAIS DE AMBIENTE
+// ==========================================
+// Define a URL do Frontend de forma centralizada. 
+// Na AWS, ele usará a sua variável. No seu PC, usará o localhost.
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+// ==========================================
 // 🗄️ CONFIGURAÇÃO DO BANCO DE DADOS (NEON + PRISMA)
 // ==========================================
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -171,7 +178,8 @@ app.post('/auth/register', async (req, res) => {
       data: { name, email, password: await bcrypt.hash(password, 10), verificationToken }
     });
 
-    const link = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verificar-email?token=${verificationToken}`;
+    // Usa a variável global dinâmica
+    const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
     const html = baseEmailTemplate(`Welcome, ${name}.`, "Please confirm your email to activate your Careful Baza Labs account.", "Verify Email", link);
     
     if (process.env.EMAIL_PASS) {
@@ -322,8 +330,9 @@ app.post('/create-checkout-session', async (req, res) => {
         // 🛡️ GUARDA OS DADOS DO CARRINHO PARA O WEBHOOK SALVAR NO BANCO
         cart: JSON.stringify(items.map(i => ({ id: i.id, quantity: i.quantity, price: i.price })))
       },
-      success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=success`,
-      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/checkout?status=error`,
+      // Usa a variável global dinâmica
+      success_url: `${FRONTEND_URL}/checkout?status=success`,
+      cancel_url: `${FRONTEND_URL}/checkout?status=error`,
     });
 
     res.json({ url: session.url });
