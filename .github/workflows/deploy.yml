@@ -2,7 +2,7 @@ name: CI/CD Careful Baza
 
 on:
   push:
-    branches: [ main ] # O robô acorda sempre que você envia código para a main
+    branches: [ main ]
 
 jobs:
   build-and-push:
@@ -12,14 +12,23 @@ jobs:
       - name: Checkout do Código
         uses: actions/checkout@v3
 
-      - name: Configurar Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Configurar Credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # Verifique se criou o ECR nesta região (Virgínia do Norte)
 
-      - name: Construir Imagem Docker
+      - name: Login no Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, Tag e Push da Imagem para o ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: careful-backend
+          IMAGE_TAG: latest
         run: |
           cd backend
-          docker build -t careful-backend:latest .
-        
-      - name: Login na AWS (Preparação)
-        # Este passo vai falhar até configurarmos as chaves no próximo passo
-        run: echo "Pronto para enviar para a AWS"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
