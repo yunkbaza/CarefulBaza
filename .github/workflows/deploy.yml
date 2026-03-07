@@ -1,0 +1,25 @@
+name: CI/CD Careful Baza
+
+on:
+  push:
+    branches: [ main ] # O robô acorda sempre que você envia código para a main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v3
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Construir Imagem Docker
+        run: |
+          cd backend
+          docker build -t careful-backend:latest .
+        
+      - name: Login na AWS (Preparação)
+        # Este passo vai falhar até configurarmos as chaves no próximo passo
+        run: echo "Pronto para enviar para a AWS"
