@@ -6,7 +6,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
 const crypto = require('crypto'); 
 const axios = require('axios');
-const nodemailer = require('nodemailer'); // <-- Adicionado para enviar e-mails
+const nodemailer = require('nodemailer'); 
+const { GoogleGenerativeAI } = require('@google/generative-ai'); // <-- Adicionado para a IA
 
 const { PrismaClient } = require('@prisma/client');
 const { PrismaPg } = require('@prisma/adapter-pg');
@@ -159,6 +160,63 @@ app.get('/products/:id', async (req, res) => {
 });
 
 // ==========================================
+// 🤖 ROTA DO CHATBOT COM GEMINI IA
+// ==========================================
+// Inicializa o SDK do Gemini apenas se a chave existir
+const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
+
+app.post('/api/chat', async (req, res) => {
+  try {
+    if (!genAI) {
+      return res.status(500).json({ error: "Chave da API do Gemini não configurada no servidor." });
+    }
+
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: "A mensagem não pode estar vazia." });
+    }
+
+    // 1. Busca os produtos no banco de dados para dar contexto à IA
+    const products = await prisma.product.findMany({
+      select: { name: true, description: true, price: true }
+    });
+
+    // 2. Formata a lista de produtos
+    const productsContext = products.map(p => 
+      `- ${p.name}: R$ ${(p.price / 100).toFixed(2)} (${p.description || 'Sem descrição extra'})`
+    ).join('\n');
+
+    // 3. Configura o modelo
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      systemInstruction: `Você é o assistente virtual de vendas da loja 'Careful Baza Labs'. 
+      Seu objetivo é ajudar os clientes, ser educado, dar suporte em compras e sugerir produtos.
+      
+      Aqui está a lista de produtos disponíveis atualmente na nossa loja:
+      ${productsContext}
+      
+      Regras de ouro:
+      - Responda APENAS com base na lista de produtos acima. Não invente produtos ou preços.
+      - Se o cliente pedir algo que não está na lista, diga educadamente que não temos no momento.
+      - Seja conciso, amigável e use emojis de forma moderada.
+      - Você pode ajudar a comparar os produtos se o cliente estiver em dúvida.`
+    });
+
+    // 4. Envia a mensagem do cliente para a IA gerar a resposta
+    const result = await model.generateContent(message);
+    const responseText = result.response.text();
+
+    // 5. Devolve a resposta
+    res.json({ reply: responseText });
+
+  } catch (error) {
+    console.error("🔴 Erro no chatbot Gemini:", error);
+    res.status(500).json({ error: "Desculpe, nosso assistente está indisponível no momento. Tente novamente mais tarde." });
+  }
+});
+
+// ==========================================
 // 🔐 ROTAS DE AUTENTICAÇÃO
 // ==========================================
 app.post('/auth/register', async (req, res) => {
@@ -186,7 +244,6 @@ app.post('/auth/register', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Error creating account." }); }
 });
 
-// 🆕 ROTA ADICIONADA: Reenviar e-mail de verificação
 app.post('/auth/resend-verification', async (req, res) => {
   try {
     const { email } = req.body;
@@ -366,5 +423,5 @@ app.post('/create-checkout-session', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => { 
-  console.log(`✅ Servidor Global a rodar na porta ${PORT} com Express e Nodemailer!`); 
+  console.log(`✅ Servidor Global a rodar na porta ${PORT} com Express e IA Gemini!`); 
 });

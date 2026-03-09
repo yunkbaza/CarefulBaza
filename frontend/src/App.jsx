@@ -10,6 +10,7 @@ import CartDrawer from './components/CartDrawer';
 import MobileMenu from './components/MobileMenu';
 import Quiz from './components/Quiz';
 import SearchModal from './components/SearchModal'; 
+import Chatbot from './components/Chatbot';
 
 // Importação das Páginas
 import Home from './pages/Home';
@@ -108,6 +109,7 @@ function MainLayout() {
         </div>
         
         <Footer />
+        <Chatbot />
       </div>
     </Router>
   );
