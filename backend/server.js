@@ -5,7 +5,8 @@ const Stripe = require('stripe');
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken'); 
 const crypto = require('crypto'); 
-const axios = require('axios'); // Mantemos o axios para falar com o Lambda e com a API de Câmbio
+const axios = require('axios');
+const nodemailer = require('nodemailer'); // <-- Adicionado para enviar e-mails
 
 const { PrismaClient } = require('@prisma/client');
 const { PrismaPg } = require('@prisma/adapter-pg');
@@ -93,6 +94,15 @@ app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
 
+// 📧 CONFIGURAÇÃO DO DISPARADOR DE E-MAILS (GMAIL)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
 // Template base de HTML para os e-mails
 const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
 <!DOCTYPE html>
@@ -149,7 +159,7 @@ app.get('/products/:id', async (req, res) => {
 });
 
 // ==========================================
-// 🔐 ROTAS DE AUTENTICAÇÃO (COM INTEGRAÇÃO LAMBDA)
+// 🔐 ROTAS DE AUTENTICAÇÃO
 // ==========================================
 app.post('/auth/register', async (req, res) => {
   try {
@@ -164,19 +174,46 @@ app.post('/auth/register', async (req, res) => {
     const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
     const html = baseEmailTemplate(`Welcome, ${name}.`, "Please confirm your email to activate your Careful Baza Labs account.", "Verify Email", link);
     
-    // 🚀 INTEGRAÇÃO ASSÍNCRONA COM O AWS LAMBDA
-    if (process.env.LAMBDA_EMAIL_URL) {
-      axios.post(process.env.LAMBDA_EMAIL_URL, {
-        to: email,
-        subject: "Confirm your account - Careful Baza",
-        html: html
-      }).catch(err => console.error("🔴 Falha ao acionar o Lambda:", err.message));
-    } else {
-      console.log(`🔗 LOCAL TEST (VERIFY): ${link}`);
-    }
+    // Dispara o e-mail via Gmail (Nodemailer)
+    transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Confirm your account - Careful Baza",
+      html: html
+    }).catch(err => console.error("🔴 Falha ao enviar e-mail de registro:", err.message));
 
     res.json({ message: "Account created! Please check your email." });
   } catch (error) { res.status(500).json({ error: "Error creating account." }); }
+});
+
+// 🆕 ROTA ADICIONADA: Reenviar e-mail de verificação
+app.post('/auth/resend-verification', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    const customer = await prisma.customer.findUnique({ where: { email } });
+    if (!customer) return res.status(404).json({ error: "User not found." });
+    if (customer.isVerified) return res.status(400).json({ error: "This email is already verified." });
+
+    const verificationToken = crypto.randomBytes(32).toString('hex'); 
+    await prisma.customer.update({
+      where: { id: customer.id },
+      data: { verificationToken }
+    });
+
+    const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
+    const html = baseEmailTemplate(`Welcome back, ${customer.name}.`, "Please confirm your email to activate your Careful Baza Labs account.", "Verify Email", link);
+    
+    // Dispara o e-mail de reenvio via Gmail (Nodemailer)
+    transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Resend: Confirm your account - Careful Baza",
+      html: html
+    }).catch(err => console.error("🔴 Falha ao reenviar e-mail:", err.message));
+
+    res.json({ message: "Verification email resent successfully! Check your inbox." });
+  } catch (error) { res.status(500).json({ error: "Server error while resending email." }); }
 });
 
 app.post('/auth/verify-email', async (req, res) => {
@@ -329,5 +366,5 @@ app.post('/create-checkout-session', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => { 
-  console.log(`✅ Servidor Global a rodar na porta ${PORT} com Arquitetura Híbrida (Express + Lambda)!`); 
+  console.log(`✅ Servidor Global a rodar na porta ${PORT} com Express e Nodemailer!`); 
 });
