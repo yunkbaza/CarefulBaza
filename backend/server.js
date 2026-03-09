@@ -5,8 +5,7 @@ const Stripe = require('stripe');
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken'); 
 const crypto = require('crypto'); 
-const nodemailer = require('nodemailer'); 
-const axios = require('axios'); 
+const axios = require('axios'); // Mantemos o axios para falar com o Lambda e com a API de Câmbio
 
 const { PrismaClient } = require('@prisma/client');
 const { PrismaPg } = require('@prisma/adapter-pg');
@@ -14,14 +13,12 @@ const { Pool } = require('pg');
 
 const app = express();
 
-// Inicializa o Stripe com a chave secreta (sk_test_...)
+// Inicializa o Stripe com a chave secreta
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 // ==========================================
 // 🌍 VARIÁVEIS GLOBAIS DE AMBIENTE
 // ==========================================
-// Define a URL do Frontend de forma centralizada. 
-// Na AWS, ele usará a sua variável. No seu PC, usará o localhost.
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // ==========================================
@@ -35,7 +32,6 @@ app.use(cors());
 
 // ==========================================
 // 🛡️ O CÃO DE GUARDA: STRIPE WEBHOOK + PRISMA
-// IMPORTANTE: Tem de ficar ANTES do express.json()!
 // ==========================================
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -50,12 +46,10 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // O Stripe avisa que o pagamento foi 100% concluído
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     console.log(`✅ DINHEIRO NA CONTA! Pagamento confirmado pelo Stripe.`);
     
-    // Puxamos a identidade do cliente e o carrinho
     const customerId = session.client_reference_id; 
     const totalAmount = session.amount_total; 
     const stripeId = session.id;
@@ -64,7 +58,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
       try {
         const cartItems = JSON.parse(session.metadata.cart);
         
-        // 🚀 A MÁGICA DO PRISMA: CRIANDO O PEDIDO NO BANCO NEON
         const novaOrdem = await prisma.order.create({
           data: {
             totalAmount: totalAmount,
@@ -74,7 +67,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             items: {
               create: cartItems.map(item => ({
                 quantity: item.quantity,
-                price: Math.round(item.price * 100), // Converte para centavos no banco
+                price: Math.round(item.price * 100),
                 product: { connect: { id: item.id } }
               }))
             }
@@ -90,25 +83,17 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     }
   }
 
-  res.send(); // Responde "200 OK" ao Stripe
+  res.send();
 });
 
 // ==========================================
 // ⚙️ CONFIGURAÇÕES GERAIS DA API
 // ==========================================
-app.use(express.json()); // A partir daqui, o Express volta a ler JSON normal
+app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
 
-// Configuração de E-mail (Nodemailer)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER || 'carefulbaza@gmail.com',
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
+// Template base de HTML para os e-mails
 const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -133,7 +118,6 @@ const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
         <tr><td align="center" style="padding: 30px 40px; background-color: #fafafa; border-top: 1px solid #e4e4e7;">
             <p style="margin: 0; font-size: 11px; color: #a1a1aa; line-height: 1.6;">
               © ${new Date().getFullYear()} Careful Baza Labs. All rights reserved.<br>
-              Contact: <a href="mailto:carefulbaza@gmail.com" style="color: #09090b;">carefulbaza@gmail.com</a>
             </p>
         </td></tr>
       </table>
@@ -141,7 +125,6 @@ const baseEmailTemplate = (title, text, buttonText, buttonLink) => `
   </table>
 </body></html>`;
 
-// Middleware de Segurança (Protege rotas privadas)
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: "Access denied." });
@@ -166,7 +149,7 @@ app.get('/products/:id', async (req, res) => {
 });
 
 // ==========================================
-// 🔐 ROTAS DE AUTENTICAÇÃO
+// 🔐 ROTAS DE AUTENTICAÇÃO (COM INTEGRAÇÃO LAMBDA)
 // ==========================================
 app.post('/auth/register', async (req, res) => {
   try {
@@ -178,15 +161,20 @@ app.post('/auth/register', async (req, res) => {
       data: { name, email, password: await bcrypt.hash(password, 10), verificationToken }
     });
 
-    // Usa a variável global dinâmica
     const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
     const html = baseEmailTemplate(`Welcome, ${name}.`, "Please confirm your email to activate your Careful Baza Labs account.", "Verify Email", link);
     
-    if (process.env.EMAIL_PASS) {
-      await transporter.sendMail({ from: '"Careful Baza Labs" <carefulbaza@gmail.com>', to: email, subject: "Confirm your account", html });
+    // 🚀 INTEGRAÇÃO ASSÍNCRONA COM O AWS LAMBDA
+    if (process.env.LAMBDA_EMAIL_URL) {
+      axios.post(process.env.LAMBDA_EMAIL_URL, {
+        to: email,
+        subject: "Confirm your account - Careful Baza",
+        html: html
+      }).catch(err => console.error("🔴 Falha ao acionar o Lambda:", err.message));
     } else {
       console.log(`🔗 LOCAL TEST (VERIFY): ${link}`);
     }
+
     res.json({ message: "Account created! Please check your email." });
   } catch (error) { res.status(500).json({ error: "Error creating account." }); }
 });
@@ -210,7 +198,7 @@ app.post('/auth/login', async (req, res) => {
 });
 
 // ==========================================
-// 📦 ROTAS DO PAINEL DO CLIENTE (MY ACCOUNT)
+// 📦 ROTAS DO PAINEL DO CLIENTE
 // ==========================================
 app.get('/my-orders', authenticateToken, async (req, res) => {
   try {
@@ -235,7 +223,6 @@ app.get('/my-orders', authenticateToken, async (req, res) => {
 
     res.json(formattedOrders);
   } catch (error) {
-    console.error("🔴 Erro ao buscar pedidos:", error);
     res.status(500).json({ error: "Falha ao buscar o histórico de pedidos." });
   }
 });
@@ -258,7 +245,6 @@ app.put('/auth/profile', authenticateToken, async (req, res) => {
       } 
     });
   } catch (error) {
-    console.error("🔴 Erro ao atualizar perfil:", error);
     res.status(500).json({ error: "Falha ao salvar os seus dados." });
   }
 });
@@ -325,12 +311,10 @@ app.post('/create-checkout-session', async (req, res) => {
       line_items: lineItems,
       mode: 'payment',
       locale: stripeLocale,
-      client_reference_id: userId, // 🛡️ IDENTIFICA O COMPRADOR PARA O WEBHOOK
+      client_reference_id: userId,
       metadata: {
-        // 🛡️ GUARDA OS DADOS DO CARRINHO PARA O WEBHOOK SALVAR NO BANCO
         cart: JSON.stringify(items.map(i => ({ id: i.id, quantity: i.quantity, price: i.price })))
       },
-      // Usa a variável global dinâmica
       success_url: `${FRONTEND_URL}/checkout?status=success`,
       cancel_url: `${FRONTEND_URL}/checkout?status=error`,
     });
@@ -345,5 +329,5 @@ app.post('/create-checkout-session', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => { 
-  console.log(`✅ Global Server running on port ${PORT} with Stripe exclusively!`); 
+  console.log(`✅ Servidor Global a rodar na porta ${PORT} com Arquitetura Híbrida (Express + Lambda)!`); 
 });
