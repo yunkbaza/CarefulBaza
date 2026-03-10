@@ -189,7 +189,7 @@ app.post('/api/chat', async (req, res) => {
 
     // 3. Configura o modelo
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash-latest",
+      model: "gemini-1.5-flash",
       systemInstruction: `Você é o assistente virtual de vendas da loja 'Careful Baza Labs'. 
       Seu objetivo é ajudar os clientes, ser educado, dar suporte em compras e sugerir produtos.
       
