@@ -19,7 +19,7 @@ export default function Chatbot() {
 
     const userMessage = input;
     setInput('');
-    // Adiciona a mensagem do usuário na tela
+    // Adiciona a mensagem do utilizador no ecrã
     setMessages(prev => [...prev, { text: userMessage, isBot: false }]);
     setIsLoading(true);
 
@@ -38,10 +38,12 @@ export default function Chatbot() {
       if (response.ok) {
         setMessages(prev => [...prev, { text: data.reply, isBot: true }]);
       } else {
-        setMessages(prev => [...prev, { text: "Ops, deu um erro de conexão. Tente novamente.", isBot: true }]);
+        // AQUI ESTÁ A MUDANÇA: Mostramos o erro que vem do backend!
+        console.error("Erro reportado pelo Backend:", data.error);
+        setMessages(prev => [...prev, { text: `Erro: ${data.error || 'Falha na conexão'}`, isBot: true }]);
       }
     } catch (error) {
-      // Correção do aviso do ESLint: agora a variável 'error' está sendo utilizada!
+      // Correção do aviso do ESLint: agora a variável 'error' está a ser utilizada!
       console.error("Erro na requisição do chat:", error); 
       setMessages(prev => [...prev, { text: "Servidor indisponível no momento.", isBot: true }]);
     } finally {
@@ -71,7 +73,7 @@ export default function Chatbot() {
             ))}
             {isLoading && (
               <div style={{ alignSelf: 'flex-start', backgroundColor: '#e4e4e7', padding: '10px 14px', borderRadius: '8px', fontSize: '12px' }}>
-                Digitando...
+                A escrever...
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -84,7 +86,7 @@ export default function Chatbot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Digite sua mensagem..."
+              placeholder="Escreva a sua mensagem..."
               style={{ flex: 1, padding: '10px', borderRadius: '6px', border: '1px solid #e4e4e7', outline: 'none' }}
             />
             <button 
