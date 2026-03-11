@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useCart } from '../context/CartContext'; // 👈 Usando o Custom Hook
 
 // ==========================================
 // 🎨 ÍCONES SVG DESENHADOS (SEM EMOJIS)
@@ -34,6 +35,9 @@ export default function Chatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const [catalog, setCatalog] = useState([]); 
   const messagesEndRef = useRef(null);
+
+  // 🛒 LIGANDO O CHAT AO CARRINHO DA LOJA VIA HOOK
+  const { addToCart, setIsCartOpen } = useCart();
 
   // 🧠 MEMÓRIA DE SESSÃO
   const [messages, setMessages] = useState(() => {
@@ -89,154 +93,87 @@ export default function Chatbot() {
     }
   };
 
+  // 🚀 A MÁGICA DO CARRINHO ACONTECE AQUI
   const handleAddToCartClick = (e, productId) => {
     e.preventDefault(); 
     const productInfo = catalog.find(p => p.id === productId);
     
     if (productInfo) {
-      alert(`O produto ${productInfo.name} foi reconhecido!\nEm breve será adicionado ao carrinho real.`);
-      setMessages(prev => [...prev, { text: `✅ Excelente escolha! O **${productInfo.name}** está pronto para ir ao carrinho. Posso ajudar com mais alguma coisa?`, isBot: true }]);
+      if (addToCart) addToCart(productInfo);
+      if (setIsCartOpen) setIsCartOpen(true);
+
+      setMessages(prev => [...prev, { text: `✅ Excelente escolha! O **${productInfo.name}** foi adicionado ao seu carrinho. Posso ajudar com mais alguma coisa?`, isBot: true }]);
     }
   };
 
-  // 🎨 PALETA OFICIAL BASEADA NO SEU TAILWIND.CONFIG
-  const colors = {
-    lavender: '#a79af0',      // baza-lavender
-    lavenderDark: '#8b7de3',  // Um pouco mais escuro para hover
-    mint: '#f3ffe3',          // baza-mint
-    mintDark: '#dff3c8',      // Um pouco mais escuro para hover no botão
-    textDark: '#09090b',      
-    white: '#ffffff',
-    gray: '#e4e4e7',
-    lightGray: '#fafafa',
-    textGray: '#71717a'
-  };
-
   return (
-    <div style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: 9999, fontFamily: '"Outfit", sans-serif', overscrollBehavior: 'contain' }}>
+    <div className="fixed bottom-[30px] right-[30px] z-[9999] font-['Outfit',sans-serif] overscroll-contain">
       
       {/* 🟢 JANELA DO CHAT */}
       {isOpen && (
-        <div style={{ 
-          width: '380px', 
-          height: '600px', 
-          backgroundColor: colors.white, 
-          borderRadius: '16px', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          boxShadow: '0 20px 50px rgba(167, 154, 240, 0.25)', // Sombra com o tom lavender
-          marginBottom: '20px', 
-          overflow: 'hidden',
-          border: `1px solid ${colors.gray}`,
-          transition: 'all 0.3s ease'
-        }}>
+        <div className="w-[380px] h-[600px] flex flex-col mb-[20px] overflow-hidden rounded-2xl transition-all duration-300
+          bg-white border border-[#e4e4e7] shadow-[0_20px_50px_rgba(167,154,240,0.25)]
+          dark:bg-zinc-900 dark:border-zinc-800 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+        >
           
           {/* Cabeçalho */}
-          <div style={{ 
-            backgroundColor: colors.lavender, 
-            color: colors.white, 
-            padding: '20px', 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            borderBottom: `1px solid ${colors.lavenderDark}`
-          }}>
+          <div className="flex justify-between items-center p-5 border-b
+            bg-baza-lavender text-white dark:text-black border-[#8b7de3]
+            dark:bg-baza-mint dark:border-[#7a6bd4]"
+          >
             <div>
-                <strong style={{ fontFamily: '"Syne", sans-serif', letterSpacing: '2px', fontSize: '15px', fontWeight: '700' }}>
+                <strong className="font-['Syne',sans-serif] tracking-[2px] text-[15px] font-bold">
                   CarefulBaza AI
                 </strong>
-                <div style={{ fontSize: '10px', color: colors.mint, letterSpacing: '1px', marginTop: '2px', fontWeight: 'bold' }}>
+                <div className="text-[10px] text-[#f3ffe3] dark:text-black tracking-[1px] mt-[2px] font-bold">
                   Labs Assistant
                 </div>
             </div>
             <button 
                 onClick={() => setIsOpen(false)} 
-                style={{ background: 'none', border: 'none', color: colors.white, cursor: 'pointer', padding: '5px', display: 'flex', opacity: 0.8 }}
-                onMouseOver={(e) => e.currentTarget.style.opacity = 1}
-                onMouseOut={(e) => e.currentTarget.style.opacity = 0.8}
+                className="bg-transparent border-none text-white dark:text-black cursor-pointer p-[5px] flex opacity-80 hover:opacity-100 transition-opacity"
             >
                 <CloseIconSVG />
             </button>
           </div>
 
           {/* Área das Mensagens */}
-          <div style={{ 
-            flex: 1, 
-            padding: '25px', 
-            overflowY: 'auto', 
-            backgroundColor: colors.lightGray, 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '15px',
-            scrollbarWidth: 'thin'
-          }}>
+          <div className="flex-1 p-[25px] overflow-y-auto flex flex-col gap-[15px] scrollbar-thin
+            bg-[#fafafa] dark:bg-zinc-950"
+          >
             {messages.map((msg, index) => (
-              <div key={index} style={{ 
-                alignSelf: msg.isBot ? 'flex-start' : 'flex-end', 
-                maxWidth: '85%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: msg.isBot ? 'flex-start' : 'flex-end'
-              }}>
-                <div style={{ 
-                    backgroundColor: msg.isBot ? colors.white : colors.lavender, 
-                    color: msg.isBot ? colors.textDark : colors.white, 
-                    padding: '12px 16px', 
-                    borderRadius: msg.isBot ? '16px 16px 16px 4px' : '16px 16px 4px 16px', 
-                    fontSize: '14px', 
-                    lineHeight: '1.5',
-                    boxShadow: msg.isBot ? '0 2px 5px rgba(0,0,0,0.03)' : '0 2px 5px rgba(167, 154, 240, 0.3)',
-                    border: msg.isBot ? `1px solid ${colors.gray}` : 'none'
-                }}>
+              <div key={index} className={`max-w-[85%] flex flex-col ${msg.isBot ? 'self-start items-start' : 'self-end items-end'}`}>
+                
+                <div className={`p-[12px_16px] text-[14px] leading-relaxed
+                  ${msg.isBot 
+                    ? 'rounded-[16px_16px_16px_4px] bg-white text-[#09090b] border border-[#e4e4e7] shadow-sm dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700' 
+                    : 'rounded-[16px_16px_4px_16px] bg-[#a79af0] text-white dark:text-black shadow-[0_2px_5px_rgba(167,154,240,0.3)] dark:bg-baza-mint dark:shadow-none'
+                  }`}
+                >
                   {msg.isBot ? (
                       <ReactMarkdown 
                         components={{
-                            p: (props) => {
-                                const cleanProps = { ...props };
-                                delete cleanProps.node; 
-                                return <p style={{margin: 0}} {...cleanProps} />;
-                            },
-                            ul: (props) => {
-                                const cleanProps = { ...props };
-                                delete cleanProps.node; 
-                                return <ul style={{margin: '5px 0', paddingLeft: '20px'}} {...cleanProps} />;
-                            },
-                            // RENDERIZAÇÃO DO BOTÃO DE COMPRA EM MINT
-                            a: (props) => {
-                                const { href, children, ...rest } = props;
-                                const cleanProps = { ...rest };
-                                delete cleanProps.node;
-                                
+                            // eslint-disable-next-line no-unused-vars
+                            p: ({node, ...props}) => <p className="m-0" {...props} />,
+                            // eslint-disable-next-line no-unused-vars
+                            ul: ({node, ...props}) => <ul className="my-[5px] pl-[20px] list-disc" {...props} />,
+                            // eslint-disable-next-line no-unused-vars
+                            a: ({node, href, children, ...props}) => {
                                 if (href && href.startsWith('#cart:')) {
                                     const productId = href.replace('#cart:', '');
                                     return (
                                         <button 
                                             onClick={(e) => handleAddToCartClick(e, productId)}
-                                            style={{
-                                                display: 'block', width: '100%', marginTop: '12px', padding: '12px', 
-                                                backgroundColor: colors.mint, color: colors.textDark, border: 'none', 
-                                                borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px',
-                                                textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s ease',
-                                                boxShadow: '0 4px 6px rgba(167, 154, 240, 0.15)'
-                                            }}
-                                            onMouseOver={(e) => {
-                                                e.currentTarget.style.backgroundColor = colors.mintDark;
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(167, 154, 240, 0.2)';
-                                            }}
-                                            onMouseOut={(e) => {
-                                                e.currentTarget.style.backgroundColor = colors.mint;
-                                                e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(167, 154, 240, 0.15)';
-                                            }}
-                                            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
-                                            onMouseUp={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                                            className="block w-full mt-[12px] p-[12px] rounded-lg cursor-pointer font-bold text-[13px] uppercase tracking-[1px] transition-all duration-200
+                                            bg-[#f3ffe3] text-[#09090b] shadow-[0_4px_6px_rgba(167,154,240,0.15)] border-none
+                                            hover:bg-[#dff3c8] hover:-translate-y-[2px] hover:shadow-[0_6px_12px_rgba(167,154,240,0.2)]
+                                            active:scale-95 active:translate-y-0"
                                         >
                                             {children}
                                         </button>
                                     );
                                 }
-                                return <a href={href} style={{ color: colors.lavenderDark, fontWeight: 'bold', textDecoration: 'underline' }} {...cleanProps}>{children}</a>;
+                                return <a href={href} className="text-[#8b7de3] font-bold underline dark:text-[#a79af0]" {...props}>{children}</a>;
                             }
                         }}
                       >
@@ -246,13 +183,13 @@ export default function Chatbot() {
                       msg.text
                   )}
                 </div>
-                <div style={{ fontSize: '10px', color: colors.textGray, marginTop: '5px', padding: '0 5px' }}>
+                <div className="text-[10px] mt-[5px] px-[5px] text-[#71717a] dark:text-zinc-400">
                     {msg.isBot ? 'Baza Bot' : 'Você'}
                 </div>
               </div>
             ))}
             {isLoading && (
-              <div style={{ alignSelf: 'flex-start', color: colors.textGray, fontSize: '12px', fontStyle: 'italic', paddingLeft: '10px' }}>
+              <div className="self-start text-[12px] italic pl-[10px] text-[#71717a] dark:text-zinc-400">
                 A processar...
               </div>
             )}
@@ -260,50 +197,27 @@ export default function Chatbot() {
           </div>
 
           {/* Input de Texto */}
-          <div style={{ 
-            padding: '15px', 
-            borderTop: `1px solid ${colors.gray}`, 
-            display: 'flex', 
-            gap: '10px', 
-            backgroundColor: colors.white 
-          }}>
+          <div className="p-[15px] border-t flex gap-[10px]
+            bg-white border-[#e4e4e7]
+            dark:bg-zinc-900 dark:border-zinc-800"
+          >
             <input 
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
               placeholder="Fale sobre a sua pele..."
-              style={{ 
-                flex: 1, 
-                padding: '12px 15px', 
-                borderRadius: '8px', 
-                border: `1px solid ${colors.gray}`, 
-                outline: 'none',
-                fontSize: '14px',
-                transition: 'border-color 0.2s',
-                backgroundColor: colors.lightGray
-              }}
-              onFocus={(e) => e.target.style.borderColor = colors.lavender}
-              onBlur={(e) => e.target.style.borderColor = colors.gray}
+              className="flex-1 p-[12px_15px] rounded-lg border outline-none text-[14px] transition-colors
+                bg-[#fafafa] border-[#e4e4e7] text-zinc-900 placeholder-zinc-400 focus:border-[#a79af0]
+                dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-[#8b7de3]"
             />
             <button 
               onClick={sendMessage} 
               disabled={isLoading}
-              style={{ 
-                backgroundColor: colors.lavender, 
-                color: colors.white, 
-                border: 'none', 
-                width: '45px',
-                borderRadius: '8px', 
-                cursor: 'pointer', 
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                transition: 'all 0.2s ease',
-                opacity: isLoading ? 0.5 : 1
-              }}
-              onMouseOver={(e) => !isLoading && (e.currentTarget.style.backgroundColor = colors.lavenderDark)}
-              onMouseOut={(e) => !isLoading && (e.currentTarget.style.backgroundColor = colors.lavender)}
+              className={`w-[45px] rounded-lg border-none flex justify-center items-center transition-colors
+                bg-baza-lavender text-white hover:bg-baza-mint
+                dark:bg-baza-mint dark:text-baza-lavender dark:hover:bg-baza-mint
+                ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             >
               <SendIconSVG />
             </button>
@@ -315,29 +229,10 @@ export default function Chatbot() {
       {!isOpen && (
         <button 
           onClick={() => setIsOpen(true)}
-          style={{ 
-            width: '65px', 
-            height: '65px', 
-            borderRadius: '50%', 
-            backgroundColor: colors.lavender, 
-            color: colors.white, 
-            border: 'none', 
-            cursor: 'pointer', 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            boxShadow: '0 10px 30px rgba(167, 154, 240, 0.4)', 
-            transition: 'transform 0.3s ease, boxShadow 0.3s ease',
-            position: 'absolute', bottom: '0', right: '0' 
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'scale(1.05)';
-            e.currentTarget.style.boxShadow = '0 15px 40px rgba(167, 154, 240, 0.5)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 10px 30px rgba(167, 154, 240, 0.4)';
-          }}
+          className="w-[65px] h-[65px] rounded-full border-none cursor-pointer flex justify-center items-center absolute bottom-0 right-0 transition-all duration-300
+            bg-baza-lavender text-white dark:text-black shadow-[0_10px_30px_rgba(167,154,240,0.4)]
+            hover:scale-105 hover:shadow-[0_15px_40px_rgba(167,154,240,0.5)]
+            dark:bg-baza-mint dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
         >
           <ChatIconSVG />
         </button>

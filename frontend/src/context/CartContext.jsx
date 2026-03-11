@@ -1,17 +1,16 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   
-  // 1. INICIALIZAÇÃO BLINDADA: Garante que lixo antigo não quebra o site
+  // 1. INICIALIZAÇÃO BLINDADA
   const [cartItems, setCartItems] = useState(() => {
     try {
       const savedCart = localStorage.getItem('@CarefulBaza:cart');
       if (savedCart) {
         const parsed = JSON.parse(savedCart);
-        // Só aceita se for realmente uma lista (array)
         if (Array.isArray(parsed)) return parsed;
       }
       return [];
@@ -20,20 +19,19 @@ export function CartProvider({ children }) {
     }
   });
 
-  // 2. PERSISTÊNCIA: Salva no localStorage
+  // 2. PERSISTÊNCIA
   useEffect(() => {
     localStorage.setItem('@CarefulBaza:cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product) => {
-    // Trava de segurança: Se o produto não for válido, ignora.
+  // 🚀 OTIMIZAÇÃO: useCallback congela as funções para que não sejam recriadas
+  const addToCart = useCallback((product) => {
     if (!product || !product.id) return;
 
     setCartItems((prev) => {
-      // Garante que o estado anterior é uma lista
       const safePrev = Array.isArray(prev) ? prev : [];
-      
       const existing = safePrev.find(item => item.id === product.id);
+      
       if (existing) {
         return safePrev.map(item => 
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
@@ -43,13 +41,13 @@ export function CartProvider({ children }) {
     });
     
     setIsCartOpen(true);
-  };
+  }, []);
 
-  const removeFromCart = (id) => {
+  const removeFromCart = useCallback((id) => {
     setCartItems((prev) => (Array.isArray(prev) ? prev : []).filter(item => item.id !== id));
-  };
+  }, []);
 
-  const updateQuantity = (id, delta) => {
+  const updateQuantity = useCallback((id, delta) => {
     setCartItems((prev) => (Array.isArray(prev) ? prev : []).map(item => {
       if (item.id === id) {
         const newQuantity = item.quantity + delta;
@@ -57,20 +55,22 @@ export function CartProvider({ children }) {
       }
       return item;
     }));
-  };
+  }, []);
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = useCallback(() => setCartItems([]), []);
 
-  // Cálculos matemáticos protegidos contra valores nulos
   const cartCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
   const cartTotal = cartItems.reduce((acc, item) => acc + ((item.price || 0) * (item.quantity || 1)), 0);
 
+  // 🚀 OTIMIZAÇÃO: useMemo no objeto de valor do Provider
+  const value = useMemo(() => ({
+    isCartOpen, setIsCartOpen, 
+    cartItems, addToCart, removeFromCart, updateQuantity, clearCart, 
+    cartCount, cartTotal 
+  }), [isCartOpen, cartItems, cartCount, cartTotal, addToCart, removeFromCart, updateQuantity, clearCart]);
+
   return (
-    <CartContext.Provider value={{ 
-      isCartOpen, setIsCartOpen, 
-      cartItems, addToCart, removeFromCart, updateQuantity, clearCart, 
-      cartCount, cartTotal 
-    }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

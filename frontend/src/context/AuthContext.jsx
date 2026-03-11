@@ -1,10 +1,9 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useMemo } from 'react';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   // 1. INICIALIZAÇÃO INTELIGENTE (Lazy Initialization)
-  // Resolve o erro do useEffect e evita re-renderizações desnecessárias
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('@CarefulBaza:user');
@@ -32,14 +31,21 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('@CarefulBaza:token');
   };
 
+  // 🚀 OTIMIZAÇÃO: useMemo garante que os componentes filhos não re-renderizem à toa
+  const value = useMemo(() => ({
+    user,
+    token,
+    login,
+    logout
+  }), [user, token]);
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 }
 
 // 2. IGNORAR AVISO DO FAST REFRESH
-// Permite manter o hook "useAuth" junto com o seu Provider para o código ficar mais limpo
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

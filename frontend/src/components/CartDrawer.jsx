@@ -120,7 +120,7 @@ export default function CartDrawer() {
             }}
             className={`w-full py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2
               ${cartItems.length > 0 
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-baza-lavender dark:hover:bg-baza-mint dark:hover:text-white' 
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-baza-lavender dark:hover:bg-baza-mint dark:hover:text-black' 
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'}
             `}
           >
