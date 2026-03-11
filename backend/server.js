@@ -195,7 +195,7 @@ app.post('/api/chat', async (req, res) => {
     try {
       // TENTATIVA 1: Usar o modelo mais novo (1.5 Flash)
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         systemInstruction: regrasLoja
       });
       const result = await model.generateContent(message);
