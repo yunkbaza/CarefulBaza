@@ -179,21 +179,27 @@ app.post('/api/chat', async (req, res) => {
 
     // Busca os produtos no banco de dados para dar contexto à IA
     const products = await prisma.product.findMany({
-      select: { name: true, description: true, price: true }
+      select: { id: true, name: true, description: true, price: true }
     });
 
-    // Formata a lista de produtos
+    // Formata a lista de produtos com IDs
     const productsContext = products.map(p => 
-      `- ${p.name}: R$ ${(p.price / 100).toFixed(2)} (${p.description || 'Sem descrição extra'})`
+      `- [ID: ${p.id}] ${p.name}: R$ ${(p.price / 100).toFixed(2)} (${p.description || 'Sem descrição extra'})`
     ).join('\n');
 
     const regrasLoja = `Você é o assistente virtual de vendas da loja 'Careful Baza Labs'. 
       Seu objetivo é ajudar os clientes, ser educado, dar suporte em compras e sugerir produtos.
       Responda APENAS com base na lista de produtos. Não invente produtos ou preços.
-      Aqui está a lista de produtos:\n${productsContext}`;
+      Aqui está a lista de produtos:\n${productsContext}
+      
+      🚨 REGRA DE OURO DE VENDAS 🚨
+      Sempre que você recomendar um produto, crie um botão de compra para ele usando EXATAMENTE este formato de link Markdown (com a hashtag #cart:):
+      [🛒 Adicionar NOME DO PRODUTO](#cart:ID_DO_PRODUTO)
+      
+      Exemplo: Se o cliente quiser o produto com ID "123", escreva: [🛒 Adicionar Sérum](#cart:123)`;
 
     try {
-      // TENTATIVA 1: Usar o modelo mais novo (1.5 Flash)
+      // TENTATIVA 1: Usar o modelo suportado (2.5 Flash)
       const model = genAI.getGenerativeModel({ 
         model: "gemini-2.5-flash",
         systemInstruction: regrasLoja
@@ -201,11 +207,11 @@ app.post('/api/chat', async (req, res) => {
       const result = await model.generateContent(message);
       return res.json({ reply: result.response.text() });
 
-    } catch (err15) {
-      console.warn("⚠️ Falha no gemini-1.5-flash. Tentando modelo de fallback (gemini-pro)...");
+    } catch (errAtual) {
+      console.warn("⚠️ Falha no gemini-2.5-flash. Tentando modelo de fallback (gemini-2.5-pro)...");
       
-      // TENTATIVA 2: Fallback automático se a chave não suportar o 1.5
-      const fallbackModel = genAI.getGenerativeModel({ model: "gemini-pro" });
+      // TENTATIVA 2: Fallback automático 
+      const fallbackModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       const promptCombinado = `${regrasLoja}\n\nMensagem do cliente: ${message}`;
       
       const result = await fallbackModel.generateContent(promptCombinado);
