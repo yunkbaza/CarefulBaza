@@ -1,6 +1,7 @@
 generator client {
   provider      = "prisma-client-js"
-  // 🚀 AJUSTE: Dizemos ao Prisma para baixar o motor compatível com Alpine Linux (musl)
+  // Forçamos o Prisma a não tentar usar o WASM bugado no Docker
+  engineType    = "library"
   binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
