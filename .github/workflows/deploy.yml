@@ -4,16 +4,20 @@ on:
   push:
     branches: [ main ]
 
+# 🚀 AJUSTE DE DEVOPS: Força o GitHub Actions a usar a versão mais recente e segura do Node para os plugins
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout do Código
-        uses: actions/checkout@v4 # 👈 Atualizado para a última versão
+        uses: actions/checkout@v4
 
       - name: Configurar Credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4 # 👈 Atualizado
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -21,23 +25,19 @@ jobs:
 
       - name: Login no Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2 # 👈 Atualizado para v2, suporta autenticações mais seguras
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, Tag e Push da Imagem para o ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: careful-backend
-          IMAGE_TAG: ${{ github.sha }} # 👈 PADRÃO ENTERPRISE: Tag única baseada no commit
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           cd backend
           
           echo "🚀 Construindo a imagem Docker..."
-          # Construímos a imagem associando a ela DUAS tags: o hash do commit e 'latest'
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           
           echo "☁️ Enviando imagem para o Amazon ECR..."
-          # Enviamos a tag específica para histórico/rollback
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          
-          # Enviamos a tag latest para facilidade de uso
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
