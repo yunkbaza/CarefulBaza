@@ -3,6 +3,8 @@
 # ==========================================
 FROM node:22-alpine AS builder
 
+RUN apk add --no-cache openssl
+
 WORKDIR /usr/src/app
 
 # Copia os arquivos de dependência
@@ -22,6 +24,8 @@ COPY . .
 # 🚀 ESTÁGIO 2: RUNNER (Ambiente de Produção)
 # ==========================================
 FROM node:22-alpine AS runner
+
+RUN apk add --no-cache openssl
 
 WORKDIR /usr/src/app
 

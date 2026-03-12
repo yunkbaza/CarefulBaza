@@ -1,8 +1,9 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // 🚀 AJUSTE: Dizemos ao Prisma para baixar o motor compatível com Alpine Linux (musl)
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
-// 🚀 AJUSTE: O Prisma precisa do env() aqui para passar na validação do Docker Build
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
