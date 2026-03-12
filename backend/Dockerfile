@@ -1,52 +1,48 @@
 # ==========================================
 # 🏗️ ESTÁGIO 1: BUILDER (Ambiente de Construção)
 # ==========================================
-FROM node:22-alpine AS builder
+# Mudamos de 'alpine' para 'slim' (Debian-based) para compatibilidade 100% com Prisma
+FROM node:22-slim AS builder
 
-RUN apk add --no-cache openssl
+# Instala o OpenSSL e as ferramentas nativas que o Prisma precisa no Debian
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-# Copia os arquivos de dependência
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY prisma.config.ts ./
 
-# Instala TODAS as dependências (incluindo as de desenvolvimento)
 RUN npm ci
 
-# Gera os binários do Prisma Client
+# Agora o Prisma vai gerar usando o motor padrão do Linux (glibc) sem procurar o WASM
 RUN npx prisma generate
 
-# Copia o resto do código-fonte
 COPY . .
 
 # ==========================================
 # 🚀 ESTÁGIO 2: RUNNER (Ambiente de Produção)
 # ==========================================
-FROM node:22-alpine AS runner
+FROM node:22-slim AS runner
 
-RUN apk add --no-cache openssl
+# Instala o OpenSSL no ambiente de produção também
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-# Define a variável de ambiente como produção (otimiza o Node e Express)
 ENV NODE_ENV=production
 
-# Copia apenas o package.json
 COPY package*.json ./
-
-# Instala APENAS dependências de produção (ignora eslint, nodemon, etc)
 RUN npm ci --omit=dev
 
-# Copia o Prisma gerado no estágio anterior
 COPY --from=builder /usr/src/app/prisma ./prisma
+COPY --from=builder /usr/src/app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
 
-# Copia o seu código modular recém-criado
 COPY --from=builder /usr/src/app/src ./src
 COPY --from=builder /usr/src/app/server.js ./
 
-# 🛡️ SEGURANÇA: Executa o contêiner com o usuário 'node' nativo, sem privilégios de root
+# 🛡️ SEGURANÇA: Executa sem privilégios de root
 USER node
 
 EXPOSE 3000
