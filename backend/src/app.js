@@ -14,8 +14,10 @@ require('./events/listeners/orderListener');
 
 const app = express();
 
-app.use(cors());
-
+app.use(cors());app.use(cors({
+  origin: ['http://localhost:5173', 'https://carefulbaza.vercel.app'],
+  credentials: true
+}));
 // 🚨 IMPORTANTE: O Webhook do Stripe precisa do corpo bruto (raw) ANTES do express.json()
 app.use('/webhook', express.raw({ type: 'application/json' }), webhookRoutes);
 
