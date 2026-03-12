@@ -9,6 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DATABASE_URL,
+    // 🚀 AJUSTE DE DEVOPS: Fallback para não quebrar o Docker Build quando a variável não existir
+    url: process.env.DATABASE_URL || "postgresql://usuario:senha@localhost:5432/banco_falso",
   },
 });
