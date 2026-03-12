@@ -9,6 +9,8 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
+require('./events/listeners/emailListener');
+
 const app = express();
 
 app.use(cors());

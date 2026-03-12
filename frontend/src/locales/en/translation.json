@@ -411,5 +411,15 @@
     "saveChanges": "Save Changes",
     "successUpdate": "Your details have been saved successfully.",
     "errorUpdate": "Error updating details."
+  },
+  "chatbot": {
+    "greeting": "Hello! I am the CarefulBaza Labs assistant. How can I help you take care of your skin today?",
+    "placeholder": "Tell me about your skin...",
+    "botName": "Baza Bot",
+    "you": "You",
+    "processing": "Processing...",
+    "error": "Sorry, a technical error occurred.",
+    "unavailable": "The service is currently unavailable. Please try again later.",
+    "added": "✅ Excellent choice! **{{name}}** has been added to your cart."
   }
 }

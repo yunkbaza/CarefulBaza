@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useCart } from '../context/CartContext'; // 👈 Usando o Custom Hook
+import { useCart } from '../context/CartContext'; 
+import { useTranslation } from 'react-i18next'; // 🌍 Importando o Tradutor
 
 // ==========================================
 // 🎨 ÍCONES SVG DESENHADOS (SEM EMOJIS)
@@ -38,12 +39,15 @@ export default function Chatbot() {
 
   // 🛒 LIGANDO O CHAT AO CARRINHO DA LOJA VIA HOOK
   const { addToCart, setIsCartOpen } = useCart();
+  
+  // 🌍 PUXANDO O IDIOMA ATUAL E O TRADUTOR
+  const { t, i18n } = useTranslation();
 
   // 🧠 MEMÓRIA DE SESSÃO
   const [messages, setMessages] = useState(() => {
     const savedChat = sessionStorage.getItem('careful_baza_chat');
     return savedChat ? JSON.parse(savedChat) : [
-      { text: "Olá! Sou o assistente da CarefulBaza Labs. Como posso te ajudar a cuidar da sua pele hoje?", isBot: true }
+      { text: t('chatbot.greeting', "Olá! Sou o assistente da CarefulBaza Labs. Como posso te ajudar a cuidar da sua pele hoje?"), isBot: true }
     ];
   });
 
@@ -74,7 +78,8 @@ export default function Chatbot() {
       const response = await fetch(`${apiUrl}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage })
+        // 🌍 ENVIANDO O IDIOMA PARA O BACKEND AQUI
+        body: JSON.stringify({ message: userMessage, language: i18n.language })
       });
 
       const data = await response.json();
@@ -83,11 +88,11 @@ export default function Chatbot() {
         setMessages(prev => [...prev, { text: data.reply, isBot: true }]);
       } else {
         console.error("Erro no Backend:", data.error);
-        setMessages(prev => [...prev, { text: `Desculpe, ocorreu um erro técnico: ${data.error}`, isBot: true }]);
+        setMessages(prev => [...prev, { text: t('chatbot.error', `Desculpe, ocorreu um erro técnico: ${data.error}`), isBot: true }]);
       }
     } catch (error) {
       console.error("Erro na requisição:", error); 
-      setMessages(prev => [...prev, { text: "O serviço está indisponível no momento. Por favor, tente mais tarde.", isBot: true }]);
+      setMessages(prev => [...prev, { text: t('chatbot.unavailable', "O serviço está indisponível no momento. Por favor, tente mais tarde."), isBot: true }]);
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +107,8 @@ export default function Chatbot() {
       if (addToCart) addToCart(productInfo);
       if (setIsCartOpen) setIsCartOpen(true);
 
-      setMessages(prev => [...prev, { text: `✅ Excelente escolha! O **${productInfo.name}** foi adicionado ao seu carrinho. Posso ajudar com mais alguma coisa?`, isBot: true }]);
+      const addedMsg = t('chatbot.added', `✅ Excelente escolha! O **{{name}}** foi adicionado ao seu carrinho.`, { name: productInfo.name });
+      setMessages(prev => [...prev, { text: addedMsg, isBot: true }]);
     }
   };
 
@@ -184,13 +190,13 @@ export default function Chatbot() {
                   )}
                 </div>
                 <div className="text-[10px] mt-[5px] px-[5px] text-[#71717a] dark:text-zinc-400">
-                    {msg.isBot ? 'Baza Bot' : 'Você'}
+                    {msg.isBot ? t('chatbot.botName', 'Baza Bot') : t('chatbot.you', 'Você')}
                 </div>
               </div>
             ))}
             {isLoading && (
               <div className="self-start text-[12px] italic pl-[10px] text-[#71717a] dark:text-zinc-400">
-                A processar...
+                {t('chatbot.processing', 'A processar...')}
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -206,7 +212,7 @@ export default function Chatbot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Fale sobre a sua pele..."
+              placeholder={t('chatbot.placeholder', 'Fale sobre a sua pele...')}
               className="flex-1 p-[12px_15px] rounded-lg border outline-none text-[14px] transition-colors
                 bg-[#fafafa] border-[#e4e4e7] text-zinc-900 placeholder-zinc-400 focus:border-[#a79af0]
                 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-[#8b7de3]"

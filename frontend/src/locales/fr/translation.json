@@ -411,5 +411,15 @@
     "saveChanges": "Enregistrer les Modifications",
     "successUpdate": "Vos données ont été enregistrées avec succès.",
     "errorUpdate": "Erreur lors de la mise à jour des données."
+  },
+  "chatbot": {
+    "greeting": "Bonjour ! Je suis l'assistant de CarefulBaza Labs. Comment puis-je vous aider à prendre soin de votre peau aujourd'hui ?",
+    "placeholder": "Parlez-moi de votre peau...",
+    "botName": "Baza Bot",
+    "you": "Vous",
+    "processing": "Traitement en cours...",
+    "error": "Désolé, une erreur technique s'est produite.",
+    "unavailable": "Le service est actuellement indisponible. Veuillez réessayer plus tard.",
+    "added": "✅ Excellent choix ! **{{name}}** a été ajouté à votre panier."
   }
 }

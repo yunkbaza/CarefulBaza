@@ -7,8 +7,18 @@ const chatComIA = async (req, res) => {
     if (!apiKey) return res.status(500).json({ error: "Chave da API não configurada." });
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const { message } = req.body;
+    
+    // 🌍 AGORA RECEBEMOS O IDIOMA DO FRONTEND
+    const { message, language = 'pt' } = req.body;
+    
     if (!message) return res.status(400).json({ error: "Mensagem vazia." });
+
+    // Mapeamento de siglas para nomes de idiomas (Para a IA entender perfeitamente)
+    const languageMap = {
+      'pt': 'Português', 'en': 'Inglês', 'es': 'Espanhol', 
+      'fr': 'Francês', 'de': 'Alemão', 'ru': 'Russo', 'zh': 'Chinês'
+    };
+    const targetLanguage = languageMap[language] || 'Português';
 
     const products = await prisma.product.findMany({
       select: { id: true, name: true, description: true, price: true }
@@ -18,20 +28,19 @@ const chatComIA = async (req, res) => {
       `- [ID: ${p.id}] ${p.name}: R$ ${(p.price / 100).toFixed(2)} (${p.description || 'Sem descrição'})`
     ).join('\n');
 
+    // 🚨 REGRA NOVA NO PROMPT: Forçando a IA a respeitar o idioma do site
     const regrasLoja = `Você é o assistente virtual de vendas da loja 'Careful Baza Labs'. 
       Ajude os clientes e sugira produtos APENAS com base nesta lista:\n${productsContext}
-      🚨 REGRA: Para recomendar, crie um botão usando o formato: [🛒 Adicionar NOME](#cart:ID)`;
+      🚨 REGRA 1: Para recomendar, crie um botão usando exatamente o formato: [🛒 Adicionar NOME](#cart:ID)
+      🚨 REGRA 2: Você DEVE conversar com o cliente e gerar suas respostas EXCLUSIVAMENTE em: ${targetLanguage}.`;
 
-    // Vamos usar EXCLUSIVAMENTE a família 1.5 que tem o Free Tier garantido para a sua chave
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", systemInstruction: regrasLoja });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: regrasLoja });
       const result = await model.generateContent(message);
       return res.json({ reply: result.response.text() });
     } catch (err) {
-      console.warn("⚠️ Falha no gemini-2.5-flash. Tentando modelo de fallback (2.5-flash-8b)...", err.message);
-      
-      // Fallback para a versão 8b (ainda mais leve e com cota livre)
-      const fallbackModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash-8b" });
+      console.warn("⚠️ Falha no gemini-1.5-flash. Tentando modelo de fallback...", err.message);
+      const fallbackModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
       const result = await fallbackModel.generateContent(`${regrasLoja}\n\nCliente: ${message}`);
       return res.json({ reply: result.response.text() });
     }

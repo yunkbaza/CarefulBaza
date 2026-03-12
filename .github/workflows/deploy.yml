@@ -1,4 +1,4 @@
-name: CI/CD Careful Baza
+name: CI/CD Careful Baza Enterprise
 
 on:
   push:
@@ -10,25 +10,34 @@ jobs:
     
     steps:
       - name: Checkout do Código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # 👈 Atualizado para a última versão
 
       - name: Configurar Credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4 # 👈 Atualizado
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # Verifique se criou o ECR nesta região (Virgínia do Norte)
+          aws-region: us-east-1 
 
       - name: Login no Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2 # 👈 Atualizado para v2, suporta autenticações mais seguras
 
       - name: Build, Tag e Push da Imagem para o ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: careful-backend
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ github.sha }} # 👈 PADRÃO ENTERPRISE: Tag única baseada no commit
         run: |
           cd backend
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          
+          echo "🚀 Construindo a imagem Docker..."
+          # Construímos a imagem associando a ela DUAS tags: o hash do commit e 'latest'
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          
+          echo "☁️ Enviando imagem para o Amazon ECR..."
+          # Enviamos a tag específica para histórico/rollback
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
+          # Enviamos a tag latest para facilidade de uso
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest

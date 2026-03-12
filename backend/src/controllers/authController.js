@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
 const crypto = require('crypto'); 
 const prisma = require('../config/prisma');
-const { sendMail } = require('../services/emailService');
+const eventBus = require('../events/eventBus'); // 👈 Importamos o EventBus
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
@@ -13,13 +13,16 @@ const register = async (req, res) => {
     if (await prisma.customer.findUnique({ where: { email } })) return res.status(400).json({ error: "Email already registered." });
 
     const verificationToken = crypto.randomBytes(32).toString('hex'); 
+    
+    // 1. Salva no banco de dados
     await prisma.customer.create({
       data: { name, email, password: await bcrypt.hash(password, 10), verificationToken }
     });
 
-    const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
-    await sendMail(email, "Confirm your account - Careful Baza", `Welcome, ${name}.`, "Please confirm your email.", "Verify Email", link);
+    // 2. 🚀 DISPARA O EVENTO (O código não para aqui, ele continua imediatamente!)
+    eventBus.emit('UserRegistered', { email, name, verificationToken, FRONTEND_URL });
 
+    // 3. Responde pro Front-end na velocidade da luz (0.1s)
     res.json({ message: "Account created! Please check your email." });
   } catch (error) { res.status(500).json({ error: "Error creating account." }); }
 };

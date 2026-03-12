@@ -411,5 +411,15 @@
     "saveChanges": "保存更改",
     "successUpdate": "您的资料已成功保存。",
     "errorUpdate": "更新资料时出错。"
+  },
+  "chatbot": {
+    "greeting": "你好！我是 CarefulBaza Labs 助手。今天我能为您提供哪些护肤帮助？",
+    "placeholder": "和我说说您的皮肤情况...",
+    "botName": "Baza Bot",
+    "you": "您",
+    "processing": "处理中...",
+    "error": "抱歉，发生技术错误。",
+    "unavailable": "该服务目前不可用，请稍后再试。",
+    "added": "✅ 极好的选择！**{{name}}** 已加入您的购物车。"
   }
 }
