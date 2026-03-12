@@ -2,8 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// 🚀 AJUSTE: O Prisma precisa do env() aqui para passar na validação do Docker Build
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // 1. CATEGORIAS (Ex: Skincare, Maquiagem, Cabelo)
