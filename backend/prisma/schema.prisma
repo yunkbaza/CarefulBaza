@@ -1,13 +1,9 @@
 generator client {
-  provider      = "prisma-client-js"
-  // Forçamos o Prisma a não tentar usar o WASM bugado no Docker
-  engineType    = "library"
-  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // 1. CATEGORIAS (Ex: Skincare, Maquiagem, Cabelo)
