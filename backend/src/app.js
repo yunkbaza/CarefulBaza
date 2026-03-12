@@ -10,6 +10,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
 require('./events/listeners/emailListener');
+require('./events/listeners/orderListener');
 
 const app = express();
 
