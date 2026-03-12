@@ -42,7 +42,6 @@ COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /usr/src/app/src ./src
 COPY --from=builder /usr/src/app/server.js ./
 
-# 🛡️ SEGURANÇA: Executa sem privilégios de root
 USER node
 
 EXPOSE 3000
