@@ -35,12 +35,12 @@ const chatComIA = async (req, res) => {
       🚨 REGRA 2: Você DEVE conversar com o cliente e gerar suas respostas EXCLUSIVAMENTE em: ${targetLanguage}.`;
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: regrasLoja });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", systemInstruction: regrasLoja });
       const result = await model.generateContent(message);
       return res.json({ reply: result.response.text() });
     } catch (err) {
-      console.warn("⚠️ Falha no gemini-1.5-flash. Tentando modelo de fallback...", err.message);
-      const fallbackModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
+      console.warn("⚠️ Falha no gemini-2.5-flash. Tentando modelo de fallback...", err.message);
+      const fallbackModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash-8b" });
       const result = await fallbackModel.generateContent(`${regrasLoja}\n\nCliente: ${message}`);
       return res.json({ reply: result.response.text() });
     }
