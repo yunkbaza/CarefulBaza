@@ -1,16 +1,17 @@
 const stripe = require('../config/stripe');
 const eventBus = require('../events/eventBus');
 
-const handleStripeWebhook = async (req, res) => {
+const handleStripeWebhook = (req, res) => {
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   let event;
   try {
-    // Usamos rawBody se existir (padrão de webhooks), senão cai para o body
-    event = stripe.webhooks.constructEvent(req.rawBody || req.body, sig, endpointSecret);
+    // CORREÇÃO: Como configuramos express.raw() no app.js, o req.body JÁ É o buffer correto.
+    // Usar apenas req.body garante que a assinatura do Stripe bata perfeitamente.
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
-    console.error(`🔴 Falha no Webhook: ${err.message}`);
+    console.error(`[Webhook] 🔴 Falha de Assinatura: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
@@ -23,6 +24,7 @@ const handleStripeWebhook = async (req, res) => {
     
     // Dispara o evento apenas se o pagamento foi confirmado
     if (session.payment_status === 'paid') {
+      console.log(`[Webhook] 💰 Pagamento confirmado! A emitir OrderPaid para a sessão: ${session.id}`);
       eventBus.emit('OrderPaid', session);
     }
   }
