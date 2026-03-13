@@ -71,7 +71,7 @@ eventBus.on('OrderPaid', async (session) => {
       `Olá, ${customer.name || 'Cliente'}!`,
       `O seu pagamento no valor de ${valorFormatado} foi aprovado. O seu pedido já está a ser preparado.`,
       "Acompanhar Pedido",
-      `${frontendUrl}/my-orders`
+      `${frontendUrl}/minha-conta`
     );
 
   } catch (error) {
