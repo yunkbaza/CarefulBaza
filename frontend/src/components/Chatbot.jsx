@@ -57,7 +57,8 @@ export default function Chatbot() {
   }, [messages]);
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    // ✅ Rota corrigida: Se VITE_API_URL já tem /api, isso vira /api/products
     fetch(`${apiUrl}/products`)
       .then(res => res.json())
       .then(data => setCatalog(data))
@@ -73,9 +74,10 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
       
-      const response = await fetch(`${apiUrl}/api/chat`, {
+      // 🚀 CORREÇÃO AQUI: Removido o /api extra. Agora fica `${apiUrl}/chat`
+      const response = await fetch(`${apiUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // 🌍 ENVIANDO O IDIOMA PARA O BACKEND AQUI
