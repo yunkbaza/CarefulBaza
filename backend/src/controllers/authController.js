@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); 
 const prisma = require('../config/prisma');
 const eventBus = require('../events/eventBus'); 
-const { sendMail } = require('../services/emailService'); // 👈 CORREÇÃO: Faltava importar o disparador de e-mails!
+const { sendMail } = require('../services/emailService'); // 👈 Importa o disparador de e-mails
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://carefulbaza.vercel.app';
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
@@ -73,7 +73,7 @@ const updateProfile = async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Failed to save data." }); }
 };
 
-// 🚀 NOVIDADE 1: O cliente pediu para recuperar a senha
+// 🚀 O cliente pediu para recuperar a senha
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -104,7 +104,7 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-// 🚀 NOVIDADE 2: O cliente clicou no e-mail e digitou a senha nova
+// 🚀 O cliente clicou no e-mail e digitou a senha nova
 const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -127,5 +127,5 @@ const resetPassword = async (req, res) => {
   }
 };
 
-// Não esqueça de exportar as funções novas no final!
+// Exporta todas as funções para as rotas
 module.exports = { register, resendVerification, verifyEmail, login, updateProfile, forgotPassword, resetPassword };
