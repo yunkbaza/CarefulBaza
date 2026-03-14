@@ -123,7 +123,8 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">{t('auth.pass_label')}</label>
-                <Link to="/esqueci-minha-senha" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-baza-mint transition-colors">{t('auth.forgot_pass')}</Link>
+                {/* 🚀 CORREÇÃO DA ROTA AQUI EMBAIXO */}
+                <Link to="/recuperar-senha" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-baza-mint transition-colors">{t('auth.forgot_pass')}</Link>
               </div>
               <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-baza-lavender transition-colors" placeholder="••••••••" />
             </div>
