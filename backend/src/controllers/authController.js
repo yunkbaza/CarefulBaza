@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); 
 const prisma = require('../config/prisma');
 const eventBus = require('../events/eventBus'); 
-const { sendMail } = require('../services/emailService'); // 👈 Importa o disparador de e-mails
+// 🚨 O emailService foi removido daqui! O Controller agora é 100% Event-Driven.
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://carefulbaza.vercel.app';
 const JWT_SECRET = process.env.JWT_SECRET || 'careful_baza_super_secret_key';
@@ -19,6 +19,7 @@ const register = async (req, res) => {
       data: { name, email, password: await bcrypt.hash(password, 10), verificationToken }
     });
 
+    // 📢 Emite o evento: A API não trava esperando o e-mail ser enviado!
     eventBus.emit('UserRegistered', { email, name, verificationToken, FRONTEND_URL });
 
     res.json({ message: "Account created! Please check your email." });
@@ -35,8 +36,8 @@ const resendVerification = async (req, res) => {
     const verificationToken = crypto.randomBytes(32).toString('hex'); 
     await prisma.customer.update({ where: { id: customer.id }, data: { verificationToken } });
 
-    const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
-    await sendMail(email, "Reenvio: Confirme a sua conta", `Olá, ${customer.name}.`, "Por favor, confirme o seu e-mail.", "Verificar E-mail", link);
+    // 📢 Emite o evento de reenvio
+    eventBus.emit('VerificationResent', { email, name: customer.name, verificationToken, FRONTEND_URL });
 
     res.json({ message: "Email resent successfully!" });
   } catch (error) { res.status(500).json({ error: "Server error." }); }
@@ -55,7 +56,6 @@ const login = async (req, res) => {
     if (!customer || !await bcrypt.compare(req.body.password, customer.password)) return res.status(401).json({ error: "Incorrect credentials." });
     if (!customer.isVerified) return res.status(403).json({ error: "Please verify email.", needsVerification: true, email: customer.email });
 
-    // Usa sempre o id padrão do Prisma
     const token = jwt.sign({ id: customer.id }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: customer.id, name: customer.name, email: customer.email, phone: customer.phone } });
   } catch (error) { res.status(500).json({ error: "Server error." }); }
@@ -73,29 +73,18 @@ const updateProfile = async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Failed to save data." }); }
 };
 
-// 🚀 O cliente pediu para recuperar a senha
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const customer = await prisma.customer.findUnique({ where: { email } });
     
-    // Por segurança, não avisamos se o e-mail não existe (evita que hackers descubram quem tem conta)
     if (!customer) return res.status(200).json({ message: "Se o e-mail existir, você receberá um link." });
 
-    // Gera um código único e salva no banco de dados
     const resetToken = crypto.randomBytes(32).toString('hex');
     await prisma.customer.update({ where: { id: customer.id }, data: { resetToken } });
 
-    // Dispara o e-mail
-    const link = `${FRONTEND_URL}/redefinir-senha?token=${resetToken}`;
-    await sendMail(
-      email, 
-      "Recuperação de Senha - CarefulBaza", 
-      `Olá, ${customer.name}.`, 
-      "Recebemos um pedido para redefinir a sua senha. Se não foi você, ignore este e-mail.", 
-      "Criar Nova Senha", 
-      link
-    );
+    // 📢 Emite o evento de recuperação de senha
+    eventBus.emit('PasswordResetRequested', { email, name: customer.name, resetToken, FRONTEND_URL });
 
     res.status(200).json({ message: "Se o e-mail existir, você receberá um link." });
   } catch (error) {
@@ -104,16 +93,13 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-// 🚀 O cliente clicou no e-mail e digitou a senha nova
 const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
     
-    // Procura quem é o dono desse token
     const customer = await prisma.customer.findFirst({ where: { resetToken: token } });
     if (!customer) return res.status(400).json({ error: "Link de redefinição inválido ou expirado." });
 
-    // Criptografa a nova senha e apaga o token de segurança
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await prisma.customer.update({
       where: { id: customer.id },
@@ -127,5 +113,4 @@ const resetPassword = async (req, res) => {
   }
 };
 
-// Exporta todas as funções para as rotas
 module.exports = { register, resendVerification, verifyEmail, login, updateProfile, forgotPassword, resetPassword };

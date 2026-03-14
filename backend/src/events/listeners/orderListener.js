@@ -1,12 +1,16 @@
 const eventBus = require('../eventBus');
 const prisma = require('../../config/prisma');
-const { sendMail } = require('../../services/emailService');
+// 🚨 O emailService foi removido daqui! O Listener de Pedidos agora é 100% focado no Banco de Dados.
 
+// 🛡️ SAGA PATTERN: Passo 2 - Comando de Escrita e Orquestração
 eventBus.on('OrderPaid', async (session) => {
   try {
+    console.log(`[Saga - Order] 📥 Recebido evento OrderPaid do Webhook. Processando sessão: ${session.id}`);
+
     const customerEmail = session.customer_details?.email;
     if (!customerEmail) throw new Error("E-mail não encontrado na sessão.");
 
+    // 1. Garantir que o cliente existe
     let customer = await prisma.customer.findUnique({ where: { email: customerEmail } });
     if (!customer) {
       customer = await prisma.customer.create({
@@ -18,12 +22,11 @@ eventBus.on('OrderPaid', async (session) => {
       });
     }
 
-    // 🚀 NOVIDADE: Lemos o carrinho do Stripe e preparamos os produtos para o Prisma
+    // 2. Preparar itens do carrinho
     let cartItemsToCreate = [];
     if (session.metadata?.cart) {
       const cart = JSON.parse(session.metadata.cart);
       
-      // Busca o preço atualizado de cada produto para garantir integridade
       for (const item of cart) {
         const product = await prisma.product.findUnique({ where: { id: item.id } });
         if (product) {
@@ -36,7 +39,7 @@ eventBus.on('OrderPaid', async (session) => {
       }
     }
 
-    // 2. Criar o Pedido com os Itens dentro!
+    // ⚡ COMMAND: Alteração de Estado (Lado da Escrita - CQRS)
     const order = await prisma.order.create({
       data: {
         totalAmount: session.amount_total,
@@ -48,33 +51,33 @@ eventBus.on('OrderPaid', async (session) => {
         state: session.shipping_details?.address?.state || "Não informado",
         zipCode: session.shipping_details?.address?.postal_code || "Não informado",
         country: session.shipping_details?.address?.country || "BR",
-        
-        // 🚀 MÁGICA AQUI: O Prisma já cria o pedido e insere os produtos na tabela OrderItem
         items: {
           create: cartItemsToCreate 
         }
       }
     });
 
-    console.log(`[EventBus] ✅ Pedido ${order.id} com ${cartItemsToCreate.length} itens guardado!`);
+    console.log(`[Saga - Order] ✅ Comando Executado: Pedido ${order.id} com ${cartItemsToCreate.length} itens criado!`);
 
+    // 🚀 SAGA PATTERN: Passo 3 - Orquestração e Desacoplamento
+
+    // A) Avisamos o Serviço de Notificações para enviar o e-mail de confirmação (Assíncrono)
     const currencyCode = (session.currency || 'BRL').toUpperCase();
     const valorFormatado = (session.amount_total / 100).toLocaleString('pt-BR', { 
       style: 'currency', currency: currencyCode 
     });
+    
+    eventBus.emit('PaymentConfirmationEmailRequested', {
+        email: customer.email,
+        name: customer.name,
+        valorFormatado
+    });
 
-    const frontendUrl = process.env.FRONTEND_URL || 'https://carefulbaza.vercel.app';
-
-    await sendMail(
-      customer.email,
-      "Pagamento Aprovado - Carefulbaza",
-      `Olá, ${customer.name || 'Cliente'}!`,
-      `O seu pagamento no valor de ${valorFormatado} foi aprovado. O seu pedido já está a ser preparado.`,
-      "Acompanhar Pedido",
-      `${frontendUrl}/minha-conta`
-    );
+    // B) Avisamos a Logística que o pedido está pronto para ser separado/enviado
+    eventBus.emit('OrderFulfillmentStarted', { orderId: order.id, customerId: customer.id });
 
   } catch (error) {
-    console.error(`[EventBus] 🔴 Falha ao processar OrderPaid:`, error.message);
+    console.error(`[Saga - Order] 🔴 Falha Crítica ao processar OrderPaid:`, error.message);
+    // 💡 Em uma arquitetura como a do Itaú, enviaríamos este erro para uma DLQ (Dead Letter Queue) no RabbitMQ.
   }
 });

@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.3",
     "node-fetch": "^3.3.2",
     "nodemailer": "^8.0.1",
+    "opossum": "^9.0.0",
     "pg": "^8.19.0",
     "stripe": "^20.4.0"
   },
