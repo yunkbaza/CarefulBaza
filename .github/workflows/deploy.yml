@@ -4,9 +4,10 @@ on:
   push:
     branches: [ main ]
 
-# 🚀 AJUSTE DE DEVOPS: Força o GitHub Actions a usar a versão mais recente e segura do Node para os plugins
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: careful-backend
 
 jobs:
   build-and-push:
@@ -21,23 +22,28 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login no Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, Tag e Push da Imagem para o ECR
+        id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: careful-backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          # Entramos na pasta do backend onde está o Dockerfile
           cd backend
           
           echo "🚀 Construindo a imagem Docker..."
+          # Build usando a tag do commit e a tag 'latest'
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           
-          echo "☁️ Enviando imagem para o Amazon ECR..."
+          echo "☁️ Enviando imagens para o Amazon ECR..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          
+          # Passa a URI da imagem para o próximo passo se necessário
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
