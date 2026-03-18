@@ -2,6 +2,9 @@ const prisma = require('../config/prisma');
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, ScanCommand, GetCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
 
+// 📦 Importamos o nosso novo serviço do AliExpress
+const aliexpressService = require('../services/aliexpressService');
+
 // 🛡️ Configuração do Cliente AWS
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION || 'us-east-1',
@@ -98,16 +101,65 @@ const getProductById = async (req, res) => {
   }
 };
 
-// 🚀 INVALIDAÇÃO DE CACHE (Agora apaga do DynamoDB de verdade)
+// 🚀 INVALIDAÇÃO DE CACHE
 const invalidateCatalogCache = async () => {
   try {
-    // No DynamoDB, para limpar tudo, geralmente você deleta e recria a tabela 
-    // ou deleta os itens. Aqui vamos apenas logar, pois no padrão Cache-Aside 
-    // o PutCommand já sobrescreve os dados antigos.
     console.log('[CQRS - Command] 🧹 O Read Model será atualizado na próxima leitura.');
   } catch (error) {
     console.error("Erro ao invalidar cache:", error);
   }
 };
 
-module.exports = { getAllProducts, getProductById, invalidateCatalogCache };
+// 🌍 🚀 NOVA FUNÇÃO: Importador Automático do AliExpress
+const importFromAliExpress = async (req, res) => {
+  try {
+    const { aliExpressId, categoryId } = req.body;
+
+    if (!aliExpressId) {
+      return res.status(400).json({ error: "O ID do produto do AliExpress é obrigatório." });
+    }
+
+    // 1. Vai à China (ou ao nosso Mock) buscar os dados limpos
+    const productData = await aliexpressService.getProductDetails(aliExpressId);
+
+    // 2. Guarda no banco de dados principal (PostgreSQL via Prisma)
+    const newProduct = await prisma.product.create({
+      data: {
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        // Estratégia Dropshipping: Finge que o preço original era 50% mais caro (Promoção)
+        compareAtPrice: Math.ceil(productData.price * 1.5), 
+        images: productData.images,
+        categoryId: categoryId || null, 
+      }
+    });
+
+    // Formata o preço para decimais antes de mandar para o DynamoDB
+    const formattedProduct = { 
+      ...newProduct, 
+      price: newProduct.price / 100, 
+      compareAtPrice: newProduct.compareAtPrice ? newProduct.compareAtPrice / 100 : null 
+    };
+
+    // 3. Padrão CQRS: Guarda logo no nosso Read-Model (DynamoDB) para o site não ficar lento
+    await ddbDocClient.send(new PutCommand({
+      TableName: TABLE_NAME,
+      Item: formattedProduct
+    }));
+
+    console.log(`[Importador] ✅ Produto "${formattedProduct.name}" importado com sucesso!`);
+
+    res.status(201).json({
+      message: "Produto importado com sucesso!",
+      product: formattedProduct
+    });
+
+  } catch (error) {
+    console.error("[ProductController] 🔴 Erro na importação:", error);
+    res.status(500).json({ error: error.message || "Erro ao importar produto." });
+  }
+};
+
+// Expondo a nova função no module.exports
+module.exports = { getAllProducts, getProductById, invalidateCatalogCache, importFromAliExpress };
