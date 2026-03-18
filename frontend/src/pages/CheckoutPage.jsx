@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useTranslation } from 'react-i18next';
 import { useCurrency, CURRENCY_MAP } from '../hooks/useCurrency';
-import { useAuth } from '../context/AuthContext'; // 🛡️ Importação do Contexto de Auth
+import { useAuth } from '../context/AuthContext'; 
 
 // --- FUNÇÕES DE MÁSCARA ---
 const maskPhone = (val) => val.replace(/\D/g, '').replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{4,5})(\d{4}).*/, '$1-$2').substring(0, 15);
@@ -12,7 +12,7 @@ const maskCEP = (val) => val.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart } = useCart();
-  const { user } = useAuth(); // 🛡️ Pegamos o utilizador logado
+  const { user } = useAuth(); 
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
@@ -40,19 +40,16 @@ export default function CheckoutPage() {
     const query = new URLSearchParams(location.search);
     const status = query.get('status');
 
-    // REGRA 1: Se o utilizador NÃO estiver logado, bloqueia e manda para o Login
     if (!user && checkoutStatus !== 'success' && checkoutStatus !== 'error') {
       navigate('/login', { state: { from: '/checkout' } }); 
       return; 
     }
 
-    // REGRA 2: Se está logado mas o carrinho está vazio, manda para a loja
     if (user && cartItems.length === 0 && checkoutStatus !== 'success' && checkoutStatus !== 'error') {
       navigate('/shop');
       return;
     }
 
-    // REGRA 3: Lida com o retorno do Stripe (Evita Loop)
     if (status === 'success' && checkoutStatus !== 'success') {
       const randomOrder = `BZ-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
       setOrderNumber(randomOrder);
@@ -71,14 +68,17 @@ export default function CheckoutPage() {
     setCheckoutStatus('processing');
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/create-checkout-session`, {
+      // 🚀 CORREÇÃO: Endpoint ajustado para /api/checkout
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           items: cartItems,
           currency: targetCurrency.toLowerCase(),
           locale: currentLng,
-          userId: user?.id // 🛡️ AGORA ENVIAMOS QUEM ESTÁ A COMPRAR!
+          userId: user?.id,
+          // Bónus: Adicionando dados de contacto para o Stripe/Order
+          customerInfo: { phone, cpf, cep }
         }), 
       });
 
@@ -101,6 +101,7 @@ export default function CheckoutPage() {
     );
   }
 
+  // ... (Os blocos de 'success' e 'error' continuam exatamente como você enviou)
   if (checkoutStatus === 'success') {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-6 transition-colors duration-300 pt-20 pb-32">
@@ -168,7 +169,6 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t('checkout.email_label')}</label>
-                    {/* Auto-preenche o email do utilizador logado */}
                     <input type="email" required defaultValue={user?.email || ''} className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3.5 text-sm text-gray-900 dark:text-white outline-none focus:border-baza-lavender dark:focus:border-baza-mint transition-colors shadow-sm" placeholder="seu@email.com" />
                   </div>
                   <div>

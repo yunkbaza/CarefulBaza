@@ -19,6 +19,7 @@ model Category {
 // 2. PRODUTOS (O coração do e-commerce)
 model Product {
   id             String   @id @default(uuid())
+  aliExpressId   String?  @unique
   name           String
   description    String?  @db.Text
   howToUse       String?

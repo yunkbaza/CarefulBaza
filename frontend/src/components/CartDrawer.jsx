@@ -70,6 +70,13 @@ export default function CartDrawer() {
 
               return (
                 <div key={item.id} className="flex gap-4 bg-white dark:bg-gray-900 p-3 rounded-sm shadow-sm border border-gray-100 dark:border-gray-800">
+                  <div className="w-20 h-24 bg-white dark:bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center border border-gray-100 dark:border-zinc-800 p-1">
+                    <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110" 
+                    />
+                  </div>
                   <div className="w-20 h-24 bg-gray-50 dark:bg-gray-800 rounded-sm overflow-hidden flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal" />
                   </div>

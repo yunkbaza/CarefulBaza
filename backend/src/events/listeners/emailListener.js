@@ -1,96 +1,106 @@
 const eventBus = require('../eventBus');
 const { sendMail } = require('../../services/emailService');
 
-// 🎧 1. Ouvinte para Registo de Novo Utilizador
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://carefulbaza.vercel.app';
+
+/**
+ * 🎧 1. OUVINTE: NOVO REGISTO (Boas-vindas + Verificação)
+ */
 eventBus.on('UserRegistered', async (data) => {
-  const { email, name, verificationToken, FRONTEND_URL } = data;
+  const { email, name, verificationToken } = data;
 
   try {
-    console.log(`[EventBus] 📨 Iniciando envio assíncrono de e-mail (Boas-vindas) para: ${email}`);
+    console.log(`[EmailListener] 📨 A preparar e-mail de boas-vindas para: ${email}`);
     const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
     
     await sendMail(
       email, 
-      "Confirm your account - Careful Baza", 
-      `Welcome, ${name}.`, 
-      "Please confirm your email to activate your account.", 
-      "Verify Email", 
+      "Bem-vindo à Careful Baza - Confirme a sua conta", 
+      `Olá, ${name}!`, 
+      "Estamos muito felizes por ter você connosco. Para começar a explorar a nossa curadoria exclusiva, por favor confirme o seu e-mail abaixo.", 
+      "Confirmar Minha Conta", 
       link
     );
 
-    console.log(`[EventBus] ✅ E-mail de boas-vindas enviado com sucesso para: ${email}`);
+    console.log(`[EmailListener] ✅ E-mail de boas-vindas enviado para: ${email}`);
   } catch (error) {
-    console.error(`[EventBus] 🔴 Falha crítica ao enviar e-mail para ${email}:`, error.message);
-    // 💡 Em produção (AWS SQS), a mensagem voltaria para a fila para ser tentada novamente (Retry Policy).
+    console.error(`[EmailListener] 🔴 Erro ao enviar boas-vindas para ${email}:`, error.message);
   }
 });
 
-// 🎧 2. Ouvinte para Reenvio de Confirmação
+/**
+ * 🎧 2. OUVINTE: REENVIO DE CONFIRMAÇÃO
+ */
 eventBus.on('VerificationResent', async (data) => {
-  const { email, name, verificationToken, FRONTEND_URL } = data;
+  const { email, name, verificationToken } = data;
 
   try {
-    console.log(`[EventBus] 📨 Iniciando envio assíncrono de e-mail (Reenvio) para: ${email}`);
     const link = `${FRONTEND_URL}/verificar-email?token=${verificationToken}`;
     
     await sendMail(
       email, 
-      "Reenvio: Confirme a sua conta", 
+      "Verificação de E-mail - Careful Baza", 
       `Olá, ${name}.`, 
-      "Por favor, confirme o seu e-mail.", 
-      "Verificar E-mail", 
+      "Aqui está o novo link que solicitou para confirmar a sua conta.", 
+      "Verificar Agora", 
       link
     );
-
-    console.log(`[EventBus] ✅ E-mail de reenvio enviado com sucesso para: ${email}`);
+    console.log(`[EmailListener] ✅ E-mail de reenvio enviado para: ${email}`);
   } catch (error) {
-    console.error(`[EventBus] 🔴 Falha crítica ao reenviar e-mail para ${email}:`, error.message);
+    console.error(`[EmailListener] 🔴 Erro no reenvio para ${email}:`, error.message);
   }
 });
 
-// 🎧 3. Ouvinte para Recuperação de Senha
+/**
+ * 🎧 3. OUVINTE: RECUPERAÇÃO DE SENHA
+ */
 eventBus.on('PasswordResetRequested', async (data) => {
-  const { email, name, resetToken, FRONTEND_URL } = data;
+  const { email, name, resetToken } = data;
 
   try {
-    console.log(`[EventBus] 📨 Iniciando envio assíncrono de e-mail (Recuperação) para: ${email}`);
     const link = `${FRONTEND_URL}/redefinir-senha?token=${resetToken}`;
     
     await sendMail(
       email, 
-      "Recuperação de Senha - CarefulBaza", 
+      "Recuperação de Acesso - Careful Baza", 
       `Olá, ${name}.`, 
-      "Recebemos um pedido para redefinir a sua senha. Se não foi você, ignore este e-mail.", 
+      "Recebemos um pedido para redefinir a sua senha. Se não realizou este pedido, por favor ignore este e-mail por segurança.", 
       "Criar Nova Senha", 
       link
     );
-
-    console.log(`[EventBus] ✅ E-mail de recuperação enviado com sucesso para: ${email}`);
+    console.log(`[EmailListener] ✅ Instruções de senha enviadas para: ${email}`);
   } catch (error) {
-    console.error(`[EventBus] 🔴 Falha crítica ao enviar recuperação de senha para ${email}:`, error.message);
+    console.error(`[EmailListener] 🔴 Erro na recuperação de senha para ${email}:`, error.message);
   }
 });
 
-// 🚀 🎧 4. Ouvinte para Confirmação de Pagamento (SAGA PATTERN)
+/**
+ * 🚀 🎧 4. OUVINTE: PAGAMENTO APROVADO (SAGA PATTERN)
+ */
 eventBus.on('PaymentConfirmationEmailRequested', async (data) => {
-  const { email, name, valorFormatado } = data;
+  const { email, name, valorFormatado, orderId } = data;
 
   try {
-    console.log(`[EventBus] 📨 Iniciando envio assíncrono de e-mail (Pagamento) para: ${email}`);
+    console.log(`[EmailListener] 💰 A preparar confirmação de pagamento para: ${email}`);
     
-    const frontendUrl = process.env.FRONTEND_URL || 'https://carefulbaza.vercel.app';
-    
+    // Se tivermos o ID do pedido, mandamos para o rastreio específico, senão para a conta
+    const trackingLink = orderId 
+      ? `${FRONTEND_URL}/rastreio?code=${orderId}`
+      : `${FRONTEND_URL}/minha-conta`;
+
     await sendMail(
       email,
-      "Pagamento Aprovado - Carefulbaza",
-      `Olá, ${name || 'Cliente'}!`,
-      `O seu pagamento no valor de ${valorFormatado} foi aprovado. O seu pedido já está a ser preparado.`,
-      "Acompanhar Pedido",
-      `${frontendUrl}/minha-conta`
+      "Pagamento Aprovado - O seu pedido está a caminho!",
+      `Olá, ${name || 'Cliente Careful Baza'}!`,
+      `Confirmamos o recebimento do seu pagamento no valor de ${valorFormatado}. A nossa equipa já iniciou o processo de preparação e envio do seu pedido.`,
+      "Acompanhar Meu Pedido",
+      trackingLink
     );
 
-    console.log(`[EventBus] ✅ E-mail de pagamento enviado com sucesso para: ${email}`);
+    console.log(`[EmailListener] ✅ E-mail de pagamento confirmado enviado para: ${email}`);
   } catch (error) {
-    console.error(`[EventBus] 🔴 Falha crítica ao enviar e-mail de pagamento para ${email}:`, error.message);
+    console.error(`[EmailListener] 🔴 Erro ao confirmar pagamento para ${email}:`, error.message);
   }
 });
+
+module.exports = {}; // O require no app.js já ativa os ouvintes

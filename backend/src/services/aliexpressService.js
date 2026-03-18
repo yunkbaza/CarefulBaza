@@ -1,23 +1,21 @@
 const crypto = require('crypto');
 const axios = require('axios');
 
-// 🛡️ Credenciais do seu .env
+// 🛡️ Credenciais do ambiente
 const APP_KEY = process.env.ALIEXPRESS_APP_KEY;
 const APP_SECRET = process.env.ALIEXPRESS_APP_SECRET;
-const API_URL = 'https://api-sg.aliexpress.com/sync'; // Gateway oficial do AliExpress Dropshipping
+const API_URL = 'https://api-sg.aliexpress.com/sync'; 
 
 /**
  * 🔐 Algoritmo Oficial de Assinatura (Taobao Open Platform)
- * O AliExpress exige que todos os parâmetros sejam ordenados alfabeticamente,
- * concatenados com o Secret e transformados em um hash MD5.
+ * Necessário para que a API da China aceite o nosso pedido.
  */
 const generateSign = (params) => {
     const sortedKeys = Object.keys(params).sort();
     let signString = APP_SECRET;
     
     for (const key of sortedKeys) {
-        // Ignora campos que não devem ser assinados
-        if (key !== 'sign' && key !== 'sign_method') {
+        if (key !== 'sign' && key !== 'sign_method' && params[key] !== undefined) {
             signString += key + params[key];
         }
     }
@@ -27,66 +25,67 @@ const generateSign = (params) => {
 };
 
 /**
- * 📥 Função 1: Buscar Detalhes do Produto (Ou usar MOCK se não tiver chave)
+ * 📥 Buscar Detalhes do Produto (AliExpress Dropshipping API)
  */
 const getProductDetails = async (productId) => {
-    // 🚦 MOCK (Simulação) enquanto a sua conta aguarda aprovação
-    if (!APP_KEY || APP_KEY === 'coloque_sua_app_key_aqui') {
-        console.log(`[AliExpress - MOCK] Simulando importação do produto ${productId}...`);
+    // 🚦 MOCK: Ativa-se se as chaves não estiverem configuradas no .env
+    if (!APP_KEY || APP_KEY === 'sua_chave_aqui') {
+        console.log(`[AliExpress - MOCK] A simular dados para o produto: ${productId}`);
         return {
-            aliExpressId: productId,
-            name: "Sérum Facial Ácido Hialurônico (Importado)",
+            name: "Sérum Facial Careful Baza (Importado)",
             price: 8990, // R$ 89,90 em centavos
-            description: "Sérum de alta hidratação simulado pela API de teste.",
+            description: "Fórmula avançada de hidratação importada com tecnologia de ponta.",
             images: [
-                "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&q=80",
-                "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=500&q=80"
+                "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800",
+                "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=800"
             ]
         };
     }
 
     try {
-        console.log(`[AliExpress] 📡 Buscando dados reais do produto ${productId}...`);
-        
-        // Montamos os parâmetros obrigatórios da API
+        // 📅 Formatação de Timestamp (YYYY-MM-DD HH:mm:ss) exigida pela API
+        const now = new Date();
+        const timestamp = now.toISOString().replace('T', ' ').split('.')[0];
+
         const params = {
             method: 'aliexpress.postproduct.redefining.findaeproductbyidfordropshipper',
             app_key: APP_KEY,
-            timestamp: new Date().toISOString().replace(/\.\d+Z$/, 'Z'), // Formato exigido: yyyy-MM-dd HH:mm:ss ou ISO
+            timestamp: timestamp,
             format: 'json',
             v: '2.0',
             sign_method: 'md5',
             product_id: productId
         };
 
-        // Adiciona a assinatura criptografada
         params.sign = generateSign(params);
 
-        // Dispara o pedido para a China
         const response = await axios.post(API_URL, new URLSearchParams(params).toString(), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
 
         const result = response.data.aliexpress_postproduct_redefining_findaeproductbyidfordropshipper_response;
 
-        if (!result || !result.result) {
-            throw new Error("Produto não encontrado ou API retornou erro de permissão.");
+        if (!result || !result.result || !result.result.success) {
+            throw new Error("Produto não encontrado ou API do AliExpress recusou o acesso.");
         }
 
         const productInfo = result.result;
         
-        // 🧹 Limpamos o JSON para o formato do nosso PostgreSQL
+        // 🧹 Limpeza e Formatação para o nosso schema do Prisma
         return {
-            aliExpressId: productId.toString(),
             name: productInfo.subject,
-            price: Math.ceil(productInfo.target_sale_price * 100), 
-            description: productInfo.detail,
-            images: productInfo.image_urls ? productInfo.image_urls.split(';') : [] 
+            // Converte preço (ex: 15.50) para centavos (1550)
+            price: Math.ceil(parseFloat(productInfo.target_sale_price) * 100), 
+            description: productInfo.detail || "Sem descrição disponível do fornecedor.",
+            // Limpa URLs de imagens
+            images: productInfo.image_urls 
+                ? productInfo.image_urls.split(';').map(url => url.trim()) 
+                : []
         };
 
     } catch (error) {
-        console.error("[AliExpress] 🔴 Erro ao buscar produto:", error.response ? error.response.data : error.message);
-        throw new Error("Falha na comunicação com a API do AliExpress.");
+        console.error("[AliExpress Service] 🔴 Erro:", error.message);
+        throw new Error("Não foi possível conectar com o fornecedor AliExpress.");
     }
 };
 

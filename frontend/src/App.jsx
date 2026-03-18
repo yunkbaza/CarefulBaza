@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
-import { useTranslation } from 'react-i18next'; // 🌍 Adicionamos a importação da tradução
+import { useTranslation } from 'react-i18next';
+
+// Componentes de UI
 import AnnouncementBar from './components/AnnouncementBar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -11,7 +13,6 @@ import MobileMenu from './components/MobileMenu';
 import Quiz from './components/Quiz';
 import SearchModal from './components/SearchModal'; 
 import Chatbot from './components/Chatbot';
-import AdminProductsPage from './pages/AdminProductsPage';
 
 // Importação das Páginas
 import Home from './pages/Home';
@@ -28,6 +29,20 @@ import CheckoutPage from './pages/CheckoutPage';
 import DashboardPage from './pages/DashboardPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import AdminProductsPage from './pages/AdminProductsPage';
+
+// 🛡️ Componente de Proteção de Rota
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) return null; // Aguarda o Firebase/Auth inicializar
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -37,7 +52,7 @@ function ScrollToTop() {
 
 function MainLayout() {
   const { isCartOpen } = useCart();
-  const { i18n } = useTranslation(); // 🌍 Trazemos a instância de idiomas
+  const { i18n } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -47,7 +62,7 @@ function MainLayout() {
     return savedTheme === 'dark';
   });
 
-  // 🌍 Atualizado: O idioma do HTML agora muda dinamicamente
+  // Gestão de Tema e Idioma do HTML
   useEffect(() => {
     const htmlElement = document.documentElement;
     htmlElement.lang = i18n.language || 'pt-BR'; 
@@ -61,6 +76,7 @@ function MainLayout() {
     }
   }, [isDarkMode, i18n.language]);
 
+  // Bloqueio de Scroll quando Modais estão abertos
   useEffect(() => {
     if (isCartOpen || isMobileMenuOpen || isQuizOpen || isSearchOpen) {
       document.body.style.overflow = 'hidden';
@@ -90,23 +106,36 @@ function MainLayout() {
         
         <div className="flex-1">
           <Routes>
+            {/* Rotas Públicas */}
             <Route path="/" element={<Home />} />
             <Route path="/produto/:id" element={<ProductPage />} />
             <Route path="/shop" element={<CollectionPage />} />
             <Route path="/colecao/:categoryId" element={<CollectionPage />} />
             <Route path="/sobre" element={<AboutPage />} />
-            <Route path="/ciencia/:topicId?" element={<SciencePage />} /> {/* 🛡️ Adicionado o '?' para evitar tela branca */}
+            <Route path="/ciencia/:topicId?" element={<SciencePage />} />
             <Route path="/rastreio" element={<TrackPage />} />
             <Route path="/info/:pageId" element={<LegalPage />} />
-            <Route path="/admin/produtos" element={<AdminProductsPage />} />
             
+            {/* Rotas de Autenticação */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cadastro" element={<RegisterPage />} />
             <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} /> 
-            <Route path="/minha-conta" element={<DashboardPage />} /> 
             <Route path="/verificar-email" element={<VerifyEmailPage />} />
             <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
+
+            {/* Rotas Protegidas */}
+            <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} /> 
+            <Route path="/minha-conta" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} /> 
+            
+            {/* 🛡️ Rota de Administração Protegida */}
+            <Route 
+              path="/admin/produtos" 
+              element={
+                <ProtectedRoute>
+                  <AdminProductsPage />
+                </ProtectedRoute>
+              } 
+            />
           </Routes>
         </div>
         
