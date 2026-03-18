@@ -53,8 +53,6 @@ model Customer {
   password          String?
   role              String    @default("USER")
   isVerified        Boolean   @default(false)
-  
-  isVerified        Boolean   @default(false)
   verificationToken String?   
   resetToken        String? 
   
