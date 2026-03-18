@@ -1,105 +1,150 @@
 # 💄 Careful Baza - AI-Powered Skincare E-commerce
 
-> Plataforma de e-commerce internacional focada em skincare (dropshipping), unindo arquitetura de software de alta performance, integrações financeiras globais e *Conversational Commerce* nativo via IA.
+Com base em todo o código que construímos e revisámos juntos, conheço a arquitetura da **Careful Baza** de ponta a ponta. Você tem nas mãos um sistema de nível *Enterprise*, e o seu `README.md` precisa de refletir essa grandiosidade, tanto para a sua própria organização quanto para futuras entrevistas ou portfólio.
 
-## 🚀 Visão Geral do Projeto
+Escrevi um `README.md` profissional, detalhado e estruturado com as melhores práticas do GitHub. Ele cobre a arquitetura orientada a eventos, a integração de IA, o dropshipping e as instruções exatas de como rodar o projeto.
 
-O **Careful Baza** não é apenas uma loja virtual; é um sistema distribuído projetado para conversão e escala global. A arquitetura foi desenhada separando rigorosamente as responsabilidades entre um Frontend reativo (React/Vite) e um Backend robusto (Node.js), orquestrado por um pipeline de CI/CD moderno e infraestrutura em nuvem.
+Basta copiar o código abaixo e colar no seu ficheiro **`README.md`** na raiz do projeto:
 
-O grande diferencial do sistema é o motor de **Conversational Commerce**, onde agentes de IA (Google Gemini) interagem com os clientes, tiram dúvidas sobre rotinas de pele e inserem produtos no carrinho dinamicamente através de triggers estruturados (`#cart:product_id`).
+***
 
-## 🏗️ Arquitetura e Tech Stack
+```markdown
+# 🌟 Careful Baza | Enterprise E-commerce & Dropshipping
 
-O projeto segue princípios de Clean Code, separação de responsabilidades (SoC) e preparação para microsserviços através de uma **Arquitetura Orientada a Eventos (EDA)**.
+![React](https://img.shields.io/badge/Frontend-React_Vite-61DAFB?style=flat-square&logo=react)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?style=flat-square&logo=node.js)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_Prisma-4169E1?style=flat-square&logo=postgresql)
+![Stripe](https://img.shields.io/badge/Payments-Stripe-008CDD?style=flat-square&logo=stripe)
+![Gemini](https://img.shields.io/badge/AI-Google_Gemini-8E75B2?style=flat-square&logo=google)
 
-### Frontend (Client-Side)
-* **Framework:** React.js com Vite (Alta performance de build e HMR).
-* **Estilização:** Tailwind CSS (Design System altamente customizável e responsivo).
-* **Estado e Roteamento:** Context API + React Router DOM.
-* **Internacionalização:** `i18next` para suporte multi-idioma nativo.
-* **Integrações:** Stripe Elements (Checkout fluido e seguro).
-
-### Backend (Server-Side)
-* **Core:** Node.js + Express.js.
-* **Banco de Dados:** PostgreSQL hospedado no Neon Serverless.
-* **ORM:** Prisma v7.5 (Queries tipadas e seguras, otimizadas com motor `library`).
-* **Autenticação:** JWT (JSON Web Tokens) com senhas cacheadas em Bcrypt.
-* **Mensageria Interna:** Padrão EventBus nativo (preparação para SAGA Pattern e filas assíncronas).
-* **Inteligência Artificial:** Google Generative AI SDK (Gemini) para processamento de linguagem natural no Chatbot.
-
-### DevOps & Infraestrutura
-* **Containerização:** Docker com *Multi-stage Builds* (Imagens de produção leves e seguras baseadas em `debian-slim`).
-* **CI/CD:** GitHub Actions (Build, Tagging imutável por SHA e Push automatizado).
-* **Registry:** AWS Elastic Container Registry (ECR).
-* **Segurança:** Execução de containers com *Least Privilege* (Usuário `node` sem root).
+A **Careful Baza** é uma plataforma de E-commerce e Dropshipping de alto desempenho, construída com uma arquitetura modular e orientada a eventos (Saga Pattern). Projetada para escala global, a aplicação integra fornecedores da China (AliExpress), processamento de pagamentos internacionais, e um assistente de vendas em Inteligência Artificial.
 
 ---
 
-## ⚙️ Funcionalidades Principais
+## ✨ Principais Funcionalidades (Features)
 
-- [x] **Event-Driven E-mails:** Disparo de e-mails transacionais (boas-vindas, recuperação de senha) desacoplados do request principal, garantindo respostas em ms para o cliente.
-- [x] **Checkout Global:** Integração com Stripe para pagamentos seguros com cartões de crédito internacionais e métodos locais (Pix, Boleto).
-- [x] **AI Shopping Assistant:** Chatbot integrado ao catálogo do banco de dados que atua como consultor dermatológico de vendas.
-- [x] **Multi-currency Dinâmico:** Conversão de preços em tempo real com base no câmbio (Exchange-API).
-- [x] **Lead Capture Blindado:** Formulários de newsletter no footer protegidos e com feedback visual instantâneo.
+* 📦 **Motor de Dropshipping Integrado:** Comunicação direta com a Taobao Open Platform (AliExpress API) via assinatura criptografada MD5 para importar produtos e gerir catálogo.
+* 🧠 **Assistente Virtual de IA (Careful IA):** Chatbot flutuante integrado ao catálogo do banco de dados, utilizando o **Google Gemini 1.5 Flash** para recomendar produtos e tirar dúvidas de clientes em tempo real.
+* 💳 **Checkout Global Seguríssimo:** Integração completa com o **Stripe**, suportando recolha automática de morada de entrega, cálculo dinâmico de frete e conversão cambial.
+* ⚙️ **Arquitetura Event-Driven:** Webhooks do Stripe disparam eventos assíncronos (`orderListener`, `emailListener`) para garantir que o banco de dados e os e-mails sejam processados sem bloquear a interface do utilizador.
+* 🌍 **Pronto para o Mundo (i18n):** Frontend com suporte a múltiplos idiomas e conversão de moedas ao vivo.
+* 🔐 **Segurança & RBAC:** Autenticação baseada em JWT com bcrypt, validação de e-mail duplo e controlo de acesso baseado em papéis (Role: `USER` vs `ADMIN`).
+* 🔄 **Automação de Tarefas:** Cron Jobs diários (`priceSyncJob.js`) para manter os preços sincronizados com os fornecedores da China.
 
 ---
 
-## 🛠️ Como rodar localmente
+## 🛠️ Tecnologias Utilizadas
+
+### Frontend (Aplicação Cliente)
+* **Framework:** React 18 (com Vite para Fast Refresh)
+* **Estilização:** Tailwind CSS (Dark/Light mode nativo)
+* **Estado & Navegação:** React Context API & React Router DOM
+* **Internacionalização:** `i18next`
+
+### Backend (API & Serviços)
+* **Ambiente:** Node.js com Express.js
+* **Banco de Dados:** PostgreSQL
+* **ORM:** Prisma Client
+* **Arquitetura:** Event Bus Nativo (Node Events)
+* **Integrações:** Stripe API, Google Generative AI, Axios, Nodemailer.
+
+---
+
+## 🚀 Como Executar o Projeto Localmente
 
 ### Pré-requisitos
-* Node.js (v22+)
-* Docker (Opcional, para rodar o banco local)
-* Chaves de API: Stripe, Google Gemini, e um servidor SMTP (ex: Gmail App Passwords).
+* [Node.js](https://nodejs.org/) (v18+)
+* [PostgreSQL](https://www.postgresql.org/) (A rodar localmente ou via Docker/Supabase)
+* Contas de Desenvolvedor: Stripe, Google AI Studio, AliExpress Open Platform.
 
-### Passo 1: Backend
+### 1. Clonar o Repositório
+```bash
+git clone [https://github.com/seu-usuario/carefulbaza.git](https://github.com/seu-usuario/carefulbaza.git)
+cd carefulbaza
+```
 
-# 1. Entre na pasta do backend
+### 2. Configurar o Backend
+```bash
 cd backend
-
-# 2. Instale as dependências
 npm install
+```
 
-# 3. Configure as variáveis de ambiente
-cp .env.example .env
-# (Preencha o .env com suas chaves reais do banco de dados, Stripe, SMTP e Gemini)
+## Crie um ficheiro `.env` na pasta `backend/` e preencha com as suas credenciais:
+```env
+# Banco de Dados
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/carefulbaza"
+PORT=3000
 
-# 4. Gere os binários do Prisma e suba as tabelas
-npx prisma generate
+# Segurança
+JWT_SECRET="sua_chave_jwt_secreta"
+
+# Stripe (Pagamentos)
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+
+# AliExpress (Dropshipping)
+ALIEXPRESS_APP_KEY="sua_app_key"
+ALIEXPRESS_APP_SECRET="sua_app_secret"
+
+# Google Gemini (IA)
+GEMINI_API_KEY="AIzaSy..."
+
+# Comunicação (Frontend URL & E-mail)
+FRONTEND_URL="http://localhost:5173"
+SMTP_HOST="smtp.gmail.com"
+SMTP_USER="seu_email@gmail.com"
+SMTP_PASS="sua_senha_de_app"
+```
+
+Configure o Banco de Dados e inicie o servidor:
+```bash
 npx prisma db push
-
-# 5. Inicie o servidor em modo de desenvolvimento
+npx prisma generate
 npm run dev
+```
 
-### Passo 2: Frontend
-
-# 1. Entre na pasta do frontend
+### 3. Configurar o Frontend
+Num novo terminal, navegue para a pasta do frontend:
+```bash
 cd frontend
-
-# 2. Instale as dependências
 npm install
+```
 
-# 3. Configure a URL da API no .env
-echo "VITE_API_URL=http://localhost:3000/api" > .env
+Crie um ficheiro `.env` na pasta `frontend/`:
+```env
+VITE_API_URL="http://localhost:3000"
+```
 
-# 4. Inicie o Vite
+Inicie a aplicação React:
+```bash
 npm run dev
+```
 
-Acesse http://localhost:5173 no seu navegador.
+---
 
-### 🚢 Pipeline de Deploy (CI/CD)
+## 🗄️ Estrutura do Banco de Dados (Prisma Schema)
 
-Este repositório possui Integração Contínua (CI) configurada via GitHub Actions.
-A cada push na branch main:
+O coração do sistema relacional inclui as seguintes entidades principais:
+* `Customer`: Gere utilizadores, tokens de verificação e permissões (`role: ADMIN | USER`).
+* `Product`: Catálogo de produtos com suporte a `aliExpressId` (SKU do fornecedor), preços em centavos e galerias de imagens.
+* `Order` & `OrderItem`: Registo imutável de vendas ligadas aos eventos do Webhook do Stripe.
+* `Category`: Organização departamental do e-commerce.
 
-O ambiente de execução é provisionado.
+---
 
-O Docker realiza o build em múltiplos estágios (Node 22 Slim + Prisma).
+## 🌐 Deploy (Produção)
 
-A imagem recebe uma tag única baseada no hash do commit (${{ github.sha }}) garantindo rastreabilidade e facilidade de rollback.
+Este repositório está otimizado para deploy moderno:
+* **Frontend:** Preparado para a [Vercel](https://vercel.com/) (configurações presentes no `vercel.json`).
+* **Backend:** Inclui um `Dockerfile` otimizado para deploy em serviços cloud como AWS (ECS/App Runner), Render ou Railway.
+* **CI/CD:** Pipelines de GitHub Actions (`deploy.yml`) pré-configurados.
 
-A imagem é enviada (Push) diretamente para o AWS ECR.
+---
 
-Projeto desenvolvido com foco em escalabilidade, resiliência corporativa e experiência do usuário internacional.
+*Desenvolvido com excelência arquitetural para a Careful Baza Enterprise.* 💎
+```
 
-Obrigado pela atenção e interesse!!
+***
+
+### O que acha do resultado?
+Ele destaca a arquitetura de **eventos**, a **Inteligência Artificial** e a integração direta com o **AliExpress**, que são os verdadeiros diferenciais tecnológicos do seu projeto. Está pronto para ser exibido a qualquer investidor ou tech lead!
