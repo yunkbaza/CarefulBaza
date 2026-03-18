@@ -32,10 +32,13 @@ const getAllProducts = async (req, res) => {
     console.log('[CQRS - Query] 🐢 Cache MISS: Lendo do PostgreSQL via Prisma...');
     const products = await prisma.product.findMany({ include: { category: true } });
     
+    // Convertendo datas para String (ISO) para o DynamoDB aceitar
     const formattedProducts = products.map(p => ({ 
       ...p, 
       price: p.price / 100, 
-      compareAtPrice: p.compareAtPrice ? p.compareAtPrice / 100 : null 
+      compareAtPrice: p.compareAtPrice ? p.compareAtPrice / 100 : null,
+      createdAt: p.createdAt ? p.createdAt.toISOString() : undefined,
+      updatedAt: p.updatedAt ? p.updatedAt.toISOString() : undefined
     }));
 
     // 💾 3. Sincroniza com o DynamoDB (Popula o Read Model)
@@ -82,10 +85,13 @@ const getProductById = async (req, res) => {
     
     if (!product) return res.status(404).json({ error: "Product not found." });
     
+    // Convertendo datas para String (ISO) para o DynamoDB aceitar
     const formattedProduct = { 
       ...product, 
       price: product.price / 100, 
-      compareAtPrice: product.compareAtPrice ? product.compareAtPrice / 100 : null 
+      compareAtPrice: product.compareAtPrice ? product.compareAtPrice / 100 : null,
+      createdAt: product.createdAt ? product.createdAt.toISOString() : undefined,
+      updatedAt: product.updatedAt ? product.updatedAt.toISOString() : undefined
     };
 
     // 💾 Salva no DynamoDB para a próxima consulta
@@ -128,18 +134,24 @@ const importFromAliExpress = async (req, res) => {
         name: productData.name,
         description: productData.description,
         price: productData.price,
-        // Estratégia Dropshipping: Finge que o preço original era 50% mais caro (Promoção)
         compareAtPrice: Math.ceil(productData.price * 1.5), 
-        images: productData.images,
+        
+        image: productData.images[0] || "https://via.placeholder.com/500", 
+        
+        // CORREÇÃO 1: Mudámos de "images" para "gallery" conforme o seu schema
+        gallery: productData.images,
+        
         categoryId: categoryId || null, 
       }
     });
 
-    // Formata o preço para decimais antes de mandar para o DynamoDB
+    // CORREÇÃO 2: Converte as datas de criação/atualização para String (formato ISO)
     const formattedProduct = { 
       ...newProduct, 
       price: newProduct.price / 100, 
-      compareAtPrice: newProduct.compareAtPrice ? newProduct.compareAtPrice / 100 : null 
+      compareAtPrice: newProduct.compareAtPrice ? newProduct.compareAtPrice / 100 : null,
+      createdAt: newProduct.createdAt.toISOString(),
+      updatedAt: newProduct.updatedAt.toISOString()
     };
 
     // 3. Padrão CQRS: Guarda logo no nosso Read-Model (DynamoDB) para o site não ficar lento

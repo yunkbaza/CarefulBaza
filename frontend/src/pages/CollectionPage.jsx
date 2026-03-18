@@ -15,10 +15,13 @@ export default function CollectionPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    // 📡 Ajustámos a URL para bater na rota correta do nosso backend Node.js
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    
     fetch(`${apiUrl}/products`)
       .then(res => res.json())
       .then(data => {
+        // Simulamos avaliações (reviews) para os produtos importados do AliExpress
         const dataWithReviews = data.map(p => ({
           ...p,
           reviews: Math.floor(Math.random() * 200) + 15
@@ -27,7 +30,7 @@ export default function CollectionPage() {
         setLoading(false);
       })
       .catch(err => {
-        console.error(err);
+        console.error("Erro ao carregar catálogo:", err);
         setLoading(false);
       });
   }, []);
@@ -57,10 +60,10 @@ export default function CollectionPage() {
 
   // Função auxiliar para depurar as traduções dos produtos
   const getTranslatedName = (productName) => {
+    if (!productName) return '';
     const translated = t(`products.${productName}`, { defaultValue: 'NOT_FOUND' });
     if (translated === 'NOT_FOUND' && i18n.language !== 'pt') {
-      console.warn(`Falta traduzir este produto no JSON (${i18n.language}): "${productName}"`);
-      return productName; // Retorna o nome em português como fallback
+      return productName; // Retorna o nome original do AliExpress se não houver tradução
     }
     return translated === 'NOT_FOUND' ? productName : translated;
   };
@@ -132,14 +135,13 @@ export default function CollectionPage() {
               
               <div className="flex flex-col flex-1">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold">{product.category?.name}</span>
+                  <span className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold">{product.category?.name || 'Geral'}</span>
                   <div className="flex items-center gap-1">
                     <svg className="w-2.5 h-2.5 text-baza-lavender dark:text-baza-mint fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                     <span className="text-[9px] font-mono text-gray-500">({product.reviews})</span>
                   </div>
                 </div>
                 
-                {/* NOME TRADUZIDO COM FUNÇÃO DE SEGURANÇA */}
                 <h3 className="font-syne font-bold text-gray-900 dark:text-white text-base mb-2 group-hover:text-baza-lavender dark:group-hover:text-baza-mint transition-colors line-clamp-1">
                   {getTranslatedName(product.name)}
                 </h3>
@@ -150,7 +152,6 @@ export default function CollectionPage() {
                       {convertAndFormat(product.compareAtPrice)}
                     </span>
                   )}
-                  {/* PREÇO CONVERTIDO */}
                   <span className="text-sm font-mono font-bold text-gray-900 dark:text-gray-300">
                     {convertAndFormat(product.price)}
                   </span>
@@ -166,7 +167,7 @@ export default function CollectionPage() {
           <svg className="w-16 h-16 text-gray-200 dark:text-gray-700 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1"><path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
           <h3 className="font-syne text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('shop.empty_title')}</h3>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">{t('shop.empty_desc')}</p>
-          <Link to="/shop" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors">
+          <Link to="/" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-baza-lavender transition-colors">
             {t('shop.view_all')}
           </Link>
         </div>

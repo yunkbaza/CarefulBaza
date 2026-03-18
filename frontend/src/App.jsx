@@ -11,6 +11,7 @@ import MobileMenu from './components/MobileMenu';
 import Quiz from './components/Quiz';
 import SearchModal from './components/SearchModal'; 
 import Chatbot from './components/Chatbot';
+import AdminProductsPage from './pages/AdminProductsPage';
 
 // Importação das Páginas
 import Home from './pages/Home';
@@ -97,6 +98,7 @@ function MainLayout() {
             <Route path="/ciencia/:topicId?" element={<SciencePage />} /> {/* 🛡️ Adicionado o '?' para evitar tela branca */}
             <Route path="/rastreio" element={<TrackPage />} />
             <Route path="/info/:pageId" element={<LegalPage />} />
+            <Route path="/admin/produtos" element={<AdminProductsPage />} />
             
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cadastro" element={<RegisterPage />} />
