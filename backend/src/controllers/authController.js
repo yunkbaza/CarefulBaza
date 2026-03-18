@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); 
 const prisma = require('../config/prisma');
 const eventBus = require('../events/eventBus'); 
+
 // 🚨 O emailService foi removido daqui! O Controller agora é 100% Event-Driven.
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://carefulbaza.vercel.app';
@@ -56,8 +57,20 @@ const login = async (req, res) => {
     if (!customer || !await bcrypt.compare(req.body.password, customer.password)) return res.status(401).json({ error: "Incorrect credentials." });
     if (!customer.isVerified) return res.status(403).json({ error: "Please verify email.", needsVerification: true, email: customer.email });
 
-    const token = jwt.sign({ id: customer.id }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: customer.id, name: customer.name, email: customer.email, phone: customer.phone } });
+    // 🛡️ CORREÇÃO: Injetamos o 'role' no token JWT para segurança nas rotas
+    const token = jwt.sign({ id: customer.id, role: customer.role }, JWT_SECRET, { expiresIn: '7d' });
+    
+    // 🛡️ CORREÇÃO: Devolvemos o 'role' para o frontend ativar o isAdmin no AuthContext
+    res.json({ 
+      token, 
+      user: { 
+        id: customer.id, 
+        name: customer.name, 
+        email: customer.email, 
+        phone: customer.phone,
+        role: customer.role 
+      } 
+    });
   } catch (error) { res.status(500).json({ error: "Server error." }); }
 };
 
@@ -69,7 +82,17 @@ const updateProfile = async (req, res) => {
       where: { id: customerId },
       data: { name, phone }
     });
-    res.json({ user: { id: updatedCustomer.id, name: updatedCustomer.name, email: updatedCustomer.email, phone: updatedCustomer.phone } });
+    
+    // 🛡️ CORREÇÃO: Mantemos o 'role' atualizado no frontend ao gravar alterações
+    res.json({ 
+      user: { 
+        id: updatedCustomer.id, 
+        name: updatedCustomer.name, 
+        email: updatedCustomer.email, 
+        phone: updatedCustomer.phone,
+        role: updatedCustomer.role
+      } 
+    });
   } catch (error) { res.status(500).json({ error: "Failed to save data." }); }
 };
 
