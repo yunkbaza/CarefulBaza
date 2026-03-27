@@ -131,6 +131,16 @@ export default function Navbar({ onOpenMenu, onOpenQuiz, toggleDarkMode, isDarkM
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         </button>
 
+        {/* 🚚 NOVO: BOTÃO DO CAMINHÃO DE RASTREIO */}
+        <Link to="/rastreio" aria-label="Rastrear Pedido" title="Rastrear Pedido" className="hover:text-baza-lavender dark:hover:text-baza-mint transition-colors hidden sm:block flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+        </Link>
+
         {/* Botão de Login / Minha Conta */}
         {user ? (
           <Link 
@@ -148,9 +158,7 @@ export default function Navbar({ onOpenMenu, onOpenQuiz, toggleDarkMode, isDarkM
           </Link>
         )}
         
-        {/* ======================================= */}
-        {/* BOTÃO DO CARRINHO */}
-        {/* ======================================= */}
+        {/* 🛒 BOTÃO DO CARRINHO DE COMPRAS */}
         <button 
           onClick={() => setIsCartOpen(true)} 
           aria-label="Cart" 
