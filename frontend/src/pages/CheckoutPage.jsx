@@ -68,8 +68,10 @@ export default function CheckoutPage() {
     setCheckoutStatus('processing');
 
     try {
-      // 🚀 CORREÇÃO: Endpoint ajustado para /api/checkout
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/checkout`, {
+      // 🚀 CORREÇÃO: Limpa o /api extra do baseUrl (se houver) e aponta para a rota correta
+      const baseUrl = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '');
+      
+      const response = await fetch(`${baseUrl}/api/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -101,7 +103,6 @@ export default function CheckoutPage() {
     );
   }
 
-  // ... (Os blocos de 'success' e 'error' continuam exatamente como você enviou)
   if (checkoutStatus === 'success') {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-6 transition-colors duration-300 pt-20 pb-32">
