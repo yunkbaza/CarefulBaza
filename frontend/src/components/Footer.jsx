@@ -1,12 +1,10 @@
 import { useState } from 'react'; // 👈 Importamos o useState
 import logoSvg from '../assets/LogoCarefulBazaHorizontal.svg';
-import logoPix from '../assets/LogoPix.png';
 import logoMaster from '../assets/LogoMaster.png';
 import logoVisa from '../assets/LogoVisa.png';
 import logoAmerican from '../assets/LogoAmerican.png';
 import logoElo from '../assets/LogoElo.png';
-import logoHipercard from '../assets/LogoHipercard.png';
-import logoDiners from '../assets/LogoDiners.png';
+import logoHipercard from '../assets/LogoHipercard.png';  
 import logoBoleto from '../assets/LogoBoleto.png';
 
 import { Link } from 'react-router-dom';
@@ -152,13 +150,11 @@ export default function Footer() {
             </div>
             
             <div className="grid grid-cols-4 gap-2.5 opacity-90 w-fit">
-              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoPix} alt="Pix" className="w-full h-full object-contain" /></div>
               <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoMaster} alt="Mastercard" className="w-full h-full object-contain" /></div>
               <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoVisa} alt="Visa" className="w-full h-full object-contain" /></div>
               <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoAmerican} alt="American Express" className="w-full h-full object-contain" /></div>
               <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoElo} alt="Elo" className="w-full h-full object-contain" /></div>
               <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoHipercard} alt="Hipercard" className="w-full h-full object-contain" /></div>
-              <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoDiners} alt="Diners Club" className="w-full h-full object-contain" /></div>
               <div className="h-7 w-11 bg-white rounded-sm flex items-center justify-center p-1 overflow-hidden"><img src={logoBoleto} alt="Boleto Bancário" className="w-full h-full object-contain" /></div>
             </div>
           </div>

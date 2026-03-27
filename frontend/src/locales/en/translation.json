@@ -11,14 +11,14 @@
     "science": "The Science",
     "skin_types": "Skin Types",
     "hair_types": "Hair Types",
-    "ingredients": "Ingredients Guide",
+    "ingredients": "Ingredient Guide",
     "tips": "Tips & Routines",
     "quiz": "Routine Quiz",
     "about": "About Us",
     "hello": "Hello"
   },
   "announcement": {
-    "shipping": "Free Global Shipping on orders over $199"
+    "shipping": "Global Free Shipping on orders over $199"
   },
   "home": {
     "carousel_title": "High Performance",
@@ -28,21 +28,21 @@
   "hero": {
     "tag1": "Innovative Formula",
     "tag2": "Daily Use",
-    "title_start": "The purity your ",
-    "title_highlight": "skin",
+    "title_start": "The purity ",
+    "title_highlight": "your skin",
     "title_end": " feels.",
     "desc": "Clean formulas developed with pure active ingredients. Discover the highest standard in facial care, without compromising on lightness.",
     "cta": "Discover Treatments",
-    "social": "+2,500 customers"
+    "social": "+2,500 clients"
   },
   "cart": {
     "title": "Your Bag",
-    "empty_btn": "Empty",
+    "empty_btn": "Empty Bag",
     "free_shipping_success": "✨ You've unlocked Free Shipping!",
-    "free_shipping_away": "Only {{amount}} away from Free Shipping",
-    "empty_cart": "Your bag is empty.",
+    "free_shipping_away": "You're {{amount}} away from Free Shipping",
+    "empty_cart": "Your bag is currently empty.",
     "subtotal": "Subtotal",
-    "checkout_btn": "Proceed to Checkout"
+    "checkout_btn": "Checkout"
   },
   "shop": {
     "breadcrumb": "Home",
@@ -52,13 +52,13 @@
     "price_low": "Price: Low to High",
     "price_high": "Price: High to Low",
     "add_btn": "Add to Bag",
-    "promo": "PROMO",
+    "promo": "SALE",
     "empty_title": "Collection Sold Out",
     "empty_desc": "Our experts are preparing a new batch of products for this category.",
     "view_all": "View All Products",
     "titles": {
       "all": "All Products",
-      "skincare": "High-Performance Skincare",
+      "skincare": "High Performance Skincare",
       "fragrancias": "Exclusive Fragrances",
       "banho-e-corpo": "Bath & Body",
       "masculino": "Men's Care",
@@ -67,7 +67,7 @@
     },
     "descriptions": {
       "all": "The complete Careful Baza catalog. Developed to deliver real results while respecting your body's biology.",
-      "category": "Discover our exclusive selection. Clean, proven formulas for your routine."
+      "category": "Discover our exclusive selection. Clean formulas with proven efficacy for your routine."
     }
   },
   "product_ui": {
@@ -76,23 +76,23 @@
     "how_to_use": "How to Use",
     "purity": "Purity Commitment",
     "purity_desc": "All Careful Baza Labs products are formulated under strict European safety standards.",
-    "paraben_free": "100% Paraben-Free",
+    "paraben_free": "100% Paraben Free",
     "cruelty_free": "Cruelty-Free (Not tested on animals)",
     "tested": "Dermatologically Tested",
     "add_btn": "Add to Bag",
     "buy_now": "Buy Now",
-    "routine_title": "High-Performance Routine",
+    "routine_title": "High Performance Routine",
     "routine_sub": "Select your treatment",
     "no_products": "No products found in the database.",
     "offer": "OFFER"
   },
   "auth": {
-    "login_title": "Sign In to Your Account",
-    "register_title": "Create a New Account",
+    "login_title": "Log in to your Account",
+    "register_title": "Create New Account",
     "email_label": "Email Address",
     "pass_label": "Password",
     "name_label": "Full Name",
-    "login_btn": "Sign In",
+    "login_btn": "Log In",
     "register_btn": "Create Account",
     "forgot_pass": "Forgot your password?",
     "no_account": "Don't have an account?",
@@ -113,7 +113,7 @@
     "token_error": "Invalid or missing token.",
     "verify_loading": "Verifying your access...",
     "verify_success_title": "Verification Complete!",
-    "verify_success_msg": "Your account has been validated and is ready!",
+    "verify_success_msg": "Your account has been validated and is ready to use!",
     "verify_error_title": "Verification Error",
     "verify_error_token": "Verification code not found.",
     "verify_login_btn": "Log In Now",
@@ -121,7 +121,7 @@
   },
   "tracking": {
     "breadcrumb": "Back to Home",
-    "title": "Track Your Order",
+    "title": "Track your Order",
     "desc": "Enter the tracking code sent to your email.",
     "placeholder": "Ex: US123456789",
     "btn": "Track",
@@ -146,16 +146,16 @@
     "hero_tag": "Our Standard of Excellence",
     "hero_title": "The New Era of Cosmetic Curation.",
     "hero_desc": "Careful Baza Labs is not just a brand. We are a global selection laboratory dedicated to finding the most advanced formulas in the world.",
-    "sec1_title": "From the origin lab straight to your skin.",
+    "sec1_title": "From the origin laboratory straight to your skin.",
     "sec1_p1": "The traditional beauty market is saturated with middlemen. Each step adds exorbitant profit margins that you pay for.",
     "sec1_p2": "At Careful Baza Labs, we redesigned consumer engineering. We test and approve only what delivers real clinical results.",
     "pillars_title": "The Pillars of Our Curation",
     "pillar1_t": "Global Sourcing",
-    "pillar1_d": "We seek excellence wherever it may be, from Asian innovation to European purity.",
-    "pillar2_t": "Strict Selection",
-    "pillar2_d": "We reject 90% of the products we test. We analyze the concentration of active ingredients and the absence of toxins.",
+    "pillar1_d": "We seek excellence wherever it is, from Asian innovation to European purity.",
+    "pillar2_t": "Rigorous Selection",
+    "pillar2_d": "We reject 90% of the products we test. We analyze active ingredient concentration and the absence of toxins.",
     "pillar3_t": "Smart Luxury",
-    "pillar3_d": "Clinical-grade active ingredients with unparalleled value in the global market.",
+    "pillar3_d": "Clinical-grade active ingredients with incomparable value in the global market.",
     "cta_title": "The exact science for your routine.",
     "cta_btn": "Explore the Catalog"
   },
@@ -164,13 +164,13 @@
     "back": "Back",
     "step": "Step {{current}} of {{total}}",
     "analyzing": "Mapping your routine...",
-    "analyzing_desc": "Matching your goals with our high-performance active ingredients for the perfect result.",
+    "analyzing_desc": "Crossing your goals with our high-performance active ingredients for the perfect result.",
     "result_tag": "Your Ideal Routine",
     "result_title": "The perfect combination for you.",
-    "result_desc": "To focus on {{goal}} and treat your {{skin}} skin, we've selected this complete protocol.",
+    "result_desc": "To focus on {{goal}} and treat your {{skin}} skin, we separated this complete protocol.",
     "free_shipping": "Free Shipping",
     "add_btn": "Add to Bag",
-    "decline_btn": "Not right now, thanks",
+    "decline_btn": "Not now, thanks",
     "q_skin_type": "How would you describe your skin today?",
     "q_goal": "What is your main goal?",
     "q_time": "How much time do you dedicate to your routine?",
@@ -179,29 +179,29 @@
     "opt_dry": "Dry and Dull",
     "opt_oily": "Oily and Shiny",
     "opt_mixed": "Combination",
-    "opt_sensitive": "Sensitive and Red",
-    "opt_aging": "Sign Prevention",
+    "opt_sensitive": "Sensitive and Redness-prone",
+    "opt_aging": "Prevent Aging Signs",
     "opt_acne": "Acne Control",
-    "opt_tone": "Even out Tone",
+    "opt_tone": "Even out Skin Tone",
     "opt_hydration": "Deep Hydration",
-    "opt_fast": "I like to be quick (3 min)",
-    "opt_ritual": "I enjoy a ritual",
+    "opt_fast": "I'm practical (3 min)",
+    "opt_ritual": "I like a ritual",
     "opt_night": "Night treatments",
-    "opt_burns": "Gets red easily",
+    "opt_burns": "Gets red",
     "opt_tans": "Tans easily",
-    "opt_spots": "Develops dark spots",
-    "opt_none": "I avoid sun exposure",
+    "opt_spots": "Gets dark spots",
+    "opt_none": "I don't expose myself",
     "opt_gel": "Cooling gel",
     "opt_cream": "Rich cream",
     "opt_oil": "Nourishing oils",
-    "opt_any": "Doesn't matter",
-    "res_oily_desc": "Deep cleansing that controls shine without stripping.",
+    "opt_any": "Indifferent",
+    "res_oily_desc": "Deep cleansing that controls shine without tightness.",
     "res_dry_desc": "Intense nourishment that restores elasticity.",
     "res_sens_desc": "Immediate relief and skin barrier protection.",
-    "res_mixed_desc": "The perfect balance for all areas of your face.",
+    "res_mixed_desc": "The perfect balance for all areas of the face.",
     "tag_morning": "Morning Routine",
     "tag_deep": "Deep Hydration",
-    "tag_rec": "Highly Recommended"
+    "tag_rec": "Most Recommended"
   },
   "legal": {
     "back_home": "Back to Home",
@@ -212,16 +212,32 @@
       "t1": "Our delivery times vary from 3 to 12 business days depending on the region.",
       "h2": "Do you test on animals?",
       "t2": "Never. We are 100% Cruelty-Free.",
-      "h3": "Daytime or nighttime use?",
-      "t3": "Most are safe for the day. Retinol is for nighttime use only."
+      "h3": "Day or night use?",
+      "t3": "Most are safe for the day. Retinol only at night."
     },
     "trocas": {
-      "title": "Returns and Exchanges",
+      "title": "Returns & Exchanges",
       "subtitle": "Your satisfaction is our priority.",
       "h1": "Remorse Period",
-      "t1": "You have up to 7 days after receipt to return your order.",
+      "t1": "You have up to 7 days after receiving the product to return it.",
       "h2": "Refunds",
-      "t2": "Processed within 2 business days after the returned product is received."
+      "t2": "Processed within 2 business days after the product is returned."
+    },
+    "privacidade": {
+      "title": "Privacy Policy",
+      "subtitle": "Total transparency on how we protect your data.",
+      "h1": "Data Protection",
+      "t1": "All information provided is processed securely and used exclusively for processing your order.",
+      "h2": "Privacy Contact",
+      "t2": "To request the alteration or removal of your data, please contact us through our official email: carefulbaza@gmail.com"
+    },
+    "termos": {
+      "title": "Terms of Service",
+      "subtitle": "The guidelines that govern our platform.",
+      "h1": "Acceptance of Terms",
+      "t1": "By using Careful Baza Labs, you agree to our usage policies and store conduct.",
+      "h2": "Official Support",
+      "t2": "Our official support is carried out exclusively through the email: carefulbaza@gmail.com"
     }
   },
   "science": {
@@ -231,98 +247,98 @@
       "ideal_solution": "The Ideal Solution",
       "why_it_works": "Why does it work?",
       "add_btn": "Add",
-      "disclaimer": "The information in this editorial is strictly educational and translates dermatological science for everyday life. In case of pathologies, extreme allergies, or severe inflammatory conditions, discontinue the use of cosmetics and consult a trusted physician."
+      "disclaimer": "The information in this editorial is strictly educational and translates dermatological science into everyday life. In case of severe allergies or severe inflammatory conditions, discontinue the use of cosmetics and consult a trusted doctor."
     },
     "fallback": {
-      "title": "Editorial Care",
+      "title": "Care Editorial",
       "subtitle": "Our scientific notebooks are being updated.",
-      "intro": "Select a category from the \"Science\" menu to access our latest articles."
+      "intro": "Select a category from the \"The Science\" menu to access our latest articles."
     },
     "skin": {
-      "title": "Ultimate Guide: Skin Types",
+      "title": "Definitive Guide: Skin Types",
       "subtitle": "Understand your face's biology for a high-performance routine.",
-      "intro": "Identifying your skin type is the first step to stop wasting money on the wrong products. The skin is a living, dynamic organ, and its needs change. Below, we've mapped the most common profiles and the exact science to treat them.",
+      "intro": "Identifying your skin type is the first step to stop wasting money on the wrong products. The skin is a living, dynamic organ, and its needs change. Below, we mapped out the most common profiles and the exact science to treat them.",
       "oily": {
         "title": "Oily Skin and Enlarged Pores",
-        "body": "Characterized by the overproduction of sebum by the sebaceous glands. Excessive shine appears a few hours after washing, and pores become visible. The most common mistake is washing the face several times a day with strong soaps, which removes the natural protection and causes a rebound effect.",
-        "tip": "Avoid coarse scrubs. They create micro-lesions that inflame the pores. Prefer gentle chemical exfoliation and ultra-light gel hydration.",
+        "body": "Characterized by the overproduction of sebum by the sebaceous glands. Excessive shine appears a few hours after washing and pores become visible. The most common mistake is washing your face several times a day with strong soaps, which removes the natural protection and causes a \"rebound effect\".",
+        "tip": "Avoid thick beaded exfoliators. They create micro-lesions that inflame the pores. Opt for a gentle chemical exfoliation and ultra-light gel hydration.",
         "prod_name": "Renewing Serum",
         "prod_cat": "Oil Control",
         "prod_tag": "Best Seller",
-        "why": "Niacinamide penetrates the pores and tells the gland to reduce oil production, while Zinc works by drying out active breakouts."
+        "why": "Niacinamide penetrates the pores and \"tells\" the gland to decrease oil production, while Zinc works by drying active breakouts."
       },
       "dry": {
         "title": "Dry Skin and Compromised Barrier",
-        "body": "Unlike dehydrated skin (which only needs water), dry skin doesn't produce enough lipids (natural oils). Without this natural \"cement\", the water you drink easily evaporates through the skin. It feels tight, has a rough texture, and flakes.",
-        "tip": "Never wash your face with hot water in the shower. High temperatures melt the few natural oils your skin has managed to produce to defend itself.",
+        "body": "Unlike dehydrated skin (which just needs water), dry skin doesn't produce enough lipids (natural oils). Without this natural \"cement\", the water you drink evaporates through your skin easily. It feels tight, rough, and flakes.",
+        "tip": "Never wash your face with hot shower water. The high temperature melts the few natural oils your skin managed to produce to defend itself.",
         "prod_name": "Aqua Glow Moisturizer",
         "prod_cat": "Lipid Replenishment",
         "prod_tag": "For Radiance",
-        "why": "Combines Hyaluronic Acid (to pull in water) and Ceramides (to lock that water inside), restoring comfort from the first use."
+        "why": "It combines Hyaluronic Acid (to pull water) and Ceramides (to lock that water inside), restoring comfort from the first use."
       },
       "sensitive": {
-        "title": "Sensitive and Red Skin",
-        "body": "Sensitive skin is a condition of inflammation. The protective barrier is so thin that wind, cosmetics, and even stress easily penetrate, triggering alerts that cause redness and burning. The focus here is not to renew, but to soothe.",
-        "tip": "Adopt minimalism (Skin Diet). When the skin is in a burning crisis, suspend acids and use only a mild soap and a soothing moisturizer.",
+        "title": "Sensitive and Redness-prone Skin",
+        "body": "Sensitive skin is a condition of inflammation. The protective barrier is so thin that wind, cosmetics, and even stress penetrate easily, triggering alerts that cause redness and burning. The focus here is not to renew, but to calm.",
+        "tip": "Adopt minimalism (Skin Diet). When your skin is in crisis and burning, suspend acids and use only a gentle soap and a calming moisturizer.",
         "prod_name": "Revitalizing Mist",
-        "prod_cat": "Skin Barrier S.O.S",
+        "prod_cat": "S.O.S Skin Barrier",
         "prod_tag": "Dermatological",
-        "why": "Its botanical prebiotics feed the \"good bacteria\" of the skin, creating a protective layer that reduces redness instantly."
+        "why": "Its botanical prebiotics feed the \"good bacteria\" on your skin, creating a protective layer that instantly reduces redness."
       }
     },
     "ingredients": {
-      "title": "Clinical Dictionary of Ingredients",
-      "subtitle": "Total transparency about what truly transforms your skin.",
-      "intro": "The cosmetic industry profits from empty promises and complicated names. At Careful Baza Labs, we translate the science so you know exactly what you are investing in.",
+      "title": "Clinical Dictionary of Actives",
+      "subtitle": "Total transparency about what really transforms your skin.",
+      "intro": "The cosmetic industry profits from empty promises and complicated names. At Careful Baza Labs, we translate the science so you know exactly what you're investing in.",
       "niacinamide": {
         "title": "Niacinamide (Vitamin B3)",
-        "body": "It's like the \"jack-of-all-trades\" of skincare. It lightens dark spots, visually reduces pore size, and calms inflamed breakouts. The best part? It doesn't irritate and can be used in the sun.",
-        "tip": "Niacinamide serums mix well with everything. You can combine it with Vitamin C in the morning or Retinol at night without fear of a reaction.",
+        "body": "It's the \"jack of all trades\" in skincare. It lightens dark spots, visually shrinks pores, and calms inflamed breakouts. Best of all? It doesn't irritate and can be used under the sun.",
+        "tip": "Niacinamide serums mix with everything. You can pair it with Vitamin C in the morning or Retinol at night without fear of a bad reaction.",
         "prod_name": "Renewing Serum",
         "prod_cat": "10% Niacinamide",
         "prod_tag": "High Concentration",
-        "why": "A clinical dose of 10% guarantees visible results in 14 days for pores and uneven texture, with zero burning."
+        "why": "A clinical 10% dose guarantees visible results in 14 days for pores and uneven texture, with zero stinging."
       },
       "retinol": {
         "title": "Retinol (Vitamin A)",
-        "body": "The only scientifically proven active ingredient that truly reverses aging. It enters the cell and tells it to \"work faster\", swapping old skin for new. It thins the top layer (giving glow) and thickens the bottom layer (stimulating collagen).",
-        "tip": "If you are a beginner with Retinol, use the \"Sandwich\" technique: Apply moisturizer, then Retinol, and then moisturizer on top again. This prevents flaking.",
+        "body": "The only active proven by scientists to actually reverse aging. It enters the cell and tells it to \"work faster\", replacing old skin with new skin. It thins the top layer (giving glow) and thickens the bottom layer (stimulating collagen).",
+        "tip": "If you are a Retinol beginner, use the \"Sandwich\" technique: Apply moisturizer, then Retinol, and then moisturizer over it again. This prevents peeling.",
         "prod_name": "Night Essence",
         "prod_cat": "Cellular Renewal",
         "prod_tag": "Night Use",
-        "why": "We envelope the active ingredient in nanocapsules. It enters the skin and only opens deep down, guaranteeing new collagen without leaving the face red."
+        "why": "We envelope the active in nanocapsules. It enters the skin and only opens deep down, ensuring new collagen without making your face red."
       }
     },
     "hair": {
       "title": "The Science of Trichology",
-      "subtitle": "Diagnosing the structural health of your strands.",
-      "intro": "Knowing if your hair is straight or curly is just aesthetics. To truly treat it, we need to look under the microscope and understand porosity (the level of damage to the \"coat\" that protects the strand).",
+      "subtitle": "Diagnosing the structural health of your hair.",
+      "intro": "Knowing if your hair is straight or curly is just aesthetics. To truly treat it, we need to look under a microscope and understand porosity (the damage level of the \"layer\" that protects the strand).",
       "porous": {
         "title": "Porous and Damaged Hair (With Frizz)",
-        "body": "Imagine a hair strand like a roof. In healthy hair, the tiles (cuticles) are tightly closed. In porous hair (due to flat irons, bleaching, or sun), the tiles are lifted. Shower water enters easily but evaporates in seconds, leaving the strand dry and puffy.",
-        "tip": "Do the cup test: place a loose strand of hair in a glass of water. If it sinks quickly, it's porous (needs oil and reconstruction). If it floats on top, it's low porosity (only needs light hydration).",
-        "prod_name": "Botanical Repair Oil",
+        "body": "Imagine a hair strand like a roof. In healthy hair, the shingles (cuticles) are tightly closed. In porous hair (due to heat styling, bleaching, or sun), the shingles are lifted. Water enters easily but evaporates in seconds, leaving the hair dry and frizzy.",
+        "tip": "Do the cup test: place a loose strand of hair in a cup of water. If it sinks quickly, it's porous (needs oil and reconstruction). If it floats on top, it has low porosity (only needs light hydration).",
+        "prod_name": "Botanical Repairing Oil",
         "prod_cat": "Cuticle Sealing",
         "prod_tag": "Treatment",
-        "why": "Dense vegetable oils act as a \"glue\" for the hair tiles, sealing the cuticles and preventing moisture from escaping throughout the day."
+        "why": "Dense vegetable oils act as a \"glue\" for the hair's shingles, sealing the cuticles and preventing moisture from escaping throughout the day."
       },
       "fine": {
-        "title": "Fine, Oily and Flat Hair",
-        "body": "Fine hair is very delicate and has less \"body\". Because the strand is very smooth and light, the natural oils produced by the scalp slide down to the ends very quickly, leaving the hair looking flat on the same day it was washed.",
-        "tip": "The golden rule for fine hair: Conditioner should never touch from the middle to the top of the head. Apply only to the extreme ends so as not to weigh down the roots.",
+        "title": "Fine, Oily, and Flat Hair",
+        "body": "Fine hair is very delicate and has less \"body\". Because the strand is so smooth and light, the natural oil produced by the scalp slides to the ends very quickly, making the hair look \"limp\" on the same day it was washed.",
+        "tip": "The golden rule for fine hair: Conditioner should never touch above the mid-lengths. Apply only to the extreme ends so you don't weigh down the roots.",
         "prod_name": "Revitalizing Mist (Hair Use)",
         "prod_cat": "Hair Detox",
         "prod_tag": "Natural Volume",
-        "why": "Being 100% free of heavy silicones, it detangles fine hair bringing softness, without adding the weight of traditional creams."
+        "why": "Being 100% free of heavy silicones, it detangles fine hair, bringing softness without adding the weight of traditional creams."
       }
     },
     "tips": {
       "title": "Routine Protocols",
       "subtitle": "The engineering behind flawless skincare.",
-      "intro": "Buying expensive products and applying them in the wrong order throws money in the trash. The universal rule of cosmetology is simple: always apply from the most liquid product to the thickest.",
+      "intro": "Buying expensive products and applying them in the wrong order throws money away. The universal rule of cosmetology is simple: always apply from the most liquid product to the thickest.",
       "morning": {
-        "title": "Morning Routine (Attack & Defense)",
-        "body": "The goal in the morning is not to treat severe problems, it's to protect your face from the sun, car smoke, and cell phone light. The correct protocol is: 1. Gentle Cleansing > 2. Antioxidant (e.g., Vitamin C) > 3. Light Moisturizer > 4. Sunscreen.",
+        "title": "The Morning Routine (Attack & Defend)",
+        "body": "The goal of the morning is not to treat severe problems, it's to protect your face from the sun, car smoke, and cell phone light. The correct protocol is: 1. Gentle Cleansing > 2. Antioxidant (e.g., Vitamin C) > 3. Light Moisturizer > 4. Sunscreen.",
         "tip": "If your skin is normal to dry, you don't need to use soap in the morning! Just wash your face with cold water. This saves the hydration your skin built while you slept.",
         "prod_name": "Renewing Serum",
         "prod_cat": "Antioxidant Defense",
@@ -330,9 +346,9 @@
         "why": "Niacinamide acts as a shield that protects cells against the darkening of spots caused by daily radiation and pollution."
       },
       "night": {
-        "title": "Night Routine (Repair & Restore)",
-        "body": "During deep sleep, the blood flow to your face increases and the skin enters \"repair mode\". This is the time to put strong active ingredients (like acids) to work. The order is: 1. Deep Cleansing > 2. Specific Treatment (Serums) > 3. Rich Moisturizing Cream.",
-        "tip": "The Korean secret of Double Cleansing: Use an oil-based product first to melt makeup and sunscreen, and then wash with your gel facial cleanser to truly clean the pores.",
+        "title": "The Night Routine (Repair & Restore)",
+        "body": "During deep sleep, your facial blood flow increases and your skin goes into \"repair mode\". This is the time to put the strong actives (like acids) to work. The order is: 1. Deep Cleansing > 2. Specific Treatment (Serums) > 3. Rich Moisturizing Cream.",
+        "tip": "The Korean secret of Double Cleansing: Use an oil-based product first to melt makeup and sunscreen, and then wash with your facial gel soap to truly clean your pores.",
         "prod_name": "Aqua Glow Moisturizer",
         "prod_cat": "Night Sealing",
         "prod_tag": "Night Cream",
@@ -341,28 +357,28 @@
     }
   },
   "checkout": {
-    "title": "Checkout",
+    "title": "Complete Purchase",
     "shipping_address": "Shipping Address",
     "email_label": "Email for Notifications",
     "name_label": "Full Name",
     "address_label": "Address",
     "city_label": "City",
-    "zip_label": "Postal Code / ZIP",
+    "zip_label": "Zip / Postal Code",
     "payment_method": "Payment Method",
     "order_summary": "Order Summary",
     "total": "Total",
     "complete_btn": "Complete Secure Payment",
     "secure_notice": "Payment processed with 256-bit encryption.",
-    "back_cart": "Return to Cart",
+    "back_cart": "Back to Cart",
     "error_badge": "Payment Interrupted",
     "error_title": "Payment Declined",
-    "error_msg": "The payment was not completed or was canceled. Your products are still in the cart if you'd like to try again.",
+    "error_msg": "The payment was not completed or was canceled. Your products are still in the cart if you want to try again.",
     "try_again": "Try Again"
   },
   "products": {
-    "Sérum Renovador Niacinamida": "Niacinamide Renewing Serum",
+    "Sérum Renovador Niacinamida": "Renewing Niacinamide Serum",
     "Hidratante Aqua Glow": "Aqua Glow Moisturizer",
-    "Óleo Reparador Botânico": "Botanical Repair Oil",
+    "Óleo Reparador Botânico": "Botanical Repairing Oil",
     "Essência Noturna Retinol": "Retinol Night Essence",
     "Bruma Calmante Revitalizante": "Revitalizing Calming Mist",
     "Perfume Sólido Amadeirado": "Woody Solid Perfume",
@@ -371,9 +387,9 @@
     "Kit Rotina Completa 5 Passos": "Complete 5-Step Routine Kit"
   },
   "footer": {
-    "desc": "The science of purity. High-performance dermatological formulas and proven results.",
+    "desc": "The science of purity. High-performance dermatological formulas with proven results.",
     "newsletter_title": "Join Baza Labs",
-    "newsletter_sub": "Get early access to launches and 15% off your first order.",
+    "newsletter_sub": "Receive early releases and 15% off your first order.",
     "newsletter_placeholder": "Your best email",
     "newsletter_btn": "Subscribe",
     "support": "Support",
@@ -402,18 +418,18 @@
     "qty": "Qty",
     "trackingCodeLabel": "Tracking Code",
     "trackOrderBtn": "Track Order",
-    "awaitingFulfillment": "Awaiting shipment...",
+    "awaitingFulfillment": "Awaiting fulfillment...",
     "personalInfo": "Personal Information",
     "emailLabel": "Email",
-    "emailWarning": "Email cannot be changed for security reasons.",
+    "emailWarning": "The email cannot be changed for security reasons.",
     "fullName": "Full Name",
-    "phoneLabel": "Phone Number",
+    "phoneLabel": "Phone",
     "saveChanges": "Save Changes",
     "successUpdate": "Your details have been saved successfully.",
     "errorUpdate": "Error updating details."
   },
   "chatbot": {
-    "greeting": "Hello! I am the CarefulBaza Labs assistant. How can I help you take care of your skin today?",
+    "greeting": "Hello! I'm the CarefulBaza Labs assistant. How can I help you care for your skin today?",
     "placeholder": "Tell me about your skin...",
     "botName": "Baza Bot",
     "you": "You",

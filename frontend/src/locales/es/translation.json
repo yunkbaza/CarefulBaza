@@ -2,11 +2,11 @@
   "nav": {
     "navigation": "Navegación",
     "bestsellers": "Más Vendidos",
-    "shop": "Shop",
+    "shop": "Tienda",
     "skincare": "Skincare",
     "fragrances": "Fragancias",
     "bath_body": "Baño y Cuerpo",
-    "mens": "Masculino",
+    "mens": "Cuidado Masculino",
     "kits": "Kits y Regalos",
     "science": "La Ciencia",
     "skin_types": "Tipos de Piel",
@@ -18,7 +18,7 @@
     "hello": "Hola"
   },
   "announcement": {
-    "shipping": "Envío Global Gratis en compras superiores a $199"
+    "shipping": "Envío Gratis Global en compras superiores a $199"
   },
   "home": {
     "carousel_title": "Alto Rendimiento",
@@ -28,8 +28,8 @@
   "hero": {
     "tag1": "Fórmula Innovadora",
     "tag2": "Uso Diario",
-    "title_start": "La pureza que tu ",
-    "title_highlight": "piel",
+    "title_start": "La pureza que ",
+    "title_highlight": "tu piel",
     "title_end": " siente.",
     "desc": "Fórmulas limpias desarrolladas con activos puros. Descubre el estándar más alto en cuidado facial, sin renunciar a la ligereza.",
     "cta": "Descubrir Tratamientos",
@@ -38,14 +38,14 @@
   "cart": {
     "title": "Tu Bolsa",
     "empty_btn": "Vaciar",
-    "free_shipping_success": "✨ ¡Ganaste Envío Gratis!",
+    "free_shipping_success": "✨ ¡Has ganado Envío Gratis!",
     "free_shipping_away": "Faltan {{amount}} para Envío Gratis",
     "empty_cart": "Tu bolsa está vacía.",
     "subtotal": "Subtotal",
     "checkout_btn": "Finalizar Compra"
   },
   "shop": {
-    "breadcrumb": "Página Inicial",
+    "breadcrumb": "Inicio",
     "found": "{{count}} Productos Encontrados",
     "sort_by": "Ordenar por:",
     "relevance": "Más Relevantes",
@@ -63,10 +63,10 @@
       "banho-e-corpo": "Baño y Cuerpo",
       "masculino": "Cuidado Masculino",
       "kits": "Kits y Regalos",
-      "mais-vendidos": "Los Más Amados por los Clientes"
+      "mais-vendidos": "Los Favoritos de los Clientes"
     },
     "descriptions": {
-      "all": "El catálogo completo de Careful Baza. Desarrollado para entregar resultados reales respetando la biología de tu cuerpo.",
+      "all": "El catálogo completo de Careful Baza. Desarrollado para ofrecer resultados reales respetando la biología de tu cuerpo.",
       "category": "Descubre nuestra selección exclusiva. Fórmulas limpias y de eficacia comprobada para tu rutina."
     }
   },
@@ -75,24 +75,24 @@
     "not_found": "Producto no encontrado.",
     "how_to_use": "Cómo Usar",
     "purity": "Compromiso de Pureza",
-    "purity_desc": "Todos los productos Careful Baza Labs son formulados bajo estrictos estándares europeos de seguridad.",
+    "purity_desc": "Todos los productos Careful Baza Labs están formulados bajo estrictos estándares de seguridad europeos.",
     "paraben_free": "100% Libre de Parabenos",
-    "cruelty_free": "Cruelty-Free (No probado en animales)",
-    "tested": "Dermatológicamente Probado",
+    "cruelty_free": "Cruelty-Free (No testado en animales)",
+    "tested": "Dermatológicamente Testado",
     "add_btn": "Añadir a la Bolsa",
     "buy_now": "Comprar Ahora",
     "routine_title": "Rutina de Alto Rendimiento",
     "routine_sub": "Selecciona tu tratamiento",
-    "no_products": "No se encontraron productos en la base de datos.",
+    "no_products": "Ningún producto encontrado en la base de datos.",
     "offer": "OFERTA"
   },
   "auth": {
-    "login_title": "Entrar a tu Cuenta",
+    "login_title": "Inicia sesión en tu Cuenta",
     "register_title": "Crear Nueva Cuenta",
-    "email_label": "Dirección de Correo",
+    "email_label": "Correo Electrónico",
     "pass_label": "Contraseña",
     "name_label": "Nombre Completo",
-    "login_btn": "Entrar",
+    "login_btn": "Iniciar Sesión",
     "register_btn": "Crear Cuenta",
     "forgot_pass": "¿Olvidaste tu contraseña?",
     "no_account": "¿Aún no tienes cuenta?",
@@ -120,15 +120,15 @@
     "verify_back_btn": "Volver al Inicio"
   },
   "tracking": {
-    "breadcrumb": "Volver al Inicio",
+    "breadcrumb": "Volver a Inicio",
     "title": "Rastrea tu Pedido",
     "desc": "Ingresa el código de rastreo enviado a tu correo.",
     "placeholder": "Ej: ES123456789",
     "btn": "Rastrear",
     "status_title": "Estado Actualizado",
-    "step1": "En tránsito a tu región",
+    "step1": "En tránsito hacia tu región",
     "step1_loc": "Hoy - Centro Logístico",
-    "step2": "Pedido Despachado",
+    "step2": "Pedido Enviado",
     "step2_loc": "Ayer - Careful Baza Labs",
     "step3": "Pago Aprobado",
     "step3_loc": "Ayer - Operadora de Tarjeta"
@@ -148,14 +148,14 @@
     "hero_desc": "Careful Baza Labs no es solo una marca. Somos un laboratorio de selección global dedicado a encontrar las fórmulas más avanzadas del mundo.",
     "sec1_title": "Del laboratorio de origen directo a tu piel.",
     "sec1_p1": "El mercado tradicional de la belleza está saturado de intermediarios. Cada etapa añade márgenes de beneficio exorbitantes que tú pagas.",
-    "sec1_p2": "En Careful Baza Labs, rediseñamos la ingeniería de consumo. Probamos y aprobamos solo lo que ofrece resultados clínicos reales.",
+    "sec1_p2": "En Careful Baza Labs, hemos rediseñado la ingeniería de consumo. Testeamos y aprobamos solo lo que ofrece resultados clínicos reales.",
     "pillars_title": "Los Pilares de Nuestra Curaduría",
     "pillar1_t": "Sourcing Global",
-    "pillar1_d": "Buscamos la excelencia donde esté, desde la innovación asiática hasta la pureza europea.",
+    "pillar1_d": "Buscamos la excelencia dondequiera que esté, desde la innovación asiática hasta la pureza europea.",
     "pillar2_t": "Selección Rigurosa",
     "pillar2_d": "Rechazamos el 90% de los productos que probamos. Analizamos la concentración de activos y la ausencia de toxinas.",
     "pillar3_t": "Lujo Inteligente",
-    "pillar3_d": "Activos de grado clínico con un valor incomparable en el mercado global.",
+    "pillar3_d": "Activos de nivel clínico con un valor incomparable en el mercado global.",
     "cta_title": "La ciencia exacta para tu rutina.",
     "cta_btn": "Explorar el Catálogo"
   },
@@ -167,11 +167,11 @@
     "analyzing_desc": "Cruzando tus objetivos con nuestros activos de alto rendimiento para el resultado perfecto.",
     "result_tag": "Tu Rutina Ideal",
     "result_title": "La combinación perfecta para ti.",
-    "result_desc": "Para enfocarnos en {{goal}} y tratar tu piel {{skin}}, hemos seleccionado este protocolo completo.",
+    "result_desc": "Para enfocarnos en {{goal}} y tratar tu piel {{skin}}, hemos preparado este protocolo completo.",
     "free_shipping": "Envío Gratis",
     "add_btn": "Añadir a la Bolsa",
     "decline_btn": "Ahora no, gracias",
-    "q_skin_type": "¿Cómo describirías tu piel hoy?",
+    "q_skin_type": "¿Cómo describes tu piel hoy?",
     "q_goal": "¿Cuál es tu principal objetivo?",
     "q_time": "¿Cuánto tiempo dedicas a tu rutina?",
     "q_sun": "¿Cómo reacciona tu piel al sol?",
@@ -185,35 +185,35 @@
     "opt_tone": "Unificar el Tono",
     "opt_hydration": "Hidratación Profunda",
     "opt_fast": "Soy práctica (3 min)",
-    "opt_ritual": "Disfruto de un ritual",
+    "opt_ritual": "Me gusta el ritual",
     "opt_night": "Tratamientos nocturnos",
-    "opt_burns": "Se enrojece",
-    "opt_tans": "Se broncea fácilmente",
+    "opt_burns": "Se pone roja",
+    "opt_tans": "Se broncea fácil",
     "opt_spots": "Genera manchas",
-    "opt_none": "No me expongo",
+    "opt_none": "No me expongo al sol",
     "opt_gel": "Gel refrescante",
     "opt_cream": "Crema rica",
     "opt_oil": "Aceites nutritivos",
     "opt_any": "Indiferente",
-    "res_oily_desc": "Limpieza profunda que controla el brillo sin resecar.",
+    "res_oily_desc": "Limpieza profunda que controla el brillo sin sensación de tirantez.",
     "res_dry_desc": "Nutrición intensa que devuelve la elasticidad.",
     "res_sens_desc": "Alivio inmediato y protección de la barrera cutánea.",
-    "res_mixed_desc": "El equilibrio perfecto para todas las áreas de tu rostro.",
-    "tag_morning": "Rutina Matinal",
+    "res_mixed_desc": "El equilibrio perfecto para todas las áreas del rostro.",
+    "tag_morning": "Rutina Matutina",
     "tag_deep": "Hidratación Profunda",
     "tag_rec": "Más Recomendado"
   },
   "legal": {
-    "back_home": "Volver al Inicio",
+    "back_home": "Volver a Inicio",
     "faq": {
       "title": "Preguntas Frecuentes (FAQ)",
       "subtitle": "¿Cómo podemos ayudarte hoy?",
       "h1": "¿Cuál es el plazo de entrega?",
       "t1": "Nuestros plazos varían de 3 a 12 días hábiles dependiendo de la región.",
-      "h2": "¿Prueban en animales?",
+      "h2": "¿Testean en animales?",
       "t2": "Nunca. Somos 100% Cruelty-Free.",
       "h3": "¿Uso diurno o nocturno?",
-      "t3": "La mayoría son seguros para el día. El retinol es solo para la noche."
+      "t3": "La mayoría son seguros para el día. El Retinol solo por la noche."
     },
     "trocas": {
       "title": "Cambios y Devoluciones",
@@ -222,19 +222,35 @@
       "t1": "Tienes hasta 7 días después de recibir el pedido para devolverlo.",
       "h2": "Reembolso",
       "t2": "Procesado en hasta 2 días hábiles después del retorno del producto."
+    },
+    "privacidade": {
+      "title": "Política de Privacidad",
+      "subtitle": "Transparencia total sobre cómo protegemos tus datos.",
+      "h1": "Protección de Datos",
+      "t1": "Toda la información proporcionada se procesa de forma segura y se utiliza exclusivamente para el procesamiento de tu pedido.",
+      "h2": "Contacto de Privacidad",
+      "t2": "Para solicitar la modificación o eliminación de tus datos, por favor contáctanos a través del correo oficial: carefulbaza@gmail.com"
+    },
+    "termos": {
+      "title": "Términos de Servicio",
+      "subtitle": "Las directrices que rigen nuestra plataforma.",
+      "h1": "Aceptación de los Términos",
+      "t1": "Al utilizar Careful Baza Labs, aceptas nuestras políticas de uso y conducta de la tienda.",
+      "h2": "Atención Oficial",
+      "t2": "Nuestro soporte oficial se realiza exclusivamente a través del correo: carefulbaza@gmail.com"
     }
   },
   "science": {
     "ui": {
-      "back_home": "Volver al Inicio",
+      "back_home": "Volver a Inicio",
       "golden_tip": "El Consejo de Oro",
       "ideal_solution": "La Solución Ideal",
       "why_it_works": "¿Por qué funciona?",
       "add_btn": "Añadir",
-      "disclaimer": "La información de este editorial tiene fines estrictamente educativos y traduce la ciencia dermatológica para el día a día. En caso de patologías, alergias extremas o condiciones inflamatorias severas, suspenda el uso de cosméticos y consulte a un médico de confianza."
+      "disclaimer": "La información de este editorial tiene fines estrictamente educativos y traduce la ciencia dermatológica al día a día. En caso de patologías, alergias extremas o condiciones inflamatorias severas, suspende el uso de cosméticos y consulta a tu médico de confianza."
     },
     "fallback": {
-      "title": "Cuidado Editorial",
+      "title": "Editorial Care",
       "subtitle": "Nuestros cuadernos científicos están en actualización.",
       "intro": "Selecciona una categoría en el menú \"La Ciencia\" para acceder a nuestros artículos más recientes."
     },
@@ -244,95 +260,95 @@
       "intro": "Identificar tu tipo de piel es el primer paso para dejar de gastar dinero en los productos equivocados. La piel es un órgano vivo y dinámico, y sus necesidades cambian. A continuación, mapeamos los perfiles más comunes y la ciencia exacta para tratarlos.",
       "oily": {
         "title": "Piel Grasa y con Poros Dilatados",
-        "body": "Se caracteriza por la sobreproducción de sebo por las glándulas sebáceas. El brillo excesivo aparece pocas horas después del lavado y los poros se vuelven visibles. El error más común es lavar el rostro varias veces al día con jabones fuertes, lo que remueve la protección natural y causa el \"efecto rebote\" (la piel entra en pánico y produce el doble de aceite).",
-        "tip": "Evita los exfoliantes granulados. Generan microlesiones que inflaman los poros. Prefiere una exfoliación química suave y una hidratación ultraligera en gel.",
+        "body": "Caracterizada por la sobreproducción de sebo por las glándulas sebáceas. El brillo excesivo aparece pocas horas después del lavado y los poros se hacen visibles. El error más común es lavar el rostro varias veces al día con jabones fuertes, lo que elimina la protección natural y causa el \"efecto rebote\" (la piel entra en pánico y produce el doble de aceite).",
+        "tip": "Evita los exfoliantes de gránulos gruesos. Generan microlesiones que inflaman los poros. Prefiere una exfoliación química suave y una hidratación ultraligera en gel.",
         "prod_name": "Sérum Renovador",
-        "prod_cat": "Control de Grasa",
+        "prod_cat": "Control de Oleosidad",
         "prod_tag": "Más Vendido",
         "why": "La Niacinamida penetra en los poros y le \"avisa\" a la glándula que disminuya la producción de aceite, mientras que el Zinc actúa secando los granos activos."
       },
       "dry": {
         "title": "Piel Seca y Barrera Comprometida",
-        "body": "A diferencia de la piel deshidratada (que solo necesita agua), la piel seca no produce suficientes lípidos (aceites naturales). Sin este \"cemento\" natural, el agua que bebes se evapora fácilmente por la piel. Se siente tirante, tiene una textura áspera y se descama.",
-        "tip": "Nunca laves tu rostro con agua caliente en la ducha. Las altas temperaturas derriten los pocos aceites naturales que tu piel logró producir para defenderse.",
+        "body": "A diferencia de la piel deshidratada (que solo necesita agua), la piel seca no produce suficientes lípidos (aceites naturales). Sin este \"cemento\" natural, el agua que bebes se evapora por la piel fácilmente. Tira, tiene una textura áspera y se descama.",
+        "tip": "Nunca laves tu rostro con el agua caliente de la ducha. La alta temperatura derrite los pocos aceites naturales que tu piel logró producir para defenderse.",
         "prod_name": "Hidratante Aqua Glow",
         "prod_cat": "Reposición Lipídica",
         "prod_tag": "Para Luminosidad",
-        "why": "Combina Ácido Hialurónico (para atraer agua) y Ceramidas (para atrapar esa agua en el interior), restaurando el confort en el primer uso."
+        "why": "Combina Ácido Hialurónico (para atraer agua) y Ceramidas (para encerrar esa agua en el interior), restaurando el confort desde el primer uso."
       },
       "sensitive": {
         "title": "Piel Sensible y Enrojecida",
-        "body": "La piel sensible es una condición de inflamación. La barrera protectora es tan delgada que el viento, los cosméticos y hasta el estrés penetran fácilmente, activando alertas que generan enrojecimiento y ardor. El enfoque aquí no es renovar, sino calmar.",
-        "tip": "Adopta el minimalismo (Skin Diet). Cuando la piel esté en crisis ardiendo, suspende los ácidos y usa solo un jabón suave y un hidratante calmante.",
+        "body": "La piel sensible es una condición de inflamación. La barrera de protección está tan fina que el viento, los cosméticos y hasta el estrés penetran fácilmente, activando alertas que generan enrojecimiento y ardor. El enfoque aquí no es renovar, es calmar.",
+        "tip": "Adopta el minimalismo (Skin Diet). Cuando la piel esté en crisis y ardiendo, suspende los ácidos y usa solo un jabón suave y un hidratante calmante.",
         "prod_name": "Bruma Revitalizante",
         "prod_cat": "S.O.S Barrera Cutánea",
         "prod_tag": "Dermatológico",
-        "why": "Sus prebióticos botánicos alimentan las \"bacterias buenas\" de la piel, creando una capa protectora que reduce el enrojecimiento al instante."
+        "why": "Sus prebióticos botánicos alimentan a las \"bacterias buenas\" de la piel, creando una capa protectora que reduce el enrojecimiento al instante."
       }
     },
     "ingredients": {
       "title": "Diccionario Clínico de Activos",
       "subtitle": "Transparencia total sobre lo que realmente transforma tu piel.",
-      "intro": "La industria cosmética se beneficia de promesas vacías y nombres complicados. En Careful Baza Labs, traducimos la ciencia para que sepas exactamente en qué estás invirtiendo.",
+      "intro": "La industria cosmética se lucra con promesas vacías y nombres complicados. En Careful Baza Labs, traducimos la ciencia para que sepas exactamente en qué estás invirtiendo.",
       "niacinamide": {
         "title": "Niacinamida (Vitamina B3)",
-        "body": "Es el \"multiusos\" del skincare. Aclara manchas (bloqueando que el pigmento suba a la superficie), disminuye el tamaño visual de los poros y calma los granos inflamados. ¿Lo mejor de todo? No irrita y se puede usar bajo el sol.",
-        "tip": "Los sérums de Niacinamida combinan con todo. Puedes mezclarla con Vitamina C por la mañana o Retinol por la noche sin miedo a una reacción.",
+        "body": "Es como el \"todoterreno\" del skincare. Aclara las manchas (bloqueando que el pigmento suba a la superficie), disminuye el tamaño visual de los poros y calma los granos inflamados. ¿Lo mejor de todo? No irrita y se puede usar bajo el sol.",
+        "tip": "Los sérums de Niacinamida combinan con todo. Puedes mezclarlo con Vitamina C por la mañana o Retinol por la noche sin miedo a una reacción.",
         "prod_name": "Sérum Renovador",
         "prod_cat": "Niacinamida 10%",
         "prod_tag": "Alta Concentración",
-        "why": "Una dosis clínica del 10% garantiza resultados visibles en 14 días para poros y textura irregular, con cero ardor."
+        "why": "Una dosis clínica del 10% garantiza resultados visibles en 14 días para poros y textura irregular, sin ningún tipo de ardor."
       },
       "retinol": {
         "title": "Retinol (Vitamina A)",
-        "body": "El único activo probado por científicos que realmente revierte el envejecimiento. Entra en la célula y le manda \"trabajar más rápido\", cambiando la piel vieja por una nueva. Afina la parte de arriba (dando brillo) y engrosa la de abajo (estimulando colágeno).",
-        "tip": "Si eres principiante con el Retinol, usa la técnica del \"Sándwich\": Aplica crema hidratante, luego Retinol, y de nuevo crema hidratante encima. Esto evita la descamación.",
+        "body": "El único activo probado por científicos que realmente revierte el envejecimiento. Entra en la célula y le ordena \"trabajar más rápido\", cambiando la piel vieja por una nueva. Afina la capa superior (dando brillo) y engrosa la inferior (estimulando el colágeno).",
+        "tip": "Si eres principiante con el Retinol, usa la técnica del \"Sándwich\": Aplica hidratante, luego el Retinol, y después hidratante por encima de nuevo. Esto evita la descamación.",
         "prod_name": "Esencia Nocturna",
         "prod_cat": "Renovación Celular",
         "prod_tag": "Uso Nocturno",
-        "why": "Envolvemos el activo en nanocápsulas. Entra en la piel y solo se abre en el fondo, garantizando colágeno nuevo sin dejar el rostro rojo."
+        "why": "Envolvemos el activo en nanocápsulas. Entra en la piel y solo se abre en lo más profundo, garantizando colágeno nuevo sin dejar el rostro rojo."
       }
     },
     "hair": {
       "title": "La Ciencia de la Tricología",
-      "subtitle": "Diagnosticando la salud estructural de tus hilos.",
-      "intro": "Saber si tu cabello es liso o rizado es solo estética. Para tratar de verdad, necesitamos mirar por el microscopio y entender la porosidad (el nivel de daño de la \"capa\" que protege el hilo).",
+      "subtitle": "Diagnosticando la salud estructural de tus hebras.",
+      "intro": "Saber si tu cabello es liso o rizado es solo estética. Para tratarlo de verdad, necesitamos mirar por un microscopio y entender la porosidad (el nivel de daño de la \"capa\" que protege el cabello).",
       "porous": {
         "title": "Cabello Poroso y Dañado (Con Frizz)",
-        "body": "Imagina el hilo de cabello como un techo. En un cabello sano, las tejas (cutículas) están bien cerradas. En el cabello poroso (por culpa de la plancha, decoloración o sol), las tejas están levantadas. El agua de la ducha entra fácil, pero se evapora en segundos, dejando el hilo seco y armado.",
-        "tip": "Haz la prueba del vaso: coloca un hilo de cabello suelto en un vaso de agua. Si se hunde rápido, es poroso (necesita aceite y reconstrucción). Si flota en la parte superior, es poco poroso (solo necesita hidratación ligera).",
+        "body": "Imagina la hebra de cabello como un techo. En un cabello sano, las tejas (cutículas) están bien cerradas. En el cabello poroso (por culpa de planchas, decoloraciones o sol), las tejas están levantadas. El agua entra fácil, pero se evapora en segundos, dejando el cabello seco y con frizz.",
+        "tip": "Haz la prueba del vaso: coloca un cabello suelto en un vaso de agua. Si se hunde rápido, es poroso (necesita aceite y reconstrucción). Si flota en la superficie, es poco poroso (solo necesita hidratación ligera).",
         "prod_name": "Aceite Reparador Botánico",
         "prod_cat": "Sellado de Cutículas",
         "prod_tag": "Tratamiento",
         "why": "Los aceites vegetales densos actúan como un \"pegamento\" para las tejas del cabello, sellando las cutículas e impidiendo que la humedad escape a lo largo del día."
       },
       "fine": {
-        "title": "Hilos Finos, Grasos y Sin Volumen",
-        "body": "El cabello fino es muy delicado y tiene menos \"cuerpo\". Como el hilo es muy liso y ligero, la grasa natural que produce el cuero cabelludo se resbala hasta las puntas muy rápido, dejando el cabello con aspecto \"marchito\" el mismo día que se lavó.",
-        "tip": "La regla de oro para cabellos finos: El acondicionador nunca debe tocar desde el medio hacia arriba de la cabeza. Aplica solo en las puntitas extremas para no aportar peso a la raíz.",
+        "title": "Cabello Fino, Graso y Sin Volumen",
+        "body": "El cabello fino es muy delicado y tiene menos \"cuerpo\". Como la hebra es muy lisa y ligera, la oleosidad natural que produce el cuero cabelludo se desliza hacia las puntas muy rápido, dejando el cabello con un aspecto \"aplastado\" el mismo día que se lavó.",
+        "tip": "La regla de oro para el cabello fino: El acondicionador nunca debe tocar desde la mitad hacia arriba de la cabeza. Aplícalo solo en las puntas extremas para no añadir peso a la raíz.",
         "prod_name": "Bruma Revitalizante (Uso Capilar)",
         "prod_cat": "Detox Capilar",
         "prod_tag": "Volumen Natural",
-        "why": "Siendo 100% libre de siliconas pesadas, desenreda el cabello fino aportando suavidad, sin añadir el peso de las cremas tradicionales."
+        "why": "Al ser 100% libre de siliconas pesadas, desenreda el cabello fino aportando suavidad, sin añadir el peso de las cremas tradicionales."
       }
     },
     "tips": {
       "title": "Protocolos de Rutina",
       "subtitle": "La ingeniería detrás de un skincare impecable.",
-      "intro": "Comprar productos caros y aplicarlos en el orden equivocado es tirar el dinero a la basura. La regla universal de la cosmetología es simple: aplica siempre del producto más líquido al más espeso.",
+      "intro": "Comprar productos caros y aplicarlos en el orden incorrecto es tirar el dinero a la basura. La regla universal de la cosmetología es simple: aplica siempre del producto más líquido al más espeso.",
       "morning": {
         "title": "La Rutina de la Mañana (Ataque y Defensa)",
-        "body": "El objetivo de la mañana no es tratar problemas graves, es proteger tu rostro del sol, del humo de los coches y de la luz del móvil. El protocolo correcto es: 1. Limpieza Suave > 2. Antioxidante (ej: Vitamina C) > 3. Hidratante Ligero > 4. Protector Solar.",
-        "tip": "¡Si tu piel es de normal a seca, no necesitas usar jabón por la mañana! Solo lava tu rostro con agua fría. Esto salva la hidratación que tu piel construyó mientras dormías.",
+        "body": "El objetivo de la mañana no es tratar problemas graves, es proteger tu rostro del sol, el humo de los autos y la luz del celular. El protocolo correcto es: 1. Limpieza Suave > 2. Antioxidante (ej: Vitamina C) > 3. Hidratante Ligero > 4. Protector Solar.",
+        "tip": "Si tu piel es normal a seca, ¡no necesitas usar jabón por la mañana! Solo lava tu rostro con agua fría. Esto salva la hidratación que tu piel construyó mientras dormías.",
         "prod_name": "Sérum Renovador",
         "prod_cat": "Defensa Antioxidante",
         "prod_tag": "Uso Diurno",
-        "why": "La Niacinamida actúa como un escudo que protege las células contra el oscurecimiento de manchas causado por la radiación y contaminación diaria."
+        "why": "La Niacinamida actúa como un escudo que protege las células contra el oscurecimiento de las manchas causado por la radiación y la contaminación diaria."
       },
       "night": {
-        "title": "La Rutina Nocturna (Reparación y Consuelo)",
-        "body": "Durante el sueño profundo, el flujo de sangre en tu rostro aumenta y la piel entra en \"modo reforma\". Esta es la hora de poner los activos fuertes (como los ácidos) a trabajar. El orden es: 1. Limpieza Profunda > 2. Tratamiento Específico (Sérums) > 3. Crema Hidratante Rica.",
-        "tip": "El secreto coreano de la Doble Limpieza (Double Cleansing): Usa un producto a base de aceite primero para derretir el maquillaje y el protector solar, y luego lava con tu jabón facial en gel para limpiar los poros de verdad.",
+        "title": "La Rutina Nocturna (Reparación y Restauración)",
+        "body": "Durante el sueño profundo, el flujo de sangre en tu rostro aumenta y la piel entra en \"modo reforma\". Esta es la hora de poner a trabajar a los activos fuertes (como los ácidos). El orden es: 1. Limpieza Profunda > 2. Tratamiento Específico (Sérums) > 3. Crema Hidratante Rica.",
+        "tip": "El secreto coreano de la Doble Limpieza (Double Cleansing): Usa primero un producto a base de aceite para derretir el maquillaje y el protector solar, y luego lava con tu jabón facial en gel para limpiar verdaderamente los poros.",
         "prod_name": "Hidratante Aqua Glow",
         "prod_cat": "Sellado Nocturno",
         "prod_tag": "Crema de Noche",
@@ -347,7 +363,7 @@
     "name_label": "Nombre Completo",
     "address_label": "Dirección",
     "city_label": "Ciudad",
-    "zip_label": "Código Postal / ZIP",
+    "zip_label": "Código Postal",
     "payment_method": "Método de Pago",
     "order_summary": "Resumen del Pedido",
     "total": "Total",
@@ -356,7 +372,7 @@
     "back_cart": "Volver al Carrito",
     "error_badge": "Pago Interrumpido",
     "error_title": "Pago Rechazado",
-    "error_msg": "El pago no se completó o fue cancelado. Tus productos siguen en el carrito por si deseas intentar nuevamente.",
+    "error_msg": "El pago no fue completado o fue cancelado. Tus productos continúan en el carrito por si deseas intentar nuevamente.",
     "try_again": "Intentar Nuevamente"
   },
   "products": {
@@ -368,14 +384,14 @@
     "Perfume Sólido Amadeirado": "Perfume Sólido Amaderado",
     "Kit Viagem Essencial": "Kit de Viaje Esencial",
     "Espuma de Limpeza Purificante": "Espuma Limpiadora Purificante",
-    "Kit Rotina Completa 5 Passos": "Kit de Rutina Completa 5 Pasos"
+    "Kit Rotina Completa 5 Passos": "Kit Rutina Completa 5 Pasos"
   },
   "footer": {
-    "desc": "La ciencia de la pureza. Fórmulas dermatológicas de alto rendimiento y resultados comprobados.",
+    "desc": "La ciencia de la pureza. Fórmulas dermatológicas de alto rendimiento con resultados comprobados.",
     "newsletter_title": "Únete a Baza Labs",
-    "newsletter_sub": "Recibe lanzamientos anticipados y 15% off en tu primer pedido.",
+    "newsletter_sub": "Recibe lanzamientos anticipados y un 15% de descuento en tu primer pedido.",
     "newsletter_placeholder": "Tu mejor correo",
-    "newsletter_btn": "Suscribir",
+    "newsletter_btn": "Suscribirse",
     "support": "Soporte",
     "returns": "Cambios y Devoluciones",
     "faq": "Preguntas Frecuentes (FAQ)",
@@ -386,7 +402,7 @@
     "rights": "TODOS LOS DERECHOS RESERVADOS."
   },
   "authority": {
-    "item1": "Dermatológicamente Probado",
+    "item1": "Dermatológicamente Testado",
     "item2": "Eficacia Comprobada",
     "item3": "Activos Concentrados"
   },
@@ -404,7 +420,7 @@
     "trackOrderBtn": "Rastrear Pedido",
     "awaitingFulfillment": "Esperando envío...",
     "personalInfo": "Información Personal",
-    "emailLabel": "Correo Electrónico",
+    "emailLabel": "Correo",
     "emailWarning": "El correo no puede ser modificado por motivos de seguridad.",
     "fullName": "Nombre Completo",
     "phoneLabel": "Teléfono",
@@ -413,13 +429,13 @@
     "errorUpdate": "Error al actualizar los datos."
   },
   "chatbot": {
-    "greeting": "¡Hola! Soy el asistente de CarefulBaza Labs. ¿Cómo puedo ayudarte a cuidar tu piel hoy?",
-    "placeholder": "Cuéntame sobre tu piel...",
-    "botName": "Baza Bot",
+    "greeting": "¡Hola! Soy el asistente de CarefulBaza Labs. ¿Cómo te puedo ayudar a cuidar tu piel hoy?",
+    "placeholder": "Háblame de tu piel...",
+    "botName": "Bot Baza",
     "you": "Tú",
     "processing": "Procesando...",
-    "error": "Lo siento, ocurrió un error técnico.",
+    "error": "Lo siento, ha ocurrido un error técnico.",
     "unavailable": "El servicio no está disponible en este momento. Por favor, inténtalo más tarde.",
-    "added": "✅ ¡Excelente elección! **{{name}}** ha sido añadido a tu carrito."
+    "added": "✅ ¡Excelente elección! **{{name}}** ha sido añadido a tu bolsa."
   }
 }

@@ -222,6 +222,22 @@
       "t1": "Você tem até 7 dias após o recebimento para devolver.",
       "h2": "Estorno",
       "t2": "Processado em até 2 dias úteis após o retorno do produto."
+    },
+    "privacidade": {
+      "title": "Política de Privacidade",
+      "subtitle": "Transparência total sobre como protegemos os seus dados.",
+      "h1": "Proteção de Dados",
+      "t1": "Todas as informações fornecidas são processadas com segurança e utilizadas exclusivamente para o processamento do seu pedido.",
+      "h2": "Contato de Privacidade",
+      "t2": "Para solicitar a alteração ou remoção dos seus dados, por favor contacte-nos através do e-mail oficial: carefulbaza@gmail.com"
+    },
+    "termos": {
+      "title": "Termos de Serviço",
+      "subtitle": "As diretrizes que regem a nossa plataforma.",
+      "h1": "Aceitação dos Termos",
+      "t1": "Ao utilizar a Careful Baza Labs, concorda com as nossas políticas de utilização e conduta da loja.",
+      "h2": "Atendimento Oficial",
+      "t2": "O nosso suporte oficial é realizado exclusivamente através do e-mail: carefulbaza@gmail.com"
     }
   },
   "science": {
@@ -327,7 +343,7 @@
         "prod_name": "Sérum Renovador",
         "prod_cat": "Defesa Antioxidante",
         "prod_tag": "Uso Diurno",
-        "why": "A Niacinamida age como um escudo que protege as células contra o escurecimento de manchas causado pela radiação e poluição diária."
+        "why": "A Niacinamida age como escudo que protege as células contra o escurecimento de manchas causado pela radiação e poluição diária."
       },
       "night": {
         "title": "A Rotina Noturna (Conserto & Reparação)",
