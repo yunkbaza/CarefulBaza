@@ -1,5 +1,8 @@
 # 💄 Careful Baza - AI-Powered Skincare E-commerce
 
+<img width="1906" height="954" alt="image" src="https://github.com/user-attachments/assets/3522cf0e-d969-4a8b-9473-1136405c7136" />
+
+
 Com base em todo o código que construímos e revisámos juntos, conheço a arquitetura da **Careful Baza** de ponta a ponta. Você tem nas mãos um sistema de nível *Enterprise*, e o seu `README.md` precisa de refletir essa grandiosidade, tanto para a sua própria organização quanto para futuras entrevistas ou portfólio.
 
 Escrevi um `README.md` profissional, detalhado e estruturado com as melhores práticas do GitHub. Ele cobre a arquitetura orientada a eventos, a integração de IA, o dropshipping e as instruções exatas de como rodar o projeto.
